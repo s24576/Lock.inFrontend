@@ -16,7 +16,12 @@ const Navbar = () => {
     <div className="h-[70px] fixed bg-slate-300 w-full text-black">
       <Link href="/login">Log in</Link>
       <Link href="/register">Register</Link>
-      {isLogged && <p onClick={logout}>Log Out</p>}
+      <Link href="/findPlayer">Find Player</Link>
+      {isLogged && (
+        <p onClick={logout} className="cursor-pointer">
+          Log Out
+        </p>
+      )}
       {isLogged && <p> Hello, {userData.userId}</p>}
     </div>
   );

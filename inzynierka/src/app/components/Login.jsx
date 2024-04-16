@@ -23,6 +23,8 @@ const Login = () => {
       setIsLogged(true);
 
       console.log("zalogowano");
+      //redirect
+
       // Tutaj możesz dodać kod obsługujący poprawną odpowiedź z serwera, na przykład przekierowanie użytkownika do innej strony
     } catch (error) {
       if (error.response) {
