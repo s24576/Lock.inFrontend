@@ -31,16 +31,19 @@ const FindPlayer = () => {
         `http://localhost:8080/riot/getChampionMastery?server=${server}&puuid=${response.data.puuid}`
       );
 
-      setMasteryData(masteryResponse.data);
-      console.log(masteryResponse.data);
+      if (masteryResponse.data) {
+        setMasteryData(masteryResponse.data);
+        console.log(masteryResponse.data);
+      }
 
       const rankResponse = await axios.get(
         `http://localhost:8080/riot/getRanks?server=${server}&summonerId=${response.data.id}`
       );
 
-      setRankData(rankResponse.data);
-      console.log(rankResponse.data);
-
+      if (rankResponse.data) {
+        setRankData(rankResponse.data);
+        console.log(rankResponse.data);
+      }
       setResultsFound(true);
     } catch (error) {
       // Handle error
