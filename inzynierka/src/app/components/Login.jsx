@@ -7,8 +7,14 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { isLogged, setIsLogged, setUserData, userData } =
-    useContext(UserContext);
+  const {
+    isLogged,
+    setIsLogged,
+    setUserData,
+    userData,
+    profileData,
+    setProfileData,
+  } = useContext(UserContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -20,9 +26,11 @@ const Login = () => {
       });
 
       setUserData(response.data);
+
       setIsLogged(true);
 
       console.log("zalogowano");
+      console.log(userData);
       //redirect
 
       // Tutaj możesz dodać kod obsługujący poprawną odpowiedź z serwera, na przykład przekierowanie użytkownika do innej strony
@@ -45,6 +53,7 @@ const Login = () => {
         onSubmit={handleSubmit}
         className="flex flex-col w-[280px] gap-2 text-black"
       >
+        {errorMessage && <p className="text-red-600">{errorMessage}</p>}
         <input
           type="text"
           placeholder="Username"

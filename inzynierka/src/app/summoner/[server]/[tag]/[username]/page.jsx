@@ -4,6 +4,7 @@ import { SearchContext } from "@/app/context/SearchContext";
 import axios from "axios";
 import { useParams, redirect } from "next/navigation";
 import Image from "next/image";
+import { UserContext } from "@/app/context/UserContext";
 
 const SearchPage = () => {
   const {
@@ -16,9 +17,12 @@ const SearchPage = () => {
     setRankData,
   } = useContext(SearchContext);
 
+  const { userData, setUserData, isLogged } = useContext(UserContext);
+
   const [championIds, setChampionIds] = useState([]);
   const [championsFetched, setChampionsFetched] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const params = useParams();
 
@@ -100,52 +104,113 @@ const SearchPage = () => {
     );
   }
 
+  const followSummoner = async () => {
+    if (isLogged) {
+      try {
+        const response = await axios.put(
+          `http://localhost:8080/profile/addWatchList?puuid=${playerData.puuid}&userId=${userData.userId}`
+        );
+
+        console.log(response.data);
+        setUserData((prevUserData) => ({
+          ...prevUserData,
+          watchList: response.data,
+        }));
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      setErrorMessage("Log in to follow other summoner");
+    }
+  };
+
+  const unfollowSummoner = async () => {
+    if (isLogged) {
+      try {
+        const response = await axios.put(
+          `http://localhost:8080/profile/removeWatchList?puuid=${playerData.puuid}&userId=${userData.userId}`
+        );
+
+        console.log(response.data);
+        setUserData((prevUserData) => ({
+          ...prevUserData,
+          watchList: response.data,
+        }));
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      setErrorMessage("Log in to unfollow other summoner");
+    }
+  };
+
   return (
     <div className="h-screen w-full flex flex-col justify-center items-center">
       <h1>Summoner</h1>
+      {isLogged && (
+        <div className="flex gap-x-3">
+          <button
+            onClick={followSummoner}
+            className="border-2 border-white px-6 py-2 hover:bg-green-600"
+          >
+            Follow
+          </button>
+          <button
+            onClick={unfollowSummoner}
+            className="border-2 border-white px-6 py-2 hover:bg-red-600"
+          >
+            Unfollow
+          </button>
+        </div>
+      )}
+      {errorMessage && <p className="text-red-600">{errorMessage}</p>}
       <p>Server: {params.server}</p>
       <p>Tag: {params.tag}</p>
-      <p>Username: {decodeURIComponent(params.username)}</p>
+      {/* username nie bierze duzej litery jesli sie nie wpisze duza */}
+      <p>Username: {decodeURIComponent(params.username)} </p>
       <div className="flex gap-x-5 mt-5">
-        {masteryData &&
-          masteryData.map((mastery, key) => {
-            return (
-              <div key={key}>
-                <Image
-                  src={
-                    "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/" +
-                    mastery.championId +
-                    "_0.jpg"
-                  }
-                  width={200}
-                  height={200}
-                  alt={mastery.championId}
-                />
-                <p>Champion Id: {mastery.championId}</p>
-                <p>CHampion mastery: {mastery.championLevel}</p>
-              </div>
-            );
-          })}
+        {Array.isArray(masteryData) && masteryData.length > 1 ? (
+          masteryData.map((mastery, key) => (
+            <div key={key}>
+              <Image
+                src={
+                  "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/" +
+                  mastery.championId +
+                  "_0.jpg"
+                }
+                width={200}
+                height={200}
+                alt={mastery.championId}
+              />
+              <p>Champion Id: {mastery.championId}</p>
+              <p>Champion mastery: {mastery.championLevel}</p>
+            </div>
+          ))
+        ) : (
+          <p>No mastery data available</p>
+        )}
       </div>
+
       <div className="flex gap-x-5 mt-5">
-        {rankData &&
-          rankData.map((rank, key) => {
-            return (
-              <div key={key}>
-                <p>
-                  {rank.tier} {rank.rank}
-                </p>
-                <p>{rank.queueType}</p>
-                <p>
-                  Wins: {rank.wins} Loses: {rank.losses}
-                </p>
-                <p>
-                  Win ratio:{" "}
-                  {((rank.wins / (rank.wins + rank.losses)) * 100).toFixed(2)}%
-                </p>
-              </div>
-            );
-          })}
+        {Array.isArray(rankData) && rankData.length > 0 ? (
+          rankData.map((rank, key) => (
+            <div key={key}>
+              <p>
+                {rank.tier} {rank.rank}
+              </p>
+              <p>{rank.queueType}</p>
+              <p>
+                Wins: {rank.wins} Loses: {rank.losses}
+              </p>
+              <p>
+                Win ratio:{" "}
+                {((rank.wins / (rank.wins + rank.losses)) * 100).toFixed(2)}%
+              </p>
+            </div>
+          ))
+        ) : (
+          <p>No rank data available</p>
+        )}
       </div>
     </div>
   );

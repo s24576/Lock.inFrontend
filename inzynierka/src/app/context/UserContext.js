@@ -11,7 +11,12 @@ export function UserContextProvider({ children }) {
 
   return (
     <UserContext.Provider
-      value={{ isLogged, setIsLogged, userData, setUserData }}
+      value={{
+        isLogged,
+        setIsLogged,
+        userData,
+        setUserData,
+      }}
     >
       {children}
     </UserContext.Provider>
