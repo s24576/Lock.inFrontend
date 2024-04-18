@@ -18,6 +18,7 @@ const Navbar = () => {
       <Link href="/login">Log in</Link>
       <Link href="/register">Register</Link>
       <Link href="/findPlayer">Find Player</Link>
+      <Link href="/findProfile">Find Profile</Link>
       {isLogged && (
         <p onClick={logout} className="cursor-pointer">
           Log Out

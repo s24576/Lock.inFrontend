@@ -50,7 +50,6 @@ const SearchPage = () => {
       console.log(rankResponse.data);
     } catch (error) {
       console.error("Error occurred:", error);
-    } finally {
     }
   };
 
