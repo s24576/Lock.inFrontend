@@ -10,6 +10,8 @@ export function SearchContextProvider({ children }) {
   const [playerData, setPlayerData] = useState({});
   const [masteryData, setMasteryData] = useState([]);
   const [rankData, setRankData] = useState([]);
+  const [matchHistoryData, setMatchHistoryData] = useState([]);
+  const [lastMatches, setLastMatches] = useState([]);
 
   return (
     <SearchContext.Provider
@@ -22,6 +24,10 @@ export function SearchContextProvider({ children }) {
         setMasteryData,
         rankData,
         setRankData,
+        matchHistoryData,
+        setMatchHistoryData,
+        lastMatches,
+        setLastMatches,
       }}
     >
       {children}

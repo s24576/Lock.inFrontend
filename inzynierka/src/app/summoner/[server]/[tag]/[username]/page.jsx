@@ -12,9 +12,13 @@ const SearchPage = () => {
     playerData,
     masteryData,
     rankData,
+    lastMatches,
     setPlayerData,
     setMasteryData,
     setRankData,
+    matchHistoryData,
+    setMatchHistoryData,
+    setLastMatches,
   } = useContext(SearchContext);
 
   const { userData, setUserData, isLogged } = useContext(UserContext);
@@ -48,6 +52,25 @@ const SearchPage = () => {
 
       setRankData(rankResponse.data);
       console.log(rankResponse.data);
+
+      const matchHistoryResponse = await axios.get(
+        `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`
+      );
+
+      setMatchHistoryData(matchHistoryResponse.data);
+      console.log(matchHistoryResponse.data);
+
+      for (let i = 0; i < matchHistoryResponse.data.length; i++) {
+        const matchDetailsResponse = await axios.get(
+          `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`
+        );
+        console.log(matchDetailsResponse.data);
+        setLastMatches((prevMatches) => [
+          ...prevMatches,
+          matchDetailsResponse.data,
+        ]);
+        console.log(lastMatches);
+      }
     } catch (error) {
       console.error("Error occurred:", error);
     }
@@ -60,6 +83,7 @@ const SearchPage = () => {
       setLoading(false);
     }
   }, []);
+
   const fetchChampionIds = async () => {
     console.log("masterydata", masteryData);
     const updatedMasteryData = [];
@@ -209,6 +233,21 @@ const SearchPage = () => {
           ))
         ) : (
           <p>No rank data available</p>
+        )}
+      </div>
+      <div className="flex flex-col mt-5 gap-y-2 text-center">
+        <p className="text-[32px]">Match history:</p>
+        {Array.isArray(lastMatches) && lastMatches.length > 0 ? (
+          lastMatches.map((match, key) => {
+            return (
+              <div className="flex flex-col" key={key}>
+                <p>{match.info.gameMode}</p>
+                <p>{match.metadata.matchId}</p>
+              </div>
+            );
+          })
+        ) : (
+          <p>No data for your last matches</p>
         )}
       </div>
     </div>

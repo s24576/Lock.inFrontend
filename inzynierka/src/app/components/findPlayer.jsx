@@ -1,16 +1,27 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { redirect } from "next/navigation";
 import axios from "axios";
 import { SearchContext } from "../context/SearchContext";
 
 const FindPlayer = () => {
-  const { setParamsData, setPlayerData, setMasteryData, setRankData } =
-    useContext(SearchContext);
+  const {
+    setParamsData,
+    setPlayerData,
+    setMasteryData,
+    setRankData,
+    setLastMatches,
+    setMatchHistoryData,
+    lastMatches,
+  } = useContext(SearchContext);
 
   const [username, setUsername] = useState("");
   const [tag, setTag] = useState("");
   const [server, setServer] = useState("eun1");
   const [resultsFound, setResultsFound] = useState(false);
+
+  useEffect(() => {
+    setLastMatches([]);
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -44,6 +55,26 @@ const FindPlayer = () => {
         setRankData(rankResponse.data);
         console.log(rankResponse.data);
       }
+
+      const matchHistoryResponse = await axios.get(
+        `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`
+      );
+
+      setMatchHistoryData(matchHistoryResponse.data);
+      console.log(matchHistoryResponse.data);
+
+      for (let i = 0; i < matchHistoryResponse.data.length; i++) {
+        const matchDetailsResponse = await axios.get(
+          `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`
+        );
+        console.log(matchDetailsResponse.data);
+        setLastMatches((prevMatches) => [
+          ...prevMatches,
+          matchDetailsResponse.data,
+        ]);
+        console.log(lastMatches);
+      }
+
       setResultsFound(true);
     } catch (error) {
       // Handle error
