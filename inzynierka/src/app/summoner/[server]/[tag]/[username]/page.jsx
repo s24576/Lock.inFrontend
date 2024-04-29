@@ -240,9 +240,21 @@ const SearchPage = () => {
         {Array.isArray(lastMatches) && lastMatches.length > 0 ? (
           lastMatches.map((match, key) => {
             return (
-              <div className="flex flex-col" key={key}>
+              <div className="flex gap-x-4" key={key}>
                 <p>{match.info.gameMode}</p>
-                <p>{match.metadata.matchId}</p>
+                {match.info.participants.map((participant, key) => {
+                  if (participant.puuid === playerData.puuid) {
+                    return (
+                      <div key={key} className="flex gap-x-3">
+                        <p>
+                          {participant.kills}/{participant.deaths}/
+                          {participant.assists}
+                        </p>
+                        <p>{participant.win ? "Victory" : "Loss"}</p>
+                      </div>
+                    );
+                  }
+                })}
               </div>
             );
           })
