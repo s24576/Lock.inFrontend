@@ -25,12 +25,11 @@ const Login = () => {
         password: password,
       });
 
-      setUserData(response.data);
+      setUserData({ token: response.data });
 
       setIsLogged(true);
 
       console.log("zalogowano");
-      console.log(userData);
       //redirect
 
       // Tutaj możesz dodać kod obsługujący poprawną odpowiedź z serwera, na przykład przekierowanie użytkownika do innej strony

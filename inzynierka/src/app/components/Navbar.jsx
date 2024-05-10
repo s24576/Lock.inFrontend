@@ -24,7 +24,7 @@ const Navbar = () => {
           Log Out
         </p>
       )}
-      {isLogged && <p> Hello, {userData.userId}</p>}
+      {isLogged && <p> Hello, {userData.token}</p>}
     </div>
   );
 };

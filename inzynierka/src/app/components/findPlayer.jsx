@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { redirect } from "next/navigation";
 import axios from "axios";
 import { SearchContext } from "../context/SearchContext";
+import { UserContext } from "../context/UserContext";
 
 const FindPlayer = () => {
   const {
@@ -13,6 +14,8 @@ const FindPlayer = () => {
     setMatchHistoryData,
     lastMatches,
   } = useContext(SearchContext);
+
+  const { userData } = useContext(UserContext);
 
   const [username, setUsername] = useState("");
   const [tag, setTag] = useState("");
@@ -30,8 +33,14 @@ const FindPlayer = () => {
       console.log(server);
       console.log(tag);
       console.log(username);
+      console.log(userData.token);
       const response = await axios.get(
-        `http://localhost:8080/riot/findPlayer?server=${server}&tag=${tag}&name=${username}`
+        `http://localhost:8080/riot/findPlayer?server=${server}&tag=${tag}&name=${username}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}}`,
+          },
+        }
       );
 
       setParamsData({ server, tag, username });
@@ -39,7 +48,12 @@ const FindPlayer = () => {
       console.log(response.data);
 
       const masteryResponse = await axios.get(
-        `http://localhost:8080/riot/getChampionMastery?server=${server}&puuid=${response.data.puuid}`
+        `http://localhost:8080/riot/getChampionMastery?server=${server}&puuid=${response.data.puuid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}}`,
+          },
+        }
       );
 
       if (masteryResponse.data) {
@@ -48,7 +62,12 @@ const FindPlayer = () => {
       }
 
       const rankResponse = await axios.get(
-        `http://localhost:8080/riot/getRanks?server=${server}&summonerId=${response.data.id}`
+        `http://localhost:8080/riot/getRanks?server=${server}&summonerId=${response.data.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}}`,
+          },
+        }
       );
 
       if (rankResponse.data) {
@@ -57,7 +76,12 @@ const FindPlayer = () => {
       }
 
       const matchHistoryResponse = await axios.get(
-        `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`
+        `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}}`,
+          },
+        }
       );
 
       setMatchHistoryData(matchHistoryResponse.data);
@@ -65,7 +89,12 @@ const FindPlayer = () => {
 
       for (let i = 0; i < matchHistoryResponse.data.length; i++) {
         const matchDetailsResponse = await axios.get(
-          `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`
+          `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userData.token}}`,
+            },
+          }
         );
         console.log(matchDetailsResponse.data);
         setLastMatches((prevMatches) => [
