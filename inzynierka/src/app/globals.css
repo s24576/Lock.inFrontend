@@ -30,4 +30,13 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .placeholder-oxford-blue::placeholder {
+    color: #001427; /* Oxford Blue */
+    text-align: center; /* Center the placeholder text */
+  }
+  .placeholder-gray::placeholder {
+    color: #f3f4f6;
+    text-align: center;
+  }
 }

@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
+import Link from "next/link";
+import { FaGoogle, FaFacebook } from "react-icons/fa";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -40,36 +42,54 @@ const Register = () => {
   };
 
   return (
-    <div className="text-white h-screen w-full flex items-center justify-center">
+    <div className="text-white h-screen w-full flex flex-col items-center justify-center bg-linen">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col w-[280px] gap-2 text-black"
+        className="flex flex-col w-[28%] p-10 text-oxford-blue bg-cordovan items-center rounded-3xl"
       >
+        <p className="text-oxford-blue font-semibold text-[48px]">Register</p>
         <input
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          className="mt-12 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
         />
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="mt-4 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="mt-4 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
         />
         <input
           type="password"
           placeholder="Repeat password"
           value={repeatPassword}
           onChange={(e) => setRepeatPassword(e.target.value)}
+          className="mt-4 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
         />
-        <button className="text-white">Register</button>
+        <div className="mt-4 flex justify-between w-[80%] text-[18px] text-gray-100 font-semibold">
+          <Link href="/login" className="block">
+            <span>Have an account?</span>
+            <span className="block text-center">Log In here</span>
+          </Link>
+          <Link href="/register">Forgot password?</Link>
+        </div>
+        <button className="mt-4 w-[50%] text-gray-100 bg-oxford-blue py-1 text-[22px] font-semibold rounded-full shadow-gray-900 shadow-lg hover:scale-105 transition-all duration-150">
+          Register
+        </button>
+        <div className="mt-6 flex gap-x-4 text-gray-100 text-[48px]">
+          <FaGoogle className="cursor-pointer"></FaGoogle>
+          <FaFacebook className="cursor-pointer"></FaFacebook>
+        </div>
       </form>
     </div>
   );

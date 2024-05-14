@@ -7,6 +7,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        "oxford-blue": "#001427",
+        cordovan: "#9C3848",
+        "cordovan-light": "#AF515F",
+        linen: "#F3E9DC",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
