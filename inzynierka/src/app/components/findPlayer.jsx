@@ -6,6 +6,12 @@ import { UserContext } from "../context/UserContext";
 import { IoMdArrowDropdown } from "react-icons/io";
 import useOutsideClick from "../hooks/useOutsideClick";
 
+const serverNames = {
+  eun1: "EUNE",
+  euw1: "EUW",
+  na1: "NA",
+};
+
 const FindPlayer = () => {
   const {
     setParamsData,
@@ -42,12 +48,7 @@ const FindPlayer = () => {
       console.log(username);
       console.log(userData.token);
       const response = await axios.get(
-        `http://localhost:8080/riot/findPlayer?server=${server}&tag=${tag}&name=${username}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}}`,
-          },
-        }
+        `http://localhost:8080/riot/findPlayer?server=${server}&tag=${tag}&name=${username}`
       );
 
       setParamsData({ server, tag, username });
@@ -55,12 +56,7 @@ const FindPlayer = () => {
       console.log(response.data);
 
       const masteryResponse = await axios.get(
-        `http://localhost:8080/riot/getChampionMastery?server=${server}&puuid=${response.data.puuid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}}`,
-          },
-        }
+        `http://localhost:8080/riot/getChampionMastery?server=${server}&puuid=${response.data.puuid}`
       );
 
       if (masteryResponse.data) {
@@ -69,12 +65,7 @@ const FindPlayer = () => {
       }
 
       const rankResponse = await axios.get(
-        `http://localhost:8080/riot/getRanks?server=${server}&summonerId=${response.data.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}}`,
-          },
-        }
+        `http://localhost:8080/riot/getRanks?server=${server}&summonerId=${response.data.id}`
       );
 
       if (rankResponse.data) {
@@ -83,12 +74,7 @@ const FindPlayer = () => {
       }
 
       const matchHistoryResponse = await axios.get(
-        `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}}`,
-          },
-        }
+        `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`
       );
 
       setMatchHistoryData(matchHistoryResponse.data);
@@ -96,12 +82,7 @@ const FindPlayer = () => {
 
       for (let i = 0; i < matchHistoryResponse.data.length; i++) {
         const matchDetailsResponse = await axios.get(
-          `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`,
-          {
-            headers: {
-              Authorization: `Bearer ${userData.token}}`,
-            },
-          }
+          `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`
         );
         console.log(matchDetailsResponse.data);
         setLastMatches((prevMatches) => [
@@ -141,26 +122,28 @@ const FindPlayer = () => {
               }
               onClick={() => setIsOpen(!isOpen)}
             >
-              <span>{server === "default" ? "Server" : server}</span>
+              <span>
+                {server === "default" ? "Server" : serverNames[server]}
+              </span>
               <IoMdArrowDropdown className="text-[42px]  " />
             </div>
             {isOpen && (
               <ul className="absolute w-full bg-cordovan rounded-b-3xl text-center">
                 <li
                   className="px-4 py-1 cursor-pointer hover:bg-cordovan-light"
-                  onClick={() => handleSelect("EUNE")}
+                  onClick={() => handleSelect("eun1")}
                 >
                   EUNE
                 </li>
                 <li
                   className="px-4 py-1 cursor-pointer hover:bg-cordovan-light"
-                  onClick={() => handleSelect("EUW")}
+                  onClick={() => handleSelect("euw1")}
                 >
                   EUW
                 </li>
                 <li
                   className="px-4 py-1 cursor-pointer hover:bg-cordovan-light hover:rounded-b-3xl"
-                  onClick={() => handleSelect("NA")}
+                  onClick={() => handleSelect("na1")}
                 >
                   NA
                 </li>
@@ -172,14 +155,14 @@ const FindPlayer = () => {
             placeholder="Tag"
             value={tag}
             onChange={(e) => setTag(e.target.value)}
-            className="w-[18%] text-gray-100 px-3 bg-cordovan border-l-gray-100 border-l-4 placeholder-gray focus:outline-none "
+            className="w-[18%] text-center text-gray-100 px-3 bg-cordovan border-l-gray-100 border-l-4 placeholder-gray focus:outline-none "
           />
           <input
             type="text"
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-[50%] text-gray-100 px-3 bg-cordovan border-l-gray-100 border-l-4 placeholder-gray rounded-r-full focus:outline-none "
+            className="w-[50%] text-center text-gray-100 px-3 bg-cordovan border-l-gray-100 border-l-4 placeholder-gray rounded-r-full focus:outline-none "
           />
         </div>
 

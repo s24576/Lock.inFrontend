@@ -39,7 +39,6 @@ const Navbar = () => {
           height={45}
         />
       </div>
-      {isLogged && <p>Hello, {userData.token}</p>}
     </div>
   );
 };

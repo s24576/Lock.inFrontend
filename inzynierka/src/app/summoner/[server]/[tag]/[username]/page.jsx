@@ -5,6 +5,7 @@ import axios from "axios";
 import { useParams, redirect } from "next/navigation";
 import Image from "next/image";
 import { UserContext } from "@/app/context/UserContext";
+import Link from "next/link";
 
 const SearchPage = () => {
   const {
@@ -33,48 +34,28 @@ const SearchPage = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/riot/findPlayer?server=${params.server}&tag=${params.tag}&name=${params.username}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}}`,
-          },
-        }
+        `http://localhost:8080/riot/findPlayer?server=${params.server}&tag=${params.tag}&name=${params.username}`
       );
 
       setPlayerData(response.data);
       console.log(response.data);
 
       const masteryResponse = await axios.get(
-        `http://localhost:8080/riot/getChampionMastery?server=${params.server}&puuid=${response.data.puuid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}}`,
-          },
-        }
+        `http://localhost:8080/riot/getChampionMastery?server=${params.server}&puuid=${response.data.puuid}`
       );
 
       setMasteryData(masteryResponse.data);
       console.log(masteryResponse.data);
 
       const rankResponse = await axios.get(
-        `http://localhost:8080/riot/getRanks?server=${params.server}&summonerId=${response.data.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}}`,
-          },
-        }
+        `http://localhost:8080/riot/getRanks?server=${params.server}&summonerId=${response.data.id}`
       );
 
       setRankData(rankResponse.data);
       console.log(rankResponse.data);
 
       const matchHistoryResponse = await axios.get(
-        `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}}`,
-          },
-        }
+        `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`
       );
 
       setMatchHistoryData(matchHistoryResponse.data);
@@ -82,12 +63,7 @@ const SearchPage = () => {
 
       for (let i = 0; i < matchHistoryResponse.data.length; i++) {
         const matchDetailsResponse = await axios.get(
-          `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`,
-          {
-            headers: {
-              Authorization: `Bearer ${userData.token}}`,
-            },
-          }
+          `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`
         );
         console.log(matchDetailsResponse.data);
         setLastMatches((prevMatches) => [
@@ -118,12 +94,7 @@ const SearchPage = () => {
       console.log(masteryData.length);
 
       const champResponse = await axios.get(
-        `http://localhost:8080/ddragon/getChampionId?championId=${champId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}}`,
-          },
-        }
+        `http://localhost:8080/ddragon/getChampionId?championId=${champId}`
       );
 
       console.log(champResponse.data);
@@ -291,6 +262,9 @@ const SearchPage = () => {
                           {participant.assists}
                         </p>
                         <p>{participant.win ? "Victory" : "Loss"}</p>
+                        <Link href={"/match/" + match.metadata.matchId}>
+                          See more
+                        </Link>
                       </div>
                     );
                   }
