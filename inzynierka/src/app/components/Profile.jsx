@@ -3,18 +3,25 @@ import React, { useState, useContext, useEffect } from "react";
 import { ProfileContext } from "../context/ProfileContext";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import { UserContext } from "../context/UserContext";
 
 const Profile = () => {
   const { profileData, setProfileData } = useContext(ProfileContext);
+  const { userData } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
 
   const params = useParams();
 
   const fetchData = async () => {
     try {
-      console.log(params);
+      console.log("siema", params);
       const response = await axios.get(
-        `http://localhost:8080/profile/findProfile?username=${params.username}`
+        `http://localhost:8080/profile/findProfile?username=${params.username}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}}`,
+          },
+        }
       );
       setProfileData(response.data);
       setLoading(false);
@@ -24,7 +31,8 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (!profileData.userId) {
+    if (profileData.userId === null) {
+      console.log("profile data", profileData.userId);
       fetchData();
     } else {
       setLoading(false);

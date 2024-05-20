@@ -2,23 +2,37 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import { ProfileContext } from "../context/ProfileContext";
+import { UserContext } from "../context/UserContext";
 import { redirect } from "next/navigation";
 
 const FindProfile = () => {
   const [username, setUsername] = useState("");
   const [resultsFound, setResultsFound] = useState(false);
   const { setProfileData } = useContext(ProfileContext);
+  const { userData } = useContext(UserContext);
+
+  const setProfileDataAsync = (data) => {
+    return new Promise((resolve) => {
+      setProfileData(data);
+      resolve();
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await axios.get(
-        `http://localhost:8080/profile/findProfile?username=${username}`
+        `http://localhost:8080/profile/findProfile?username=${username}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}}`,
+          },
+        }
       );
 
-      setProfileData(response.data);
       console.log(response.data);
+      await setProfileDataAsync(response.data);
       setResultsFound(true);
     } catch (error) {
       console.log(error);
