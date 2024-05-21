@@ -9,6 +9,7 @@ const Navbar = () => {
     useContext(UserContext);
 
   const logout = () => {
+    localStorage.removeItem("loginToken");
     setUserData({});
     setIsLogged(false);
   };
@@ -22,8 +23,8 @@ const Navbar = () => {
         logo
       </Link>
       <div className="flex space-x-4 ml-auto items-center">
-        <Link href="/login">Log in</Link>
-        <Link href="/register">Register</Link>
+        {!isLogged && <Link href="/login">Log in</Link>}
+        {!isLogged && <Link href="/register">Register</Link>}
         <Link href="/findPlayer">Find Player</Link>
         <Link href="/findProfile">Find Profile</Link>
         {isLogged && (

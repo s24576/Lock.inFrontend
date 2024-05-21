@@ -1,15 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [isRegistered, setIsRegistered] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const router = useRouter();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -26,6 +30,8 @@ const Register = () => {
         password: password,
       });
 
+      setIsRegistered(true);
+
       console.log("dodano do db");
       // Tutaj możesz dodać kod obsługujący poprawną odpowiedź z serwera, na przykład przekierowanie użytkownika do innej strony
     } catch (error) {
@@ -40,6 +46,12 @@ const Register = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (isRegistered) {
+      router.push("/login");
+    }
+  }, [isRegistered, router]);
 
   return (
     <div className="text-white h-screen w-full flex flex-col items-center justify-center bg-linen">

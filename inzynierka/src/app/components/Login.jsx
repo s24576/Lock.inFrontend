@@ -1,22 +1,18 @@
 "use client";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const {
-    isLogged,
-    setIsLogged,
-    setUserData,
-    userData,
-    profileData,
-    setProfileData,
-  } = useContext(UserContext);
+  const { isLogged, setIsLogged, setUserData } = useContext(UserContext);
+
+  const router = useRouter();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,14 +23,15 @@ const Login = () => {
         password: password,
       });
 
-      setUserData({ token: response.data });
+      const token = response.data;
 
-      setIsLogged(true);
+      if (token) {
+        localStorage.setItem("loginToken", token);
+        setUserData({ token: token });
+        setIsLogged(true);
+      }
 
       console.log("zalogowano");
-      //redirect
-
-      // Tutaj możesz dodać kod obsługujący poprawną odpowiedź z serwera, na przykład przekierowanie użytkownika do innej strony
     } catch (error) {
       if (error.response) {
         // Serwer zwrócił odpowiedź inną niż 2xx
@@ -47,6 +44,12 @@ const Login = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (isLogged) {
+      router.push("/");
+    }
+  }, [isLogged, router]);
 
   return (
     <div className="text-white h-screen w-full flex flex-col items-center justify-center bg-linen">
