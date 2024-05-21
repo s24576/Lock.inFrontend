@@ -117,11 +117,12 @@ const SummonerProfile = () => {
       console.log(userData.token);
       console.log(playerData.puuid);
       try {
-        const response = await axios.post(
+        const response = await axios.put(
           `http://localhost:8080/profile/addWatchList?puuid=${playerData.puuid}`,
+          {},
           {
             headers: {
-              Authorization: `Bearer ${userData.token}}`,
+              Authorization: `Bearer ${userData.token}`,
             },
           }
         );
@@ -143,10 +144,11 @@ const SummonerProfile = () => {
     if (isLogged) {
       try {
         const response = await axios.put(
-          `http://localhost:8080/profile/removeWatchList?puuid=${playerData.puuid}&userId=${userData.userId}`,
+          `http://localhost:8080/profile/removeWatchList?puuid=${playerData.puuid}`,
+          {},
           {
             headers: {
-              Authorization: `Bearer ${userData.token}}`,
+              Authorization: `Bearer ${userData.token}`,
             },
           }
         );

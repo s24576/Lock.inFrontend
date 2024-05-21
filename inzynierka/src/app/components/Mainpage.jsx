@@ -9,7 +9,7 @@ const Mainpage = () => {
     <div className="h-screen w-full flex flex-col justify-center items-center text-white">
       {isLogged && (
         <div>
-          {isLogged && <p>{userData.token}</p>}
+          {isLogged && <p>User token: {userData.token}</p>}
           <h1 className="text-[36px]">Followed summoners</h1>
           {Array.isArray(userData.watchList) &&
           userData.watchList.length > 0 ? (

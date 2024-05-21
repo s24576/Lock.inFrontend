@@ -19,7 +19,7 @@ const Profile = () => {
         `http://localhost:8080/profile/findProfile?username=${params.username}`,
         {
           headers: {
-            Authorization: `Bearer ${userData.token}}`,
+            Authorization: `Bearer ${userData.token}`,
           },
         }
       );
