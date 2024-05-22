@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import getVersion from "../api/ddragon/getVersion";
 
 export const SearchContext = createContext();
 
@@ -12,6 +13,20 @@ export function SearchContextProvider({ children }) {
   const [rankData, setRankData] = useState([]);
   const [matchHistoryData, setMatchHistoryData] = useState([]);
   const [lastMatches, setLastMatches] = useState([]);
+  const [version, setVersion] = useState("");
+
+  useEffect(() => {
+    const getV = async () => {
+      try {
+        const version = await getVersion();
+        setVersion(version);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getV();
+  }, []);
 
   return (
     <SearchContext.Provider
@@ -28,6 +43,8 @@ export function SearchContextProvider({ children }) {
         setMatchHistoryData,
         lastMatches,
         setLastMatches,
+        version,
+        setVersion,
       }}
     >
       {children}

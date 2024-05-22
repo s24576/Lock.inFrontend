@@ -22,6 +22,7 @@ const getChampionNameById = async (masteryData) => {
 
     updatedMasteryData.push(updatedMasteryItem);
   }
+  console.log("ss", updatedMasteryData);
   return updatedMasteryData;
 };
 

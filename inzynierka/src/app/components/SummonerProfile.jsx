@@ -7,6 +7,7 @@ import Image from "next/image";
 import { UserContext } from "@/app/context/UserContext";
 import Link from "next/link";
 import getChampionNameById from "@/app/api/ddragon/getChampionNameById";
+import getQueues from "../api/ddragon/getQueues";
 
 const SummonerProfile = () => {
   const {
@@ -21,6 +22,7 @@ const SummonerProfile = () => {
     matchHistoryData,
     setMatchHistoryData,
     setLastMatches,
+    version,
   } = useContext(SearchContext);
 
   const { userData, setUserData, isLogged } = useContext(UserContext);
@@ -29,6 +31,7 @@ const SummonerProfile = () => {
   const [championsFetched, setChampionsFetched] = useState(false);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [queueList, setQueueList] = useState("");
 
   const params = useParams();
 
@@ -84,6 +87,18 @@ const SummonerProfile = () => {
     } else {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    const getQ = async () => {
+      try {
+        const data = await getQueues();
+        setQueueList(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getQ();
   }, []);
 
   const fetchChampionNames = async () => {
@@ -196,9 +211,11 @@ const SummonerProfile = () => {
             <div key={key}>
               <Image
                 src={
-                  "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/" +
+                  "https://ddragon.leagueoflegends.com/cdn/" +
+                  version +
+                  "/img/champion/" +
                   mastery.championId +
-                  "_0.jpg"
+                  ".png"
                 }
                 width={200}
                 height={200}
@@ -218,7 +235,8 @@ const SummonerProfile = () => {
           rankData.map((rank, key) => (
             <div key={key}>
               <p>
-                {rank.tier} {rank.rank}
+                {rank.tier} {rank.rank}{" "}
+                {rank.leaguePoints ? rank.leaguePoints + " LP" : "Unranked"}
               </p>
               <p>{rank.queueType}</p>
               <p>
@@ -240,7 +258,19 @@ const SummonerProfile = () => {
           lastMatches.map((match, key) => {
             return (
               <div className="flex gap-x-4" key={key}>
-                <p>{match.info.gameMode}</p>
+                {match.info.queueId &&
+                  queueList &&
+                  queueList.map((queue, key) => {
+                    if (match.info.queueId == queue.queueId) {
+                      return (
+                        <p key={key}>
+                          {queue.description.includes("games")
+                            ? queue.description.replace("games", "")
+                            : queue.description}
+                        </p>
+                      );
+                    }
+                  })}
                 {match.info.participants.map((participant, key) => {
                   if (participant.puuid === playerData.puuid) {
                     return (
