@@ -33,7 +33,7 @@ const Navbar = () => {
           </p>
         )}
         <Image
-          src="/flags/english.svg"
+          src="/flags/en.svg"
           alt="english"
           className="cursor-pointer border-[1px] border-gray-100 rounded-full"
           width={45}

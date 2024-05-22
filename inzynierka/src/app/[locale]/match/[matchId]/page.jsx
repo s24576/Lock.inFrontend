@@ -1,5 +1,5 @@
 import React from "react";
-import MatchDetails from "@/app/components/MatchDetails";
+import MatchDetails from "@/app/[locale]/components/MatchDetails";
 
 const page = () => {
   return <MatchDetails />;

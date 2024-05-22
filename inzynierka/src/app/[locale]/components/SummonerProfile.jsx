@@ -1,12 +1,12 @@
 "use client";
 import React, { useContext, useState, useEffect } from "react";
-import { SearchContext } from "@/app/context/SearchContext";
+import { SearchContext } from "@/app/[locale]/context/SearchContext";
 import axios from "axios";
 import { useParams, redirect } from "next/navigation";
 import Image from "next/image";
-import { UserContext } from "@/app/context/UserContext";
+import { UserContext } from "@/app/[locale]/context/UserContext";
 import Link from "next/link";
-import getChampionNameById from "@/app/api/ddragon/getChampionNameById";
+import getChampionNameById from "../api/ddragon/getChampionNameById";
 import getQueues from "../api/ddragon/getQueues";
 
 const SummonerProfile = () => {
