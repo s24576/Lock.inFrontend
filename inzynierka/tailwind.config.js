@@ -12,6 +12,9 @@ module.exports = {
         cordovan: "#9C3848",
         "cordovan-light": "#AF515F",
         linen: "#F3E9DC",
+        "air-force-blue": "#698996",
+        azul: "#296EB4",
+        "arg-blue": "#5AA9E6",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
