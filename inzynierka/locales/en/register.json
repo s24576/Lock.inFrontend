@@ -1,0 +1,10 @@
+{
+  "header": "Register",
+  "username": "Username",
+  "password": "Password",
+  "repeatPassword": "Repeat password",
+  "loginRedirect": "Have an account?",
+  "loginRedirect2": "Log In here",
+  "forgotPassword": "Forgot Password?",
+  "register": "Register"
+}

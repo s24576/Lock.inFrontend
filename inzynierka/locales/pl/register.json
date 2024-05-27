@@ -1,0 +1,10 @@
+{
+  "header": "Utwórz konto",
+  "username": "Nazwa użytkownika",
+  "password": "Hasło",
+  "repeatPassword": "Powtórz hasło",
+  "loginRedirect": "Masz już konto?",
+  "loginRedirect2": "Zaloguj się",
+  "forgotPassword": "Zapomniałeś hasła?",
+  "register": "Utwórz"
+}

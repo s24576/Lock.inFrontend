@@ -5,6 +5,7 @@ import { SearchContext } from "../context/SearchContext";
 import { UserContext } from "../context/UserContext";
 import { IoMdArrowDropdown } from "react-icons/io";
 import useOutsideClick from "../hooks/useOutsideClick";
+import { useTranslation } from "react-i18next";
 
 const serverNames = {
   eun1: "EUNE",
@@ -13,6 +14,8 @@ const serverNames = {
 };
 
 const FindPlayer = () => {
+  const { t } = useTranslation();
+
   const {
     setParamsData,
     setPlayerData,
@@ -123,7 +126,9 @@ const FindPlayer = () => {
               onClick={() => setIsOpen(!isOpen)}
             >
               <span>
-                {server === "default" ? "Server" : serverNames[server]}
+                {server === "default"
+                  ? t("findPlayer:server")
+                  : serverNames[server]}
               </span>
               <IoMdArrowDropdown className="text-[42px]  " />
             </div>
@@ -159,7 +164,7 @@ const FindPlayer = () => {
           />
           <input
             type="text"
-            placeholder="Username"
+            placeholder={t("findPlayer:username")}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="w-[50%] text-center text-gray-100 px-3 bg-cordovan border-l-gray-100 border-l-4 placeholder-gray rounded-r-full focus:outline-none "
@@ -170,7 +175,7 @@ const FindPlayer = () => {
           type="submit"
           className="mt-6 text-gray-100 bg-oxford-blue px-5 py-2 text-[24px] w-[25%] rounded-full mx-auto hover:scale-105 transition-all duration-150 shadow-gray-900 shadow-lg"
         >
-          Find player
+          {t("findPlayer:search")}
         </button>
       </form>
     </div>

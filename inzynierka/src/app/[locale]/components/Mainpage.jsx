@@ -2,7 +2,6 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useTranslation } from "react-i18next";
-import LanguageChanger from "./LanguageChanger";
 
 const Mainpage = () => {
   const { userData, isLogged } = useContext(UserContext);
@@ -25,7 +24,6 @@ const Mainpage = () => {
           )}
         </div>
       )}
-      <LanguageChanger></LanguageChanger>
     </div>
   );
 };

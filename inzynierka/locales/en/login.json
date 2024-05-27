@@ -1,0 +1,8 @@
+{
+  "header": "Log In",
+  "username": "Username/Email",
+  "password": "Password",
+  "registerRedirect": "Register here",
+  "forgotPassword": "Forgot password?",
+  "logIn": "Log In"
+}

@@ -4,8 +4,11 @@ import axios from "axios";
 import Link from "next/link";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
+  const { t } = useTranslation();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -59,44 +62,48 @@ const Register = () => {
         onSubmit={handleSubmit}
         className="flex flex-col w-[28%] p-10 text-oxford-blue bg-cordovan items-center rounded-3xl"
       >
-        <p className="text-oxford-blue font-semibold text-[48px]">Register</p>
+        <p className="text-oxford-blue font-semibold text-[48px]">
+          {t("register:header")}
+        </p>
         <input
           type="text"
-          placeholder="Username"
+          placeholder={t("register:username")}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="mt-12 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
         />
         <input
           type="email"
-          placeholder="Email"
+          placeholder="E-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="mt-4 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t("register:password")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="mt-4 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
         />
         <input
           type="password"
-          placeholder="Repeat password"
+          placeholder={t("register:repeatPassword")}
           value={repeatPassword}
           onChange={(e) => setRepeatPassword(e.target.value)}
           className="mt-4 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
         />
         <div className="mt-4 flex justify-between w-[80%] text-[18px] text-gray-100 font-semibold">
           <Link href="/login" className="block">
-            <span>Have an account?</span>
-            <span className="block text-center">Log In here</span>
+            <span>{t("register:loginRedirect")}</span>
+            <span className="block text-center">
+              {t("register:loginRedirect2")}
+            </span>
           </Link>
-          <Link href="/register">Forgot password?</Link>
+          <Link href="/register">{t("register:forgotPassword")}</Link>
         </div>
         <button className="mt-4 w-[50%] text-gray-100 bg-oxford-blue py-1 text-[22px] font-semibold rounded-full shadow-gray-900 shadow-lg hover:scale-105 transition-all duration-150">
-          Register
+          {t("register:register")}
         </button>
         <div className="mt-6 flex gap-x-4 text-gray-100 text-[48px]">
           <FaGoogle className="cursor-pointer"></FaGoogle>

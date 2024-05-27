@@ -13,10 +13,9 @@ export default function LanguageChanger() {
   const router = useRouter();
   const currentPathname = usePathname();
 
-  const handleChange = (e) => {
-    // const newLocale = e.target.value;
-    const newLocale = e;
+  const languages = i18nConfig.locales; // Assuming this array contains all available locales
 
+  const handleChange = (newLocale) => {
     // set cookie for next-i18n-router
     const days = 30;
     const date = new Date();
@@ -39,13 +38,13 @@ export default function LanguageChanger() {
     router.refresh();
   };
 
-  const [languages, setLanguages] = useState(false);
+  const [showLanguages, setShowLanguages] = useState(false);
   const languagesRef = useRef();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (languagesRef.current && !languagesRef.current.contains(e.target)) {
-        setLanguages(false);
+        setShowLanguages(false);
       }
     };
 
@@ -57,15 +56,14 @@ export default function LanguageChanger() {
   }, []);
 
   const toggleDropdown = () => {
-    setLanguages(!languages);
-    console.log("siema");
+    setShowLanguages(!showLanguages);
   };
 
   return (
     <ul>
       <li
         ref={languagesRef}
-        className="px-4 cursor-pointer flex items-center relative"
+        className="px-2 cursor-pointer flex items-center relative"
       >
         <Image
           src={"/flags/" + currentLocale + ".svg"}
@@ -75,29 +73,23 @@ export default function LanguageChanger() {
           height={45}
           onClick={toggleDropdown}
         />
-        {languages && (
-          <div className="absolute top-full left-0 mt-1 bg-cordovan rounded-md">
+        {showLanguages && (
+          <div className="absolute top-full left-0 mt-1 bg-oxford-blue rounded-md">
             <ul className="py-1">
-              <li className="px-4 py-2">
-                <Image
-                  src={"/flags/pl.svg"}
-                  alt={currentLocale}
-                  className="cursor-pointer border-[1px] border-gray-100 rounded-full"
-                  width={45}
-                  height={45}
-                  onClick={() => handleChange("pl")}
-                />
-              </li>
-              <li className="px-4 py-2">
-                <Image
-                  src={"/flags/en.svg"}
-                  alt={currentLocale}
-                  className="cursor-pointer border-[1px] border-gray-100 rounded-full"
-                  width={45}
-                  height={45}
-                  onClick={() => handleChange("en")}
-                />
-              </li>
+              {languages
+                .filter((locale) => locale !== currentLocale)
+                .map((locale) => (
+                  <li key={locale} className="p-2">
+                    <Image
+                      src={`/flags/${locale}.svg`}
+                      alt={locale}
+                      className="cursor-pointer border-[1px] border-gray-100 rounded-full"
+                      width={45}
+                      height={45}
+                      onClick={() => handleChange(locale)}
+                    />
+                  </li>
+                ))}
             </ul>
           </div>
         )}

@@ -3,10 +3,14 @@ import React, { useContext } from "react";
 import Link from "next/link";
 import { UserContext } from "../context/UserContext";
 import Image from "next/image";
+import LanguageChanger from "./LanguageChanger";
+import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
   const { userData, setUserData, isLogged, setIsLogged } =
     useContext(UserContext);
+
+  const { t } = useTranslation();
 
   const logout = () => {
     localStorage.removeItem("loginToken");
@@ -23,22 +27,16 @@ const Navbar = () => {
         logo
       </Link>
       <div className="flex space-x-4 ml-auto items-center">
-        {!isLogged && <Link href="/login">Log in</Link>}
-        {!isLogged && <Link href="/register">Register</Link>}
-        <Link href="/findPlayer">Find Player</Link>
-        <Link href="/findProfile">Find Profile</Link>
+        {!isLogged && <Link href="/login">{t("navbar:logIn")}</Link>}
+        {!isLogged && <Link href="/register">{t("navbar:register")}</Link>}
+        <Link href="/findPlayer">{t("navbar:findPlayer")}</Link>
+        <Link href="/findProfile">{t("navbar:findProfile")}</Link>
         {isLogged && (
           <p onClick={logout} className="cursor-pointer">
-            Log Out
+            {t("navbar:logOut")}
           </p>
         )}
-        <Image
-          src="/flags/en.svg"
-          alt="english"
-          className="cursor-pointer border-[1px] border-gray-100 rounded-full"
-          width={45}
-          height={45}
-        />
+        <LanguageChanger></LanguageChanger>
       </div>
     </div>
   );
