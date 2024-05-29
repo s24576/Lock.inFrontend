@@ -13,7 +13,8 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { isLogged, setIsLogged, setUserData } = useContext(UserContext);
+  const { isLogged, setIsLogged, setUserData, userData } =
+    useContext(UserContext);
 
   const router = useRouter();
 
@@ -25,6 +26,7 @@ const Login = () => {
         username: username,
         password: password,
       });
+      console.log(response.data);
 
       const token = response.data;
 
@@ -48,9 +50,31 @@ const Login = () => {
     }
   };
 
+  const getUserInfo = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/profile/getWatchList",
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      setUserData((prevData) => ({
+        ...prevData,
+        watchList: response.data, // Dodaj lub zaktualizuj pole watchList w userData
+      }));
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (isLogged) {
-      router.push("/");
+      console.log("ss");
+      getUserInfo();
     }
   }, [isLogged, router]);
 

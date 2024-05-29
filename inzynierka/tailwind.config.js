@@ -15,6 +15,7 @@ module.exports = {
         "air-force-blue": "#698996",
         azul: "#296EB4",
         "arg-blue": "#5AA9E6",
+        "arg-blue-dark": "#3A73B0",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

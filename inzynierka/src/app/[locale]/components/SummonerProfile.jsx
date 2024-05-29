@@ -200,7 +200,11 @@ const SummonerProfile = () => {
         </div>
         <div className="flex items-center gap-x-12">
           <Image
-            src="/summonerIcon.jpg"
+            src={
+              "https://ddragon.leagueoflegends.com/cdn/14.10.1/img/profileicon/" +
+              playerData.profileIconId +
+              ".png"
+            }
             width={150}
             height={150}
             alt="summonerIcon"
@@ -258,7 +262,9 @@ const SummonerProfile = () => {
                 </div>
               ))
             ) : (
-              <p>No rank data available</p>
+              <p className="h-[206px] flex justify-center items-center">
+                No rank data available
+              </p>
             )}
           </div>
           <div className="mt-8 flex justify-center items-center gap-x-6 bg-oxford-blue py-4 rounded-3xl">
@@ -349,7 +355,7 @@ const SummonerProfile = () => {
                           </p>
                           <Link
                             href={"/match/" + match.metadata.matchId}
-                            className="ml-10 bg-arg-blue py-1 px-4 text-[24px] rounded-full"
+                            className="ml-10 bg-arg-blue py-1 px-4 text-[24px] rounded-full hover:bg-arg-blue-dark"
                           >
                             See more
                           </Link>
