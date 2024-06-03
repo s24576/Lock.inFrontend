@@ -58,7 +58,7 @@ const SummonerProfile = () => {
       console.log(masteryResponse.data);
 
       const rankResponse = await axios.get(
-        `http://localhost:8080/riot/getRanks?server=${params.server}&summonerId=${response.data.id}`
+        `http://localhost:8080/riot/getRanks?server=${params.server}&summonerId=${response.data.id}&puuid=${response.data.puuid}`
       );
 
       if (rankResponse.data) {
@@ -159,6 +159,7 @@ const SummonerProfile = () => {
           ...prevUserData,
           watchList: response.data,
         }));
+        toast.success("You have followed");
       } catch (error) {
         toast.error("An error occured", {
           description: error,
@@ -188,6 +189,7 @@ const SummonerProfile = () => {
           ...prevUserData,
           watchList: response.data,
         }));
+        toast.success("You have unfollowed");
       } catch (error) {
         toast.error("An error occured", {
           description: error,
@@ -259,6 +261,7 @@ const SummonerProfile = () => {
                     src={"/rank_emblems/" + rank.tier + ".png"}
                     width={110}
                     height={110}
+                    alt="ranktier"
                   />
                   <p>
                     {rank.tier} {rank.rank}{" "}
@@ -296,7 +299,12 @@ const SummonerProfile = () => {
                     alt={mastery.championId}
                     className="rounded-full"
                   />
-                  <Image src="/masteryPlaceholder.png" width={60} height={60} />
+                  <Image
+                    src="/masteryPlaceholder.png"
+                    width={60}
+                    height={60}
+                    alt="mastery"
+                  />
                   <p>{(mastery.championPoints / 1000).toFixed(1) + "k"}</p>
                 </div>
               ))
@@ -326,6 +334,7 @@ const SummonerProfile = () => {
                             width={60}
                             height={60}
                             className="rounded-full"
+                            alt={participant.championName}
                           />
                           <p
                             className={

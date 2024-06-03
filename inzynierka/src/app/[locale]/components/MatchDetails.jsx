@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
-import { useParams, redirect } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import fetchData from "../api/riot/getMatchInfo";
 import findByPuuid from "../api/riot/findByPuuid";
-import getQueues from "../api/ddragon/getQueues";
 import Image from "next/image";
 import { SearchContext } from "../context/SearchContext";
 
@@ -12,6 +11,7 @@ const MatchDetails = () => {
   const [matchData, setMatchData] = useState({});
   const { version, queueList } = useContext(SearchContext);
   const params = useParams();
+  const router = useRouter();
 
   useEffect(() => {
     const getMatchData = async () => {
@@ -31,6 +31,7 @@ const MatchDetails = () => {
     try {
       const data = await findByPuuid(matchId, puuid);
       console.log(data);
+      router.push(`/summoner/${data.server}/${data.tagLine}/${data.gameName}`);
     } catch (error) {
       console.log(error);
     }
@@ -86,13 +87,21 @@ const MatchDetails = () => {
                       />
                       <div className="flex flex-col ml-2">
                         <Image
-                          src="/SummonerFlash.png"
+                          src={
+                            "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+                            participant.summoner1Name +
+                            ".png"
+                          }
                           width={24}
                           height={24}
                           alt="summoner_spell1"
                         />
                         <Image
-                          src="/SummonerSnowball.png"
+                          src={
+                            "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+                            participant.summoner2Name +
+                            ".png"
+                          }
                           width={24}
                           height={24}
                           alt="summoner_spell2"
@@ -254,13 +263,21 @@ const MatchDetails = () => {
                       />
                       <div className="flex flex-col ml-2">
                         <Image
-                          src="/SummonerFlash.png"
+                          src={
+                            "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+                            participant.summoner1Name +
+                            ".png"
+                          }
                           width={24}
                           height={24}
                           alt="summoner_spell1"
                         />
                         <Image
-                          src="/SummonerSnowball.png"
+                          src={
+                            "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+                            participant.summoner2Name +
+                            ".png"
+                          }
                           width={24}
                           height={24}
                           alt="summoner_spell2"

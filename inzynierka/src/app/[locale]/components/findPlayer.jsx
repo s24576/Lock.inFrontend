@@ -69,7 +69,7 @@ const FindPlayer = () => {
       }
 
       const rankResponse = await axios.get(
-        `http://localhost:8080/riot/getRanks?server=${server}&summonerId=${response.data.id}`
+        `http://localhost:8080/riot/getRanks?server=${server}&summonerId=${response.data.id}&puuid=${response.data.puuid}`
       );
 
       if (rankResponse.data) {

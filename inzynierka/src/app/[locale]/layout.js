@@ -40,7 +40,7 @@ export default async function RootLayout({ children, params: { locale } }) {
               <UserContextProvider>
                 <Navbar></Navbar>
                 {children}
-                <Toaster richColors position="bottom-right"></Toaster>
+                {/* <Toaster richColors position="bottom-right"></Toaster> */}
               </UserContextProvider>
             </SearchContextProvider>
           </ProfileContextProvider>
