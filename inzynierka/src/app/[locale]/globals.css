@@ -39,4 +39,7 @@ body {
     color: #f3f4f6;
     text-align: center;
   }
+  .placeholder-gray:focus::placeholder {
+    color: transparent;
+  }
 }

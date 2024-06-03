@@ -6,6 +6,7 @@ import { UserContext } from "../context/UserContext";
 import { IoMdArrowDropdown } from "react-icons/io";
 import useOutsideClick from "../hooks/useOutsideClick";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 const serverNames = {
   eun1: "EUNE",
@@ -72,8 +73,13 @@ const FindPlayer = () => {
       );
 
       if (rankResponse.data) {
-        setRankData(rankResponse.data);
-        console.log(rankResponse.data);
+        if (Array.isArray(rankResponse.data)) {
+          const filteredRankData = rankResponse.data.filter(
+            (item) => item.queueType !== "CHERRY"
+          );
+          setRankData(filteredRankData);
+          console.log(rankResponse.data);
+        }
       }
 
       const matchHistoryResponse = await axios.get(
@@ -97,7 +103,9 @@ const FindPlayer = () => {
 
       setResultsFound(true);
     } catch (error) {
-      // Handle error
+      toast.error("An error occured", {
+        description: error,
+      });
       console.error("Error occurred:", error);
     }
   };
@@ -115,8 +123,11 @@ const FindPlayer = () => {
     <div className="h-screen w-full flex justify-center items-center flex-col bg-linen">
       <p className="text-black pb-16 text-[32px]">Grafika</p>
       <form onSubmit={handleSubmit} className="flex flex-col text-gray-100">
-        <div className="flex text-[24px] justify-center ">
-          <div className="relative inline-block w-[32%] " ref={dropdownRef}>
+        <div className="flex text-[24px] justify-center w-full max-w-[800px]">
+          <div
+            className="relative inline-block w-[32%] max-w-[32%]"
+            ref={dropdownRef}
+          >
             <div
               className={
                 isOpen
@@ -125,7 +136,7 @@ const FindPlayer = () => {
               }
               onClick={() => setIsOpen(!isOpen)}
             >
-              <span>
+              <span className="truncate">
                 {server === "default"
                   ? t("findPlayer:server")
                   : serverNames[server]}
@@ -160,14 +171,14 @@ const FindPlayer = () => {
             placeholder="Tag"
             value={tag}
             onChange={(e) => setTag(e.target.value)}
-            className="w-[18%] text-center text-gray-100 px-3 bg-cordovan border-l-gray-100 border-l-4 placeholder-gray focus:outline-none "
+            className="w-[18%] max-w-[18%] text-center text-gray-100 px-3 bg-cordovan border-l-gray-100 border-l-4 placeholder-gray focus:outline-none "
           />
           <input
             type="text"
             placeholder={t("findPlayer:username")}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-[50%] text-center text-gray-100 px-3 bg-cordovan border-l-gray-100 border-l-4 placeholder-gray rounded-r-full focus:outline-none "
+            className="w-[50%] max-w-[50%] text-center text-gray-100 px-3 bg-cordovan border-l-gray-100 border-l-4 placeholder-gray rounded-r-full focus:outline-none "
           />
         </div>
 

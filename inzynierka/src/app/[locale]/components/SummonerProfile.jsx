@@ -13,6 +13,7 @@ import { FaLock, FaUnlock } from "react-icons/fa";
 import { CiLock } from "react-icons/ci";
 import { GoLock } from "react-icons/go";
 import { MdOutlineRefresh } from "react-icons/md";
+import { toast } from "sonner";
 
 const SummonerProfile = () => {
   const {
@@ -60,9 +61,15 @@ const SummonerProfile = () => {
         `http://localhost:8080/riot/getRanks?server=${params.server}&summonerId=${response.data.id}`
       );
 
-      setRankData(rankResponse.data);
-      console.log(rankResponse.data);
-
+      if (rankResponse.data) {
+        if (Array.isArray(rankResponse.data)) {
+          const filteredRankData = rankResponse.data.filter(
+            (item) => item.queueType !== "CHERRY"
+          );
+          setRankData(filteredRankData);
+          console.log(rankResponse.data);
+        }
+      }
       const matchHistoryResponse = await axios.get(
         `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`
       );
@@ -118,11 +125,6 @@ const SummonerProfile = () => {
     }
   };
 
-  const fetchNamesForMatches = async () => {
-    try {
-    } catch (error) {}
-  };
-
   if (masteryData.length > 0 && !championsFetched) {
     fetchChampionNames();
     setChampionsFetched(true);
@@ -158,6 +160,9 @@ const SummonerProfile = () => {
           watchList: response.data,
         }));
       } catch (error) {
+        toast.error("An error occured", {
+          description: error,
+        });
         console.log(error);
       }
     } else {
@@ -184,6 +189,9 @@ const SummonerProfile = () => {
           watchList: response.data,
         }));
       } catch (error) {
+        toast.error("An error occured", {
+          description: error,
+        });
         console.log(error);
       }
     } else {
@@ -247,7 +255,11 @@ const SummonerProfile = () => {
               rankData.map((rank, key) => (
                 <div key={key} className="flex flex-col items-center">
                   <p>{rank.queueType}</p>
-                  <Image src="/diamondRank.png" width={110} height={110} />
+                  <Image
+                    src={"/rank_emblems/" + rank.tier + ".png"}
+                    width={110}
+                    height={110}
+                  />
                   <p>
                     {rank.tier} {rank.rank}{" "}
                     {rank.leaguePoints ? rank.leaguePoints + " LP" : "Unranked"}
@@ -367,7 +379,7 @@ const SummonerProfile = () => {
               );
             })
           ) : (
-            <p>No data for your last matches</p>
+            <p>No data for last matches</p>
           )}
         </div>
       </div>

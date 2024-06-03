@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import getVersion from "../api/ddragon/getVersion";
+import getQueues from "../api/ddragon/getQueues";
 
 export const SearchContext = createContext();
 
@@ -14,6 +15,7 @@ export function SearchContextProvider({ children }) {
   const [matchHistoryData, setMatchHistoryData] = useState([]);
   const [lastMatches, setLastMatches] = useState([]);
   const [version, setVersion] = useState("");
+  const [queueList, setQueueList] = useState("");
 
   useEffect(() => {
     const getV = async () => {
@@ -26,6 +28,18 @@ export function SearchContextProvider({ children }) {
     };
 
     getV();
+  }, []);
+
+  useEffect(() => {
+    const getQ = async () => {
+      try {
+        const data = await getQueues();
+        setQueueList(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getQ();
   }, []);
 
   return (
@@ -45,6 +59,8 @@ export function SearchContextProvider({ children }) {
         setLastMatches,
         version,
         setVersion,
+        queueList,
+        setQueueList,
       }}
     >
       {children}

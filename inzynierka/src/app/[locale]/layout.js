@@ -6,6 +6,7 @@ import { SearchContextProvider } from "./context/SearchContext";
 import { ProfileContextProvider } from "./context/ProfileContext";
 import initTranslations from "./i18n";
 import TranslationsProvider from "./components/TranslationsProvider";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,6 +40,7 @@ export default async function RootLayout({ children, params: { locale } }) {
               <UserContextProvider>
                 <Navbar></Navbar>
                 {children}
+                <Toaster richColors position="bottom-right"></Toaster>
               </UserContextProvider>
             </SearchContextProvider>
           </ProfileContextProvider>
