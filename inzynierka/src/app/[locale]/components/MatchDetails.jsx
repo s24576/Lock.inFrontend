@@ -10,6 +10,8 @@ import { SearchContext } from "../context/SearchContext";
 const MatchDetails = () => {
   const [matchData, setMatchData] = useState({});
   const { version, queueList } = useContext(SearchContext);
+  const [redirectToProfile, setRedirectToProfile] = useState(false);
+  const [redirectData, setRedirectData] = useState({});
   const params = useParams();
   const router = useRouter();
 
@@ -30,13 +32,21 @@ const MatchDetails = () => {
   const handleFindByPuuid = async (matchId, puuid) => {
     try {
       const data = await findByPuuid(matchId, puuid);
+      setRedirectData(data);
       console.log(data);
-      router.push(`/summoner/${data.server}/${data.tagLine}/${data.gameName}`);
+      setRedirectToProfile(true);
     } catch (error) {
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    if (redirectToProfile) {
+      router.push(
+        `/summoner/${redirectData.server}/${redirectData.tagLine}/${redirectData.gameName}`
+      );
+    }
+  }, [redirectToProfile, redirectData, router]);
   return (
     <div className="w-full min-h-screen flex justify-center text-black bg-linen">
       {Object.keys(matchData).length > 0 ? (

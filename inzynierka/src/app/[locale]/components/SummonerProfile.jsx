@@ -6,8 +6,6 @@ import { useParams, redirect } from "next/navigation";
 import Image from "next/image";
 import { UserContext } from "@/app/[locale]/context/UserContext";
 import Link from "next/link";
-import getChampionNameById from "../api/ddragon/getChampionNameById";
-import getQueues from "../api/ddragon/getQueues";
 import { BiWorld } from "react-icons/bi";
 import { FaLock, FaUnlock } from "react-icons/fa";
 import { CiLock } from "react-icons/ci";
@@ -19,12 +17,8 @@ const SummonerProfile = () => {
   const {
     paramsData,
     playerData,
-    masteryData,
-    rankData,
     lastMatches,
     setPlayerData,
-    setMasteryData,
-    setRankData,
     matchHistoryData,
     setMatchHistoryData,
     setLastMatches,
@@ -33,8 +27,6 @@ const SummonerProfile = () => {
 
   const { userData, setUserData, isLogged } = useContext(UserContext);
 
-  const [championIds, setChampionIds] = useState([]);
-  const [championsFetched, setChampionsFetched] = useState(false);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [queueList, setQueueList] = useState("");
@@ -42,6 +34,10 @@ const SummonerProfile = () => {
   const params = useParams();
 
   const fetchData = async () => {
+    setPlayerData({});
+    setLastMatches([]);
+    setMatchHistoryData([]);
+
     try {
       const response = await axios.get(
         `http://localhost:8080/riot/findPlayer?server=${params.server}&tag=${params.tag}&name=${params.username}`
@@ -50,86 +46,45 @@ const SummonerProfile = () => {
       setPlayerData(response.data);
       console.log(response.data);
 
-      const masteryResponse = await axios.get(
-        `http://localhost:8080/riot/getChampionMastery?server=${params.server}&puuid=${response.data.puuid}`
-      );
+      // const matchHistoryResponse = await axios.get(
+      //   `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`
+      // );
 
-      setMasteryData(masteryResponse.data);
-      console.log(masteryResponse.data);
+      // setMatchHistoryData(matchHistoryResponse.data);
+      // console.log(matchHistoryResponse.data);
 
-      const rankResponse = await axios.get(
-        `http://localhost:8080/riot/getRanks?server=${params.server}&summonerId=${response.data.id}&puuid=${response.data.puuid}`
-      );
-
-      if (rankResponse.data) {
-        if (Array.isArray(rankResponse.data)) {
-          const filteredRankData = rankResponse.data.filter(
-            (item) => item.queueType !== "CHERRY"
-          );
-          setRankData(filteredRankData);
-          console.log(rankResponse.data);
-        }
-      }
-      const matchHistoryResponse = await axios.get(
-        `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`
-      );
-
-      setMatchHistoryData(matchHistoryResponse.data);
-      console.log(matchHistoryResponse.data);
-
-      for (let i = 0; i < matchHistoryResponse.data.length; i++) {
-        const matchDetailsResponse = await axios.get(
-          `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`
-        );
-        console.log(matchDetailsResponse.data);
-        setLastMatches((prevMatches) => [
-          ...prevMatches,
-          matchDetailsResponse.data,
-        ]);
-        console.log(lastMatches);
-      }
+      // for (let i = 0; i < matchHistoryResponse.data.length; i++) {
+      //   const matchDetailsResponse = await axios.get(
+      //     `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`
+      //   );
+      //   console.log(matchDetailsResponse.data);
+      //   setLastMatches((prevMatches) => [
+      //     ...prevMatches,
+      //     matchDetailsResponse.data,
+      //   ]);
+      //   console.log(lastMatches);
+      // }
+      setLoading(false);
     } catch (error) {
       console.error("Error occurred:", error);
     }
   };
 
   useEffect(() => {
-    if (!playerData.id) {
-      fetchData();
-    } else {
-      setLoading(false);
-    }
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    const getQ = async () => {
-      try {
-        const data = await getQueues();
-        setQueueList(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getQ();
-  }, []);
-
-  const fetchChampionNames = async () => {
-    try {
-      const data = await getChampionNameById(masteryData);
-      setMasteryData(data);
-
-      setChampionsFetched(true);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  if (masteryData.length > 0 && !championsFetched) {
-    fetchChampionNames();
-    setChampionsFetched(true);
-    setLoading(false);
-  }
+  // useEffect(() => {
+  //   const getQ = async () => {
+  //     try {
+  //       const data = await getQueues();
+  //       setQueueList(data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getQ();
+  // }, []);
 
   if (loading) {
     return (
@@ -201,6 +156,13 @@ const SummonerProfile = () => {
     }
   };
 
+  const test = () => {
+    console.log("playerdata:", playerData);
+    console.log("matches:", playerData.matches);
+    console.log("matches:", playerData.matches[0].info);
+    console.log("matches:", playerData.matches[0].info.participants);
+  };
+
   return (
     <div className="min-h-screen w-full flex flex-col justify-center items-center bg-linen">
       <div className="mt-[80px] py-6 px-4 w-[80%] flex justify-between items-center bg-cordovan rounded-3xl">
@@ -211,7 +173,9 @@ const SummonerProfile = () => {
         <div className="flex items-center gap-x-12">
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/14.10.1/img/profileicon/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/profileicon/" +
               playerData.profileIconId +
               ".png"
             }
@@ -219,6 +183,7 @@ const SummonerProfile = () => {
             height={150}
             alt="summonerIcon"
             className="rounded-full border-2 border-white"
+            onClick={() => test()}
           />
           <div className="flex flex-col items-center justify-center">
             <p className="text-[48px] font-semibold">
@@ -253,8 +218,8 @@ const SummonerProfile = () => {
       <div className="flex w-[80%]">
         <div className="flex flex-col w-[35%]">
           <div className="mt-8 flex justify-center gap-x-8 bg-oxford-blue py-4 rounded-3xl">
-            {Array.isArray(rankData) && rankData.length > 0 ? (
-              rankData.map((rank, key) => (
+            {Array.isArray(playerData.ranks) && playerData.ranks.length > 0 ? (
+              playerData.ranks.map((rank, key) => (
                 <div key={key} className="flex flex-col items-center">
                   <p>{rank.queueType}</p>
                   <Image
@@ -283,15 +248,16 @@ const SummonerProfile = () => {
             )}
           </div>
           <div className="mt-8 flex justify-center items-center gap-x-6 bg-oxford-blue py-4 rounded-3xl">
-            {Array.isArray(masteryData) && masteryData.length > 1 ? (
-              masteryData.map((mastery, key) => (
+            {Array.isArray(playerData.mastery) &&
+            playerData.mastery.length > 1 ? (
+              playerData.mastery.map((mastery, key) => (
                 <div key={key} className="flex flex-col items-center">
                   <Image
                     src={
                       "https://ddragon.leagueoflegends.com/cdn/" +
                       version +
                       "/img/champion/" +
-                      mastery.championId +
+                      mastery.championName +
                       ".png"
                     }
                     width={120}
@@ -314,81 +280,58 @@ const SummonerProfile = () => {
           </div>
         </div>
         <div className="ml-[5%] mt-8 w-[60%] bg-oxford-blue rounded-3xl flex flex-col gap-y-6 items-center justify-center">
-          {Array.isArray(lastMatches) && lastMatches.length > 0 ? (
-            lastMatches.map((match, key) => {
+          {Array.isArray(playerData.matches) &&
+          playerData.matches.length > 0 ? (
+            playerData.matches.map((match, index) => {
               return (
                 <div
+                  key={index}
                   className="flex items-center gap-x-4 bg-air-force-blue w-[90%] py-1 px-8 rounded-3xl"
-                  key={key}
                 >
-                  {match.info.participants.map((participant, key) => {
-                    if (participant.puuid === playerData.puuid) {
-                      return (
-                        <div key={key} className="flex gap-x-8 items-center">
-                          <Image
-                            src={
-                              "https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/" +
-                              participant.championName +
-                              ".png"
-                            }
-                            width={60}
-                            height={60}
-                            className="rounded-full"
-                            alt={participant.championName}
-                          />
-                          <p
-                            className={
-                              participant.win
-                                ? "text-[#1FFB28] font-semibold text-[24px] w-[100px] text-center"
-                                : "text-[#DF1A0D] font-semibold text-[24px] w-[100px] text-center"
-                            }
-                          >
-                            {participant.win ? "Victory" : "Loss"}
-                          </p>
-                        </div>
-                      );
-                    }
-                  })}
-                  {match.info.queueId &&
-                    queueList &&
-                    queueList.map((queue, key) => {
-                      if (match.info.queueId == queue.queueId) {
-                        return (
-                          <p
-                            key={key}
-                            className="w-[200px] text-center font-bold text-[20px]"
-                          >
-                            {queue.description.includes("games")
-                              ? queue.description.replace("games", "")
-                              : queue.description}
-                          </p>
-                        );
+                  <div className="flex gap-x-3 items-center">
+                    <Image
+                      src={
+                        "https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/" +
+                        match.championName +
+                        ".png"
                       }
-                    })}
-                  {match.info.participants.map((participant, key) => {
-                    if (participant.puuid === playerData.puuid) {
-                      return (
-                        <div key={key} className="flex gap-x-3 items-center">
-                          <p className="w-[100px] text-center font-bold text-[24px]">
-                            {" "}
-                            {participant.kills}/{participant.deaths}/
-                            {participant.assists}
-                          </p>
-                          <Link
-                            href={"/match/" + match.metadata.matchId}
-                            className="ml-10 bg-arg-blue py-1 px-4 text-[24px] rounded-full hover:bg-arg-blue-dark"
-                          >
-                            See more
-                          </Link>
-                        </div>
-                      );
-                    }
-                  })}
+                      width={60}
+                      height={60}
+                      className="rounded-full"
+                      alt={match.championName}
+                    />
+                    <p
+                      className={
+                        match.win
+                          ? "text-[#1FFB28] font-semibold text-[24px] w-[100px] text-center"
+                          : "text-[#DF1A0D] font-semibold text-[24px] w-[100px] text-center"
+                      }
+                    >
+                      {match.win ? "Victory" : "Loss"}
+                    </p>
+                  </div>
+
+                  <p className="w-[200px] text-center font-bold text-[20px]">
+                    {match.queueType}
+                  </p>
+
+                  <div className="flex gap-x-3 items-center">
+                    <p className="w-[100px] text-center font-bold text-[24px]">
+                      {" "}
+                      {match.kills}/{match.deaths}/{match.assists}
+                    </p>
+                    <Link
+                      href={"/match/" + match.matchId}
+                      className="ml-10 bg-arg-blue py-1 px-4 text-[24px] rounded-full hover:bg-arg-blue-dark"
+                    >
+                      See more
+                    </Link>
+                  </div>
                 </div>
               );
             })
           ) : (
-            <p>No data for last matches</p>
+            <p>No data for your last matches</p>
           )}
         </div>
       </div>

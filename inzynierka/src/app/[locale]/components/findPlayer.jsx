@@ -56,50 +56,7 @@ const FindPlayer = () => {
       );
 
       setParamsData({ server, tag, username });
-      setPlayerData(response.data);
       console.log(response.data);
-
-      const masteryResponse = await axios.get(
-        `http://localhost:8080/riot/getChampionMastery?server=${server}&puuid=${response.data.puuid}`
-      );
-
-      if (masteryResponse.data) {
-        setMasteryData(masteryResponse.data);
-        console.log(masteryResponse.data);
-      }
-
-      const rankResponse = await axios.get(
-        `http://localhost:8080/riot/getRanks?server=${server}&summonerId=${response.data.id}&puuid=${response.data.puuid}`
-      );
-
-      if (rankResponse.data) {
-        if (Array.isArray(rankResponse.data)) {
-          const filteredRankData = rankResponse.data.filter(
-            (item) => item.queueType !== "CHERRY"
-          );
-          setRankData(filteredRankData);
-          console.log(rankResponse.data);
-        }
-      }
-
-      const matchHistoryResponse = await axios.get(
-        `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`
-      );
-
-      setMatchHistoryData(matchHistoryResponse.data);
-      console.log(matchHistoryResponse.data);
-
-      for (let i = 0; i < matchHistoryResponse.data.length; i++) {
-        const matchDetailsResponse = await axios.get(
-          `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`
-        );
-        console.log(matchDetailsResponse.data);
-        setLastMatches((prevMatches) => [
-          ...prevMatches,
-          matchDetailsResponse.data,
-        ]);
-        console.log(lastMatches);
-      }
 
       setResultsFound(true);
     } catch (error) {
