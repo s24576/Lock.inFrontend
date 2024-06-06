@@ -23,6 +23,7 @@ const Profile = () => {
           },
         }
       );
+      console.log("aaa", response.data);
       setProfileData(response.data);
       setLoading(false);
     } catch (error) {
@@ -31,13 +32,13 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (profileData.userId === null) {
-      console.log("profile data", profileData.userId);
+    if (profileData.id === undefined && userData.token !== undefined) {
+      console.log("profile data", profileData.id);
       fetchData();
     } else {
       setLoading(false);
     }
-  }, []);
+  }, [userData]);
 
   if (loading) {
     return (
@@ -50,11 +51,12 @@ const Profile = () => {
   return (
     <div className="h-screen w-full flex flex-col items-center justify-center">
       Profile
-      {profileData.userId && (
+      {profileData.id && (
         <div>
-          <p>User Id: {profileData.userId}</p>
+          <p>{params.username}</p>
+          <p>User Id: {profileData.id}</p>
           <div>
-            <p>Watch list:</p>
+            <p>Summoner Watch list:</p>
             {Array.isArray(profileData.watchList) &&
             profileData.watchList.length > 0 ? (
               profileData.watchList.map((summoner, key) => {
