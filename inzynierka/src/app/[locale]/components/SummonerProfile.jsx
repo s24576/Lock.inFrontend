@@ -2,6 +2,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { SearchContext } from "@/app/[locale]/context/SearchContext";
 import axios from "axios";
+import useAxios from "../hooks/useAxios";
 import { useParams, redirect } from "next/navigation";
 import Image from "next/image";
 import { UserContext } from "@/app/[locale]/context/UserContext";
@@ -32,6 +33,7 @@ const SummonerProfile = () => {
   const [queueList, setQueueList] = useState("");
 
   const params = useParams();
+  const api = useAxios();
 
   const fetchData = async () => {
     setPlayerData({});
@@ -99,14 +101,9 @@ const SummonerProfile = () => {
       console.log(userData.token);
       console.log(playerData.puuid);
       try {
-        const response = await axios.put(
-          `http://localhost:8080/profile/addWatchList?puuid=${playerData.puuid}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${userData.token}`,
-            },
-          }
+        const response = await api.put(
+          `/profile/addWatchList?puuid=${playerData.puuid}`,
+          {}
         );
 
         console.log(response.data);
@@ -129,14 +126,9 @@ const SummonerProfile = () => {
   const unfollowSummoner = async () => {
     if (isLogged) {
       try {
-        const response = await axios.put(
-          `http://localhost:8080/profile/removeWatchList?puuid=${playerData.puuid}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${userData.token}`,
-            },
-          }
+        const response = await api.put(
+          `/profile/removeWatchList?puuid=${playerData.puuid}`,
+          {}
         );
 
         console.log(response.data);

@@ -13,7 +13,7 @@ const Builds = () => {
     const fetchBuild = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/build/getBuilds?page=0&size=10"
+          "http://localhost:8080/build/getBuilds?page=0&size=15"
         );
         console.log(response.data);
         setBuilds(response.data);
