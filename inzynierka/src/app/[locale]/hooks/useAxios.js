@@ -14,9 +14,12 @@ const useAxios = () => {
   }
 
   const { userData, setUserData } = context;
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("loginToken") : null;
+
   const axiosInstance = axios.create({
     baseURL,
-    headers: { Authorization: `Bearer ${localStorage.getItem("loginToken")}` },
+    headers: { Authorization: `Bearer ${token}` },
   });
 
   axiosInstance.interceptors.request.use(async (req) => {

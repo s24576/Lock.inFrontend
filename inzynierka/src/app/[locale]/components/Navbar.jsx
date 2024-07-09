@@ -1,6 +1,7 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
+import useAxios from "../hooks/useAxios";
 import { UserContext } from "../context/UserContext";
 import Image from "next/image";
 import LanguageChanger from "./LanguageChanger";
@@ -19,6 +20,31 @@ import {
 const Navbar = () => {
   const { userData, setUserData, isLogged, setIsLogged } =
     useContext(UserContext);
+  const [loading, setLoading] = useState(true);
+
+  const api = useAxios();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await api.get("/user/getUserData");
+        if (response.status === 200) {
+          setUserData((prevUserData) => ({
+            ...prevUserData,
+            ...response.data,
+          }));
+          console.log(response.data);
+          setIsLogged(true);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkToken();
+  }, []);
 
   const { t } = useTranslation();
 
@@ -27,6 +53,19 @@ const Navbar = () => {
     setUserData({});
     setIsLogged(false);
   };
+
+  if (loading) {
+    return (
+      <div className="h-[72px] fixed bg-oxford-blue w-full text-gray-100 flex justify-center items-center z-20">
+        <Link
+          href="/"
+          className="text-[42px] absolute left-1/2 transform -translate-x-1/2"
+        >
+          logo
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="h-[72px] fixed bg-oxford-blue w-full text-gray-100 flex justify-between items-center px-4 z-20">

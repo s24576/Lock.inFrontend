@@ -15,31 +15,42 @@ import { MdOutlineRefresh } from "react-icons/md";
 import { toast } from "sonner";
 
 const SummonerProfile = () => {
-  const {
-    paramsData,
-    playerData,
-    lastMatches,
-    setPlayerData,
-    matchHistoryData,
-    setMatchHistoryData,
-    setLastMatches,
-    version,
-  } = useContext(SearchContext);
+  const { playerData, setPlayerData, version } = useContext(SearchContext);
 
-  const { userData, setUserData, isLogged } = useContext(UserContext);
+  const { userData, setUserData, isLogged, setIsLogged } =
+    useContext(UserContext);
 
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-  const [queueList, setQueueList] = useState("");
+  const [matchesShown, setMatchesShown] = useState(5);
+  const [filterValue, setFilterValue] = useState("");
+  const [showMoreButton, setShowMoreButton] = useState(true);
 
   const params = useParams();
   const api = useAxios();
 
-  const fetchData = async () => {
-    setPlayerData({});
-    setLastMatches([]);
-    setMatchHistoryData([]);
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await api.get("/user/getUserData");
+        if (response.status === 200) {
+          setUserData((prevUserData) => ({
+            ...prevUserData,
+            ...response.data, // Poprawne rozpakowanie danych użytkownika do stanu
+          }));
+          console.log(response.data);
+          setIsLogged(true);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        // Możesz dodać tutaj dodatkową obsługę błędów, jeśli jest potrzebna
+      }
+    };
 
+    checkToken();
+  }, []);
+
+  const fetchData = async () => {
     try {
       const response = await axios.get(
         `http://localhost:8080/riot/findPlayer?server=${params.server}&tag=${params.tag}&name=${params.username}`
@@ -48,45 +59,40 @@ const SummonerProfile = () => {
       setPlayerData(response.data);
       console.log(response.data);
 
-      // const matchHistoryResponse = await axios.get(
-      //   `http://localhost:8080/riot/getMatchHistory?puuid=${response.data.puuid}`
-      // );
-
-      // setMatchHistoryData(matchHistoryResponse.data);
-      // console.log(matchHistoryResponse.data);
-
-      // for (let i = 0; i < matchHistoryResponse.data.length; i++) {
-      //   const matchDetailsResponse = await axios.get(
-      //     `http://localhost:8080/riot/getMatchInfo?matchId=${matchHistoryResponse.data[i]}`
-      //   );
-      //   console.log(matchDetailsResponse.data);
-      //   setLastMatches((prevMatches) => [
-      //     ...prevMatches,
-      //     matchDetailsResponse.data,
-      //   ]);
-      //   console.log(lastMatches);
-      // }
       setLoading(false);
     } catch (error) {
       console.error("Error occurred:", error);
     }
   };
 
+  const showMore = async () => {
+    console.log(playerData.puuid);
+    console.log(filterValue);
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/riot/getMatchHistory?puuid=${
+          playerData.puuid
+        }&count=${matchesShown + 5}&queue=${filterValue}`
+      );
+
+      if (response.data.length % 5 === 0) {
+        console.log(response.data);
+        setMatchesShown(matchesShown + 5);
+        setPlayerData((prevData) => ({
+          ...prevData,
+          matches: response.data,
+        }));
+      } else {
+        setShowMoreButton(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
-
-  // useEffect(() => {
-  //   const getQ = async () => {
-  //     try {
-  //       const data = await getQueues();
-  //       setQueueList(data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getQ();
-  // }, []);
 
   if (loading) {
     return (
@@ -100,9 +106,11 @@ const SummonerProfile = () => {
     if (isLogged) {
       console.log(userData.token);
       console.log(playerData.puuid);
+      const param = playerData.server + "_" + playerData.puuid;
+      console.log(param);
       try {
         const response = await api.put(
-          `/profile/addWatchList?puuid=${playerData.puuid}`,
+          `/profile/addWatchList?server_puuid=${param}`,
           {}
         );
 
@@ -125,9 +133,10 @@ const SummonerProfile = () => {
 
   const unfollowSummoner = async () => {
     if (isLogged) {
+      const param = playerData.server + "_" + playerData.puuid;
       try {
         const response = await api.put(
-          `/profile/removeWatchList?puuid=${playerData.puuid}`,
+          `/profile/removeWatchList?server_puuid=${param}`,
           {}
         );
 
@@ -148,11 +157,22 @@ const SummonerProfile = () => {
     }
   };
 
-  const test = () => {
-    console.log("playerdata:", playerData);
-    console.log("matches:", playerData.matches);
-    console.log("matches:", playerData.matches[0].info);
-    console.log("matches:", playerData.matches[0].info.participants);
+  const handleQueueFilter = async (value) => {
+    setFilterValue(value);
+    setShowMoreButton(true);
+    setMatchesShown(5);
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/riot/getMatchHistory?puuid=${playerData.puuid}&queue=${value}`
+      );
+      console.log(response.data);
+      setPlayerData((prevData) => ({
+        ...prevData,
+        matches: response.data,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -175,7 +195,6 @@ const SummonerProfile = () => {
             height={150}
             alt="summonerIcon"
             className="rounded-full border-2 border-white"
-            onClick={() => test()}
           />
           <div className="flex flex-col items-center justify-center">
             <p className="text-[48px] font-semibold">
@@ -207,9 +226,23 @@ const SummonerProfile = () => {
         </div>
       )}
 
+      <div className="w-[80%] flex justify-end">
+        <select
+          className="text-black w-[20%]"
+          value={filterValue}
+          onChange={(e) => handleQueueFilter(e.target.value)}
+        >
+          <option value="">All</option>
+          <option value="420">Ranked Solo</option>
+          <option value="440">Ranked Flex</option>
+          <option value="450">ARAM</option>
+          <option value="1700">Arena</option>
+        </select>
+      </div>
+
       <div className="flex w-[80%]">
         <div className="flex flex-col w-[35%]">
-          <div className="mt-8 flex justify-center gap-x-8 bg-oxford-blue py-4 rounded-3xl">
+          <div className="mt-8 flex justify-center gap-x-8 bg-oxford-blue py-7 rounded-3xl">
             {Array.isArray(playerData.ranks) && playerData.ranks.length > 0 ? (
               playerData.ranks.map((rank, key) => (
                 <div key={key} className="flex flex-col items-center">
@@ -239,7 +272,7 @@ const SummonerProfile = () => {
               </p>
             )}
           </div>
-          <div className="mt-8 flex justify-center items-center gap-x-6 bg-oxford-blue py-4 rounded-3xl">
+          <div className="mt-8 flex justify-center items-center gap-x-6 bg-oxford-blue py-7 rounded-3xl">
             {Array.isArray(playerData.mastery) &&
             playerData.mastery.length > 1 ? (
               playerData.mastery.map((mastery, key) => (
@@ -271,7 +304,7 @@ const SummonerProfile = () => {
             )}
           </div>
         </div>
-        <div className="ml-[5%] mt-8 w-[60%] bg-oxford-blue rounded-3xl flex flex-col gap-y-6 items-center justify-center">
+        <div className="ml-[5%] mt-8 w-[60%] py-6 bg-oxford-blue rounded-3xl flex flex-col gap-y-6 items-center justify-center">
           {Array.isArray(playerData.matches) &&
           playerData.matches.length > 0 ? (
             playerData.matches.map((match, index) => {
@@ -324,6 +357,14 @@ const SummonerProfile = () => {
             })
           ) : (
             <p>No data for your last matches</p>
+          )}
+          {showMoreButton && (
+            <button
+              className="bg-arg-blue py-1 px-4 text-[24px] rounded-full hover:bg-arg-blue-dark"
+              onClick={() => showMore()}
+            >
+              Show more
+            </button>
           )}
         </div>
       </div>

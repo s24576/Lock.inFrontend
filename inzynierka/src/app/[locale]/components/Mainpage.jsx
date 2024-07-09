@@ -2,13 +2,20 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import useAxios from "../hooks/useAxios";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import { SearchContext } from "../context/SearchContext";
 
 const Mainpage = () => {
   const { userData, isLogged, setUserData, setIsLogged } =
     useContext(UserContext);
+  const { version } = useContext(SearchContext);
+
+  const [followedProfiles, setFollowedProfiles] = useState([]);
 
   const api = useAxios();
+  const router = useRouter();
 
   useEffect(() => {
     const checkToken = async () => {
@@ -19,6 +26,7 @@ const Mainpage = () => {
             ...prevUserData,
             ...response.data, // Poprawne rozpakowanie danych użytkownika do stanu
           }));
+          console.log(response.data);
           setIsLogged(true);
         }
       } catch (error) {
@@ -30,6 +38,36 @@ const Mainpage = () => {
     checkToken();
   }, []);
 
+  useEffect(() => {
+    const fetchFollowed = async () => {
+      try {
+        const response = await api.get(`/riot/getRiotProfiles`);
+        console.log(response.data);
+        setFollowedProfiles(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchFollowed();
+  }, []);
+
+  const redirectToProfile = async (puuid, server) => {
+    try {
+      const response = await api.get(
+        `/riot/findPlayer?puuid=${puuid}&server=${server}`
+      );
+      console.log(response.data);
+      if (response.status === 200) {
+        router.push(
+          `/summoner/${response.data.server}/${response.data.tagLine}/${response.data.gameName}`
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const { t } = useTranslation();
 
   return (
@@ -38,11 +76,53 @@ const Mainpage = () => {
         <div>
           {isLogged && <p>User id: {userData.id}</p>}
           <h1 className="text-[36px]">{t("header")}</h1>
-          {Array.isArray(userData.watchList) &&
-          userData.watchList.length > 0 ? (
-            userData.watchList.map((summonerId, key) => {
-              return <p key={key}>{summonerId}</p>;
-            })
+          {Array.isArray(followedProfiles) && followedProfiles.length > 0 ? (
+            <div className="flex flex-col gap-y-2">
+              {followedProfiles.map((profile, index) => {
+                if (profile.gameName !== null) {
+                  return (
+                    <div
+                      key={index}
+                      className="flex gap-x-4 items-center hover:bg-[#1a1a1a] cursor-pointer rounded-2xl"
+                      onClick={() =>
+                        redirectToProfile(profile.puuid, profile.server)
+                      }
+                    >
+                      <Image
+                        src={
+                          "https://ddragon.leagueoflegends.com/cdn/" +
+                          version +
+                          "/img/profileicon/" +
+                          profile.profileIconId +
+                          ".png"
+                        }
+                        width={50}
+                        height={50}
+                        alt="summonerIcon"
+                        className="rounded-full border-2 border-white"
+                      />
+                      <p>{profile.gameName}</p>
+                      <p>{profile.server}</p>
+                      <p>{profile.summonerLevel} lvl</p>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div
+                      key={index}
+                      className="flex gap-x-4"
+                      onClick={() =>
+                        redirectToProfile(profile.puuid, profile.server)
+                      }
+                    >
+                      <p>Summoner</p>
+                      <p>{profile.server}</p>
+                      <p>puuid: {profile.puuid}</p>
+                    </div>
+                  );
+                }
+              })}
+            </div>
           ) : (
             <p>{t("noneFollowed")}</p>
           )}
