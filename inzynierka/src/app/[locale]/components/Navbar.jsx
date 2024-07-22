@@ -79,8 +79,15 @@ const Navbar = () => {
             <SheetClose asChild>
               <Link href="/builds/create">Create build</Link>
             </SheetClose>
+            <SheetClose asChild>
+              <Link href="/builds/me">My Builds</Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link href="/builds/saved">Saved Builds</Link>
+            </SheetClose>
+
             <SheetDescription>
-              This action cannot be undone. This will permanently delete your
+              Tssshis action cannot be undone. This will permanently delete your
               account and remove your data from our servers.
             </SheetDescription>
           </SheetHeader>

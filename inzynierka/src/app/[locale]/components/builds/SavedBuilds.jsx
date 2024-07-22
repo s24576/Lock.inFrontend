@@ -1,33 +1,18 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
+import useAxios from "../../hooks/useAxios";
 import Link from "next/link";
 import Image from "next/image";
-import axios from "axios";
-import { usePathname } from "next/navigation";
 
-const Builds = () => {
+export const SavedBuilds = () => {
   const [builds, setBuilds] = useState([]);
-  const [championNames, setChampionNames] = useState([]);
 
-  const pathname = usePathname();
+  const api = useAxios();
 
   useEffect(() => {
-    const langRegex = /^\/([a-z]{2})\//;
-    const langMatch = pathname.match(langRegex);
-    const language = langMatch ? langMatch[1] : "en";
-    console.log("language, ", language);
-
-    const fetchBuild = async () => {
+    const fetchBuilds = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/build/getBuilds?page=0&size=15",
-          {
-            headers: {
-              "Accept-Language": language,
-            },
-          }
-        );
+        const response = await api.get(`/build/getSavedBuilds`);
         console.log(response.data);
         setBuilds(response.data);
       } catch (error) {
@@ -35,55 +20,13 @@ const Builds = () => {
       }
     };
 
-    const fetchChampionNames = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/ddragon/getChampionNames"
-        );
-
-        console.log(response.data);
-        setChampionNames(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchBuild();
-    fetchChampionNames();
+    fetchBuilds();
   }, []);
 
   return (
-    <div className="h-screen text-white flex flex-col items-center">
-      <div className="mt-[115px] flex justify-center gap-x-2 h-8 items-center">
-        <p className="">Builds</p>
-        <Link
-          href="/builds/create"
-          className=" px-3 py-1 bg-blue-400 text-white border-2 border-white"
-        >
-          Create Build
-        </Link>
-      </div>
-      <input
-        type="text"
-        className="px-3 py-1 mt-3"
-        placeholder="Search by ? "
-      />
-      {/* by champion, by tags?, by author */}
-      <div className="flex items-center mt-3 gap-x-3">
-        <p>Sort by: </p>
-        <select className="text-black">
-          <option value="">Aatrox</option>
-          <option value="">Ahri</option>
-          <option value="">Anivia</option>
-        </select>
-        <input type="text" className="px-3 py-1" placeholder="tags" />
-        <input type="text" className="px-3 py-1" placeholder="Author name" />
-        <select className="text-black">
-          <option value="">12</option>
-          <option value="">24</option>
-          <option value="">36</option>
-        </select>
-      </div>
+    <div className="min-h-screen w-full pt-[70px] flex flex-col items-center">
+      <h1 className="mt-[100px] text-[40px]">Saved builds</h1>
+
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {Array.isArray(builds.content) && builds.content.length > 0 ? (
           builds.content.map((build, index) => {
@@ -180,15 +123,16 @@ const Builds = () => {
                   <p>Likes: {build.likesCount}</p>
                   <p>Disikes: {build.dislikesCount}</p>
                 </div>
+                <button className="mt-3 text-red-600 px-3 py-2 border-[1px] border-white hover:bg-red-500 hover:text-white">
+                  Delete build
+                </button>
               </Link>
             );
           })
         ) : (
-          <p>No builds</p>
+          <p className="">No builds</p>
         )}
       </div>
     </div>
   );
 };
-
-export default Builds;

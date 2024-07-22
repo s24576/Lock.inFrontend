@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { SearchContext } from "@/app/[locale]/context/SearchContext";
 import axios from "axios";
 import useAxios from "../hooks/useAxios";
-import { useParams, redirect } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import { UserContext } from "@/app/[locale]/context/UserContext";
 import Link from "next/link";
@@ -27,6 +27,7 @@ const SummonerProfile = () => {
   const [showMoreButton, setShowMoreButton] = useState(true);
 
   const params = useParams();
+  const pathname = usePathname();
   const api = useAxios();
 
   useEffect(() => {
@@ -51,9 +52,18 @@ const SummonerProfile = () => {
   }, []);
 
   const fetchData = async () => {
+    const langRegex = /^\/([a-z]{2})\//;
+    const langMatch = pathname.match(langRegex);
+    const language = langMatch ? langMatch[1] : "en";
+
     try {
       const response = await axios.get(
-        `http://localhost:8080/riot/findPlayer?server=${params.server}&tag=${params.tag}&name=${params.username}`
+        `http://localhost:8080/riot/findPlayer?server=${params.server}&tag=${params.tag}&name=${params.username}`,
+        {
+          headers: {
+            "Accept-Language": language,
+          },
+        }
       );
 
       setPlayerData(response.data);

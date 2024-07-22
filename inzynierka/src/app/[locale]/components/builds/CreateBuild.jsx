@@ -4,12 +4,11 @@ import { UserContext } from "../../context/UserContext";
 import axios from "axios";
 import useAxios from "../../hooks/useAxios";
 import Image from "next/image";
-import { Check, ChevronsUpDown } from "lucide-react";
 import Select from "react-select";
 import { usePathname } from "next/navigation";
 
 const CreateBuild = () => {
-  const { userData } = useContext(UserContext);
+  const { userData, isLogged } = useContext(UserContext);
   const [championNames, setChampionNames] = useState({});
   const [allItems, setAllItems] = useState([]);
   const [chosenItems, setChosenItems] = useState([]);

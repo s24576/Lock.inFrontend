@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import { redirect } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import axios from "axios";
 import { SearchContext } from "../context/SearchContext";
 import { UserContext } from "../context/UserContext";
@@ -37,6 +37,8 @@ const FindPlayer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  const pathname = usePathname();
+
   useOutsideClick(dropdownRef, () => setIsOpen(false));
 
   useEffect(() => {
@@ -46,13 +48,22 @@ const FindPlayer = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const langRegex = /^\/([a-z]{2})\//;
+    const langMatch = pathname.match(langRegex);
+    const language = langMatch ? langMatch[1] : "en";
+
     try {
       console.log(server);
       console.log(tag);
       console.log(username);
       console.log(userData.token);
       const response = await axios.get(
-        `http://localhost:8080/riot/findPlayer?server=${server}&tag=${tag}&name=${username}`
+        `http://localhost:8080/riot/findPlayer?server=${server}&tag=${tag}&name=${username}`,
+        {
+          headers: {
+            "Accept-Language": language,
+          },
+        }
       );
 
       setParamsData({ server, tag, username });
