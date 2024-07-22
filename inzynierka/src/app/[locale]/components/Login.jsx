@@ -3,7 +3,7 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
@@ -17,6 +17,7 @@ const Login = () => {
     useContext(UserContext);
 
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,12 +52,20 @@ const Login = () => {
   };
 
   const getUserInfo = async () => {
+    console.log(userData.token);
+
+    const langRegex = /^\/([a-z]{2})\//;
+    const langMatch = pathname.match(langRegex);
+    const language = langMatch ? langMatch[1] : "en";
+    console.log("language, ", language);
+
     try {
       const response = await axios.get(
         "http://localhost:8080/profile/getWatchList",
         {
           headers: {
             Authorization: `Bearer ${userData.token}`,
+            "Accept-Language": language,
           },
         }
       );
@@ -72,7 +81,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (isLogged) {
+    if (userData.token) {
       console.log("ss");
       getUserInfo();
     }

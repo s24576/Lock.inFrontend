@@ -4,16 +4,25 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
+import { usePathname } from "next/navigation";
 
 const Builds = () => {
   const [builds, setBuilds] = useState([]);
   const [championNames, setChampionNames] = useState([]);
 
+  const pathname = usePathname();
+
   useEffect(() => {
+    const langRegex = /^\/([a-z]{2})\//;
+    const langMatch = pathname.match(langRegex);
+    const language = langMatch ? langMatch[1] : "en";
+    console.log("language, ", language);
+
     const fetchBuild = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/build/getBuilds?page=0&size=15"
+          "http://localhost:8080/build/getBuilds?page=0&size=15&lang=en",
+          {}
         );
         console.log(response.data);
         setBuilds(response.data);
@@ -76,7 +85,7 @@ const Builds = () => {
           builds.content.map((build, index) => {
             return (
               <Link
-                href={"/builds/" + build.id}
+                href={"/builds/" + build._id}
                 key={index}
                 className="flex flex-col justify-center items-center border-2 border-white p-5 cursor-pointer 
                 hover:bg-[#1a1a1a]"
@@ -96,21 +105,71 @@ const Builds = () => {
                 />
                 <p>{build.champion}</p>
                 <div className="flex">
-                  {build.items.map((item, key) => {
-                    return (
-                      <Image
-                        src={
-                          "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
-                          item +
-                          ".png"
-                        }
-                        height={50}
-                        width={50}
-                        alt={item}
-                        key={key}
-                      />
-                    );
-                  })}
+                  <Image
+                    src={
+                      "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
+                      build.item1 +
+                      ".png"
+                    }
+                    height={50}
+                    width={50}
+                    alt={build.item1}
+                  />
+
+                  <Image
+                    src={
+                      "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
+                      build.item2 +
+                      ".png"
+                    }
+                    height={50}
+                    width={50}
+                    alt={build.item2}
+                  />
+
+                  <Image
+                    src={
+                      "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
+                      build.item3 +
+                      ".png"
+                    }
+                    height={50}
+                    width={50}
+                    alt={build.item3}
+                  />
+
+                  <Image
+                    src={
+                      "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
+                      build.item4 +
+                      ".png"
+                    }
+                    height={50}
+                    width={50}
+                    alt={build.item4}
+                  />
+
+                  <Image
+                    src={
+                      "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
+                      build.item5 +
+                      ".png"
+                    }
+                    height={50}
+                    width={50}
+                    alt={build.item5}
+                  />
+
+                  <Image
+                    src={
+                      "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
+                      build.item6 +
+                      ".png"
+                    }
+                    height={50}
+                    width={50}
+                    alt={build.item6}
+                  />
                 </div>
               </Link>
             );

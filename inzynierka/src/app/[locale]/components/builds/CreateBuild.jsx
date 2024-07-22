@@ -6,6 +6,7 @@ import useAxios from "../../hooks/useAxios";
 import Image from "next/image";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Select from "react-select";
+import { usePathname } from "next/navigation";
 
 const CreateBuild = () => {
   const { userData } = useContext(UserContext);
@@ -22,6 +23,7 @@ const CreateBuild = () => {
   });
 
   const api = useAxios();
+  const pathname = usePathname();
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -106,12 +108,19 @@ const CreateBuild = () => {
 
     const chosenItemsIds = chosenItems.map((item) => item.id);
 
+    console.log("siema");
+
     try {
       const response = await api.post("/build/createBuild", {
-        championName: formValues.champion,
+        championId: formValues.champion,
         title: formValues.title,
         description: formValues.description,
-        items: chosenItemsIds,
+        item1: chosenItemsIds[0],
+        item2: chosenItemsIds[1],
+        item3: chosenItemsIds[2],
+        item4: chosenItemsIds[3],
+        item5: chosenItemsIds[4],
+        item6: chosenItemsIds[5],
       });
 
       console.log(response.data);
