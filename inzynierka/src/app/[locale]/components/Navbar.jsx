@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
 import useAxios from "../hooks/useAxios";
 import { UserContext } from "../context/UserContext";
-import Image from "next/image";
+import { IoPeople, IoPersonAddSharp } from "react-icons/io5";
 import LanguageChanger from "./LanguageChanger";
 import { useTranslation } from "react-i18next";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -16,6 +16,9 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/componentsShad/ui/sheet";
+import SockJS from "sockjs-client";
+import { Client } from "@stomp/stompjs";
+import FriendList from "./FriendList";
 
 const Navbar = () => {
   const { userData, setUserData, isLogged, setIsLogged } =
@@ -111,6 +114,7 @@ const Navbar = () => {
             {t("navbar:logOut")}
           </p>
         )}
+        {isLogged && <FriendList />}
         <LanguageChanger></LanguageChanger>
       </div>
     </div>

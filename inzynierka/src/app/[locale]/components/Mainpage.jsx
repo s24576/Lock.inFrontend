@@ -74,7 +74,7 @@ const Mainpage = () => {
     <div className="h-screen w-full flex flex-col justify-center items-center text-white">
       {isLogged && (
         <div>
-          {isLogged && <p>User id: {userData.id}</p>}
+          {isLogged && <p>Hello {userData.username}!</p>}
           <h1 className="text-[36px]">{t("header")}</h1>
           {Array.isArray(followedProfiles) && followedProfiles.length > 0 ? (
             <div className="flex flex-col gap-y-2">
