@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
 const Register = () => {
@@ -17,6 +17,11 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const router = useRouter();
+  const pathname = usePathname();
+
+  const langRegex = /^\/([a-z]{2})\//;
+  const langMatch = pathname.match(langRegex);
+  const language = langMatch ? langMatch[1] : "en";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,11 +32,19 @@ const Register = () => {
         throw Error("Passwords are different");
       }
 
-      const response = await axios.post("http://localhost:8080/user/register", {
-        username: username,
-        email: email,
-        password: password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/user/register",
+        {
+          username: username,
+          email: email,
+          password: password,
+        },
+        {
+          headers: {
+            "Accept-Language": language,
+          },
+        }
+      );
 
       setIsRegistered(true);
 

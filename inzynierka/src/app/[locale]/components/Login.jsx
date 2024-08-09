@@ -19,14 +19,26 @@ const Login = () => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const langRegex = /^\/([a-z]{2})\//;
+  const langMatch = pathname.match(langRegex);
+  const language = langMatch ? langMatch[1] : "en";
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8080/user/login", {
-        username: username,
-        password: password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/user/login",
+        {
+          username: username,
+          password: password,
+        },
+        {
+          headers: {
+            "Accept-Language": language,
+          },
+        }
+      );
       console.log("zalogowano", response.data);
 
       const token = response.data;
@@ -40,13 +52,11 @@ const Login = () => {
       console.log("zalogowano");
     } catch (error) {
       if (error.response) {
-        // Serwer zwrócił odpowiedź inną niż 2xx
+        console.error("Error response:", error.response);
         setErrorMessage(error.response.data);
       } else {
-        // Wystąpił błąd podczas wysyłania żądania
-        setErrorMessage(
-          "Wystąpił błąd podczas logowania. Spróbuj ponownie później."
-        );
+        console.error("Error message:", error.message);
+        setErrorMessage("An error occurred. Please try again later.");
       }
     }
   };

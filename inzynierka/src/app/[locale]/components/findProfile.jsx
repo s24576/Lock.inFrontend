@@ -3,13 +3,18 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import { ProfileContext } from "../context/ProfileContext";
 import { UserContext } from "../context/UserContext";
+import { LanguageContext } from "../context/LanguageContext";
 import { redirect } from "next/navigation";
+import useAxios from "../hooks/useAxios";
 
 const FindProfile = () => {
   const [username, setUsername] = useState("");
   const [resultsFound, setResultsFound] = useState(false);
   const { setProfileData } = useContext(ProfileContext);
   const { userData } = useContext(UserContext);
+  const { language } = useContext(LanguageContext);
+
+  const api = useAxios();
 
   const setProfileDataAsync = (data) => {
     return new Promise((resolve) => {
@@ -22,11 +27,11 @@ const FindProfile = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.get(
+      const response = await api.get(
         `http://localhost:8080/profile/findProfile?username=${username}`,
         {
           headers: {
-            Authorization: `Bearer ${userData.token}}`,
+            "Accept-Language": language,
           },
         }
       );

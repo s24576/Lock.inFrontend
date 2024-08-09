@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import { UserContextProvider } from "./context/UserContext";
 import { SearchContextProvider } from "./context/SearchContext";
 import { ProfileContextProvider } from "./context/ProfileContext";
+import { LanguageContextProvider } from "./context/LanguageContext";
 import initTranslations from "./i18n";
 import TranslationsProvider from "./components/TranslationsProvider";
 import { Toaster } from "sonner";
@@ -35,15 +36,17 @@ export default async function RootLayout({ children, params: { locale } }) {
           locale={locale}
           namespaces={i18nNamespaces}
         >
-          <ProfileContextProvider>
-            <SearchContextProvider>
-              <UserContextProvider>
-                <Navbar></Navbar>
-                {children}
-                {/* <Toaster richColors position="bottom-right"></Toaster> */}
-              </UserContextProvider>
-            </SearchContextProvider>
-          </ProfileContextProvider>
+          <LanguageContextProvider>
+            <ProfileContextProvider>
+              <SearchContextProvider>
+                <UserContextProvider>
+                  <Navbar></Navbar>
+                  {children}
+                  {/* <Toaster richColors position="bottom-right"></Toaster> */}
+                </UserContextProvider>
+              </SearchContextProvider>
+            </ProfileContextProvider>
+          </LanguageContextProvider>
         </TranslationsProvider>
       </body>
     </html>
