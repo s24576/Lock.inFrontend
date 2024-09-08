@@ -231,6 +231,20 @@ const FriendList = () => {
         </div>
         <p className="mt-3">Last notification</p>
         <p>{receivedMessage}</p>
+        <div className="mt-4">
+          <p className="text-[24px]">Your friends:</p>
+          {isLogged && userData.friends && userData.friends.length > 0 ? (
+            userData.friends.map((friend, key) => (
+              <p key={key}>
+                {friend.username !== userData._id
+                  ? friend.username
+                  : friend.username2}
+              </p>
+            ))
+          ) : (
+            <p>No friends available</p>
+          )}
+        </div>
       </SheetContent>
     </Sheet>
   );

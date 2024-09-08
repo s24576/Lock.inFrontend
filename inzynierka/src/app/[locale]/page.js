@@ -10,9 +10,9 @@ export default async function Home({ params: { locale } }) {
   // const { t, resources } = await initTranslations(locale, i18nNamespaces);
 
   return (
-    <main className="flex h-screen flex-col items-center justify-center">
-      <Mainpage></Mainpage>
-      {/* <Test></Test> */}
+    <main className="flex h-screen flex-col">
+      {/* <Mainpage></Mainpage> */}
+      <Test></Test>
     </main>
   );
 }

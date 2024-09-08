@@ -19,6 +19,7 @@ import {
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import FriendList from "./FriendList";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const { userData, setUserData, isLogged, setIsLogged } =
@@ -26,6 +27,7 @@ const Navbar = () => {
   const [loading, setLoading] = useState(true);
 
   const api = useAxios();
+  const router = useRouter();
 
   useEffect(() => {
     const checkToken = async () => {
@@ -55,6 +57,7 @@ const Navbar = () => {
     localStorage.removeItem("loginToken");
     setUserData({});
     setIsLogged(false);
+    router.push("/");
   };
 
   if (loading) {

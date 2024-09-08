@@ -9,7 +9,7 @@ import useAxios from "../hooks/useAxios";
 
 const Profile = () => {
   const { profileData, setProfileData } = useContext(ProfileContext);
-  const { userData } = useContext(UserContext);
+  const { userData, isLogged } = useContext(UserContext);
   const { language } = useContext(LanguageContext);
   const [loading, setLoading] = useState(true);
 
@@ -58,36 +58,46 @@ const Profile = () => {
 
   return (
     <div className="h-screen w-full flex flex-col items-center justify-center">
+      {userData._id &&
+        userData._id !== profileData._id &&
+        !userData.friends.some(
+          (friend) =>
+            (friend.username === userData._id &&
+              friend.username2 === profileData._id) ||
+            (friend.username2 === userData._id &&
+              friend.username === profileData._id)
+        ) && (
+          <button className="px-4 py-2 border-2 border-white hover:bg-[#3a3a3a]">
+            Add to friends
+          </button>
+        )}
       Profile
-      {profileData.id && (
+      {profileData._id && (
         <div className="flex flex-col items-center gap-y-2 mt-4">
-          <p>{params.username}</p>
-          <p>User Id: {profileData.id}</p>
-          <div className="flex gap-x-4">
-            <button
-              className="px-4 py-2 border-2 border-white hover:bg-[#3a3a3a]"
-              onClick={() => followUser()}
-            >
-              Follow
-            </button>
-            <button
-              className="px-4 py-2 border-2 border-white hover:bg-[#3a3a3a]"
-              onClick={() => unfollowUser()}
-            >
-              Unfollow
-            </button>
-          </div>
-          <div>
-            <p>Summoner Watch list:</p>
-            {Array.isArray(profileData.watchList) &&
-            profileData.watchList.length > 0 ? (
-              profileData.watchList.map((summoner, key) => {
-                return <p key={key}>{summoner}</p>;
-              })
-            ) : (
-              <></>
-            )}
-          </div>
+          <p>Username: {profileData._id}</p>
+          <p>Friendlist:</p>
+          {profileData.friends && profileData.friends.length > 0 ? (
+            profileData.friends.map((friend, key) => {
+              return (
+                <div key={key} className="flex items-center gap-x-4">
+                  <p>
+                    {friend.username !== profileData._id
+                      ? friend.username
+                      : friend.username2}
+                  </p>
+                  {userData._id === profileData._id ? (
+                    <button className="px-4 py-2 border-2 border-white hover:bg-[#3a3a3a]">
+                      Remove
+                    </button>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              );
+            })
+          ) : (
+            <p>No friends available</p>
+          )}
         </div>
       )}
     </div>
