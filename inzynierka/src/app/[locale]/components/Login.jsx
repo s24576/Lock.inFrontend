@@ -62,7 +62,7 @@ const Login = () => {
   };
 
   const getUserInfo = async () => {
-    console.log(userData.token);
+    console.log("getting user info:", userData.token);
 
     const langRegex = /^\/([a-z]{2})\//;
     const langMatch = pathname.match(langRegex);
@@ -71,7 +71,7 @@ const Login = () => {
 
     try {
       const response = await axios.get(
-        "http://localhost:8080/profile/getWatchList",
+        "http://localhost:8080/user/getUserData",
         {
           headers: {
             Authorization: `Bearer ${userData.token}`,
@@ -79,11 +79,8 @@ const Login = () => {
           },
         }
       );
-      console.log(response.data);
-      setUserData((prevData) => ({
-        ...prevData,
-        watchList: response.data, // Dodaj lub zaktualizuj pole watchList w userData
-      }));
+      console.log("got user info:", response.data);
+      setUserData(response.data);
       router.push("/");
     } catch (error) {
       console.log(error);

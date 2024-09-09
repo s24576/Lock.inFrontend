@@ -20,6 +20,7 @@ const Test = () => {
   const [selectedChat, setSelectedChat] = useState(0);
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [newChatName, setNewChatName] = useState("");
+  const [newMemberName, setNewMemberName] = useState("");
 
   const api = useAxios();
 
@@ -72,7 +73,9 @@ const Test = () => {
       return { username }; // Zwracamy nowy obiekt z polem `username`
     });
 
-    console.log(members);
+    console.log("members::::::", members);
+
+    //dodaj do members samego siebie
 
     try {
       // Wykonujemy żądanie z nową tablicą członków (`members`)
@@ -115,6 +118,26 @@ const Test = () => {
     );
   };
 
+  const addNewMembers = async (username, chatId) => {
+    // Tworzymy tablicę nowych obiektów na podstawie `selectedFriends`
+    const members = selectedFriends.map((friend) => {
+      // Jeżeli `username` jest różne od `userData._id`, wybieramy `username`, inaczej `username2`
+      const username =
+        friend.username !== userData._id ? friend.username : friend.username2;
+      return { username }; // Zwracamy nowy obiekt z polem `username`
+    });
+
+    try {
+      const response = await api.post(
+        `/messenger/addChatter?username=${username}&chatId=${chatId}`
+      );
+
+      console.log(response.status);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flex">
       <div className="flex flex-col gap-y-6 mt-[70px]">
@@ -131,9 +154,9 @@ const Test = () => {
             />
             <div>
               {userData.friends &&
-                userData.friends.map((friend) => {
+                userData.friends.map((friend, key) => {
                   return (
-                    <div className="flex justify-between">
+                    <div key={key} className="flex justify-between">
                       <p>
                         {friend.username !== userData._id
                           ? friend.username
@@ -210,6 +233,74 @@ const Test = () => {
             {chatData.members.map((member, key) => {
               return <p key={key}>{member.username}</p>;
             })}
+            <Dialog>
+              <DialogTrigger className="border-2 border-white px-4 py-2">
+                Add new members
+              </DialogTrigger>
+              <DialogContent className="bg-oxford-blue">
+                <DialogTitle className="font-semibold">
+                  Add new members
+                </DialogTitle>
+                <div>
+                  {userData.friends &&
+                    userData.friends
+                      .filter((friend) => {
+                        // Sprawdź, czy friend znajduje się już w chatData.members
+                        const isAlreadyInChat = chatData.members.some(
+                          (member) =>
+                            member.username ===
+                            (friend.username !== userData._id
+                              ? friend.username
+                              : friend.username2)
+                        );
+                        return !isAlreadyInChat;
+                      })
+                      .map((friend, key) => (
+                        <div key={key} className="flex justify-between">
+                          <p>
+                            {friend.username !== userData._id
+                              ? friend.username
+                              : friend.username2}
+                          </p>
+                          <button onClick={() => selectFriend(friend)}>
+                            Add
+                          </button>
+                        </div>
+                      ))}
+                </div>
+
+                <p>Picked friends:</p>
+                <div className="flex gap-x-5">
+                  {selectedFriends.length > 0 &&
+                    selectedFriends.map((friend) => {
+                      return (
+                        <div className="flex gap-x-1 items-center">
+                          <p>
+                            {friend.username !== userData._id
+                              ? friend.username
+                              : friend.username2}
+                          </p>
+                          <button
+                            onClick={() => unselectFriend(friend)}
+                            className="text-red-500 font-bold"
+                          >
+                            X
+                          </button>
+                        </div>
+                      );
+                    })}
+                </div>
+
+                <DialogClose>
+                  <p
+                    onClick={() => addNewMembers(chatData._id)}
+                    className="border-2 border-white mx-auto px-5 py-2"
+                  >
+                    {selectedFriends.length > 0 ? "Add member" : "Add more"}
+                  </p>
+                </DialogClose>
+              </DialogContent>
+            </Dialog>
           </div>
         ) : (
           <p>No chat selected or data is still loading...</p>

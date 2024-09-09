@@ -69,16 +69,16 @@ const FriendList = () => {
     const client = new Client({
       webSocketFactory: () => socket,
       debug: function (str) {
-        console.log("STOMP Debug: ", str);
+        // console.log("STOMP Debug: ", str);
       },
       onConnect: () => {
-        console.log("Connected");
+        // console.log("Connected");
 
         //nasluchiwanie do powiadomienia
         client.subscribe(
           `/user/${userData.username}/notification`,
           (message) => {
-            console.log("Message received: ", message.body); // Debug incoming messages
+            // console.log("Message received: ", message.body); // Debug incoming messages
             setReceivedMessage(message.body);
           }
         );
@@ -87,7 +87,7 @@ const FriendList = () => {
         client.subscribe(
           `/user/${userData.username}/friendRequest/to`,
           (message) => {
-            console.log("friend request to: ", message.body); // Debug incoming messages
+            // console.log("friend request to: ", message.body); // Debug incoming messages
             setToRequests((prevData) => [...prevData, message.body]);
             fetchRequests();
           }
@@ -97,8 +97,8 @@ const FriendList = () => {
         client.subscribe(
           `/user/${userData.username}/friendRequest/from`,
           (message) => {
-            console.log("friend request from: ", message.body); // Debug incoming messages
-            console.log(fromRequests);
+            // console.log("friend request from: ", message.body); // Debug incoming messages
+            // console.log(fromRequests);
             setFromRequests((prevData) => [...prevData, message.body]);
             fetchRequests();
           }
@@ -108,8 +108,8 @@ const FriendList = () => {
         client.subscribe(
           `/user/${userData.username}/delete/friendRequest/from`,
           (message) => {
-            console.log("delete friend request from: ", message.body);
-            console.log(fromRequests);
+            // console.log("delete friend request from: ", message.body);
+            // console.log(fromRequests);
             setFromRequests((prevData) =>
               prevData.filter((request) => request._id !== message.body)
             );
@@ -121,8 +121,8 @@ const FriendList = () => {
         client.subscribe(
           `/user/${userData.username}/delete/friendRequest/to`,
           (message) => {
-            console.log("delete friend request to: ", message.body);
-            console.log(toRequests);
+            // console.log("delete friend request to: ", message.body);
+            // console.log(toRequests);
             setToRequests((prevData) =>
               prevData.filter((request) => request._id !== message.body)
             );
@@ -131,8 +131,8 @@ const FriendList = () => {
         );
       },
       onStompError: (frame) => {
-        console.error("STOMP Error: ", frame.headers["message"]);
-        console.error("Additional details: ", frame.body);
+        // console.error("STOMP Error: ", frame.headers["message"]);
+        // console.error("Additional details: ", frame.body);
       },
     });
 
