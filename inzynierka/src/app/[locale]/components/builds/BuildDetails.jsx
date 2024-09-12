@@ -257,7 +257,7 @@ const BuildDetails = () => {
             {isLogged && ( //do zmiany isLogged na usera
               <button
                 onClick={() => {
-                  deleteBuild(build._id);
+                  deleteBuild(buildData._id);
                 }}
                 className="mt-3 text-red-600 px-3 py-2 border-[1px] border-white hover:bg-red-500 hover:text-white"
               >

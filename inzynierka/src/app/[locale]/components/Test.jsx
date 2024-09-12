@@ -12,15 +12,34 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/componentsShad/ui/dialog";
+import SockJS from "sockjs-client";
+import { Client } from "@stomp/stompjs";
 
 const Test = () => {
   const { userData, isLogged } = useContext(UserContext);
+
+  //metadane z konkretnego wybranego chatu, np members
   const [chatData, setChatData] = useState();
+
+  //wszystkie chaty uzytkownika
   const [allChats, setAllChats] = useState([]);
+
+  //ktory chat ma byc aktywny w okienku
   const [selectedChat, setSelectedChat] = useState(0);
+
+  //wybrani do dodania do chatu
   const [selectedFriends, setSelectedFriends] = useState([]);
+
+  //nazwa nowego chatu
   const [newChatName, setNewChatName] = useState("");
+
   const [newMemberName, setNewMemberName] = useState("");
+
+  //tresc nowej wiadomosci
+  const [newMessage, setNewMessage] = useState("");
+
+  //wiadomosci konkretnego wybranego chatu
+  const [chatMessages, setChatMessages] = useState({});
 
   const api = useAxios();
 
@@ -41,22 +60,27 @@ const Test = () => {
 
   useEffect(() => {
     const getChatById = async () => {
-      // Ensure that allChats and the selected chat exist before making the API call
       if (allChats?.content && allChats.content[selectedChat]) {
+        let chatResponse; // Zmienna na dane odpowiedzi
         try {
           const response = await api.get(
             `/messenger/getChatById?chatId=${allChats.content[selectedChat]._id}`
           );
           console.log("selected Chat:", response.data);
-          setChatData(response.data); // Store the chat data
+          setChatData(response.data); // Przechowaj dane czatu
+          chatResponse = response.data; // Przechwyć dane do zmiennej
         } catch (error) {
           console.log(error);
+        } finally {
+          if (chatResponse && chatResponse._id) {
+            getMessages(chatResponse._id); // Użyj ID czatu w finally
+          }
         }
       }
     };
 
     if (allChats?.content?.length > 0) {
-      getChatById(); // Only call this when allChats is loaded
+      getChatById(); // Wywołaj funkcję, gdy załadowane są dane czatów
     }
   }, [allChats, selectedChat]);
 
@@ -138,9 +162,82 @@ const Test = () => {
     }
   };
 
+  const sendMessage = async (chatId) => {
+    try {
+      const response = await api.post(
+        `/messenger/sendMessage?chatId=${chatId}`,
+        { message: newMessage }
+      );
+      console.log(response.data);
+      setChatMessages((prev) => ({
+        ...prev, // Kopiuj poprzedni stan
+        content: [...prev.content, response.data], // Dodaj nową wiadomość do tablicy content
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getMessages = async (chatId) => {
+    console.log("chat id: ", chatId);
+    try {
+      const response = await api.get(`/messenger/getMessages?chatId=${chatId}`);
+
+      console.log("messages content:", response.data);
+      setChatMessages(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [stompClient, setStompClient] = useState(null);
+  const [newMessageReceived, setNewMessageReceived] = useState();
+
+  useEffect(() => {
+    const socket = new SockJS("http://localhost:8080/ws");
+    const client = new Client({
+      webSocketFactory: () => socket,
+      debug: function (str) {
+        console.log("STOMP Debug: ", str);
+      },
+      onConnect: () => {
+        console.log("Connected");
+
+        //nasluchiwanie do powiadomienia
+        client.subscribe(
+          `/user/${userData.username}/messenger/message`,
+          (message) => {
+            console.log("Message received: ", message.body); // Debug incoming messages
+            const parsed = JSON.parse(message.body);
+            console.log("Message received2: ", parsed); // Debug incoming messages
+            setNewMessageReceived(parsed.message);
+            setChatMessages((prev) => ({
+              ...prev, // Kopiuj poprzedni stan
+              content: [...prev.content, parsed], // Dodaj nową wiadomość do tablicy content
+            }));
+          }
+        );
+      },
+      onStompError: (frame) => {
+        console.error("STOMP Error: ", frame.headers["message"]);
+        console.error("Additional details: ", frame.body);
+      },
+    });
+
+    client.activate();
+    setStompClient(client);
+
+    return () => {
+      if (client) {
+        client.deactivate();
+      }
+    };
+  }, [userData]);
+
   return (
     <div className="flex">
       <div className="flex flex-col gap-y-6 mt-[70px]">
+        {userData && <p>Hello, {userData.username}</p>}
         <Dialog>
           <DialogTrigger>Create chat</DialogTrigger>
           <DialogContent className="bg-oxford-blue">
@@ -220,6 +317,7 @@ const Test = () => {
                 })}
                 <p>chat name: {chat.name}</p>
                 <p>chat id: {chat._id}</p>
+                <p>last message:</p>
               </div>
             );
           })}
@@ -301,6 +399,25 @@ const Test = () => {
                 </DialogClose>
               </DialogContent>
             </Dialog>
+            <input
+              type="text"
+              value={newMessage}
+              className="text-black py-2 px-5"
+              onChange={(e) => setNewMessage(e.target.value)}
+            />
+            <button onClick={() => sendMessage(chatData._id)}>
+              Send message
+            </button>
+            {chatMessages.content &&
+              [...chatMessages.content]
+                .sort((a, b) => a.timestamp - b.timestamp) // Sortowanie rosnąco po timestamp
+                .map((msg, key) => {
+                  return (
+                    <p key={key}>
+                      {msg.userId}: {msg.message}
+                    </p>
+                  );
+                })}
           </div>
         ) : (
           <p>No chat selected or data is still loading...</p>
