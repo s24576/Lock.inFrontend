@@ -31,11 +31,9 @@ const useAxios = () => {
   axiosInstance.interceptors.request.use(async (req) => {
     const user = jwtDecode(localStorage.getItem("loginToken"));
     const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
-    console.log("asdasd", token);
+    console.log("token po wymianie: ", token);
 
     if (!isExpired) return req;
-
-    console.log("token przed wysłaniem", localStorage.getItem("loginToken"));
 
     const response = await axios.post(
       `${baseURL}/user/refreshToken`,
@@ -43,14 +41,13 @@ const useAxios = () => {
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("loginToken")}`,
+          "Accept-Language": language,
         },
       }
     );
 
     localStorage.setItem("loginToken", response.data);
 
-    console.log("token1", response.data);
-    console.log("token2", userData.token);
     setUserData((prevData) => ({
       ...prevData,
       token: response.data,
