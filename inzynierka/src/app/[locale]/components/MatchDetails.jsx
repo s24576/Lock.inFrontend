@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import axios from "axios";
-import fetchData from "../api/riot/getMatchInfo";
 import findByPuuid from "../api/riot/findByPuuid";
 import Image from "next/image";
 import { SearchContext } from "../context/SearchContext";
@@ -14,15 +13,26 @@ const MatchDetails = () => {
   const [redirectData, setRedirectData] = useState({});
   const params = useParams();
   const router = useRouter();
+  const pathname = usePathname();
 
+  const langRegex = /^\/([a-z]{2})\//;
+  const langMatch = pathname.match(langRegex);
+  const language = langMatch ? langMatch[1] : "en";
   useEffect(() => {
     const getMatchData = async () => {
       try {
-        const data = await fetchData(params.matchId);
-        console.log(data);
-        setMatchData(data);
+        const response = await axios.get(
+          `http://localhost:8080/riot/getMatchInfo?matchId=${params.matchId}`,
+          {
+            headers: {
+              "Accept-Language": language,
+            },
+          }
+        );
+        setMatchData(response.data);
       } catch (error) {
         console.error(error);
+        throw error;
       }
     };
 
