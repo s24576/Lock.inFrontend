@@ -119,6 +119,25 @@ const Test = () => {
     }
   };
 
+  const deleteChat = async () => {
+    try {
+      const response =
+        await api.delete(`/messenger/deleteChat?chatId=${chatData._id}
+      `);
+
+      if (response.status === 200) console.log("chat deleted", chatData._id);
+
+      if (selectedChat === 0) {
+        setSelectedChat(1);
+      } else {
+        setSelectedChat(0);
+      }
+      getAllChats();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const selectFriend = (friend) => {
     setSelectedFriends((prev) => {
       // Sprawdzamy, czy przyjaciel już istnieje w tablicy na podstawie `_id`
@@ -142,7 +161,7 @@ const Test = () => {
     );
   };
 
-  const addNewMembers = async (username, chatId) => {
+  const addNewMembers = async (chatId, username) => {
     // Tworzymy tablicę nowych obiektów na podstawie `selectedFriends`
     const members = selectedFriends.map((friend) => {
       // Jeżeli `username` jest różne od `userData._id`, wybieramy `username`, inaczej `username2`
@@ -157,11 +176,13 @@ const Test = () => {
       );
 
       console.log(response.status);
+      getAllChats();
     } catch (error) {
       console.log(error);
     }
   };
 
+  //wyslij wiadomosc
   const sendMessage = async (chatId) => {
     try {
       const response = await api.post(
@@ -173,11 +194,13 @@ const Test = () => {
         ...prev, // Kopiuj poprzedni stan
         content: [...prev.content, response.data], // Dodaj nową wiadomość do tablicy content
       }));
+      getAllChats();
     } catch (error) {
       console.log(error);
     }
   };
 
+  //wiadomosci dla konkretnego chatu
   const getMessages = async (chatId) => {
     console.log("chat id: ", chatId);
     try {
@@ -193,6 +216,7 @@ const Test = () => {
   const [stompClient, setStompClient] = useState(null);
   const [newMessageReceived, setNewMessageReceived] = useState();
 
+  //websocket
   useEffect(() => {
     const socket = new SockJS("http://localhost:8080/ws");
     const client = new Client({
@@ -317,7 +341,16 @@ const Test = () => {
                 })}
                 <p>chat name: {chat.name}</p>
                 <p>chat id: {chat._id}</p>
-                <p>last message:</p>
+
+                {chat.lastMessage &&
+                chat.lastMessage.message &&
+                chat.lastMessage.userId ? (
+                  <p>
+                    {chat.lastMessage.userId}: {chat.lastMessage.message}
+                  </p>
+                ) : (
+                  <p>write message to start chatting</p>
+                )}
               </div>
             );
           })}
@@ -331,6 +364,25 @@ const Test = () => {
             {chatData.members.map((member, key) => {
               return <p key={key}>{member.username}</p>;
             })}
+
+            <Dialog>
+              <DialogTrigger className="border-2 border-white px-4 py-2">
+                Delete chat
+              </DialogTrigger>
+              <DialogContent className="bg-oxford-blue">
+                <DialogTitle className="font-semibold">Delete chat</DialogTitle>
+                <p>Are you sure?</p>
+                <DialogClose className="flex gap-x-3 justify-center">
+                  <div
+                    className="px-4 py-2 border-white border-2"
+                    onClick={() => deleteChat()}
+                  >
+                    Yes
+                  </div>
+                  <div className="px-4 py-2 border-white border-2">No</div>
+                </DialogClose>
+              </DialogContent>
+            </Dialog>
             <Dialog>
               <DialogTrigger className="border-2 border-white px-4 py-2">
                 Add new members
@@ -340,63 +392,57 @@ const Test = () => {
                   Add new members
                 </DialogTitle>
                 <div>
-                  {userData.friends &&
-                    userData.friends
-                      .filter((friend) => {
-                        // Sprawdź, czy friend znajduje się już w chatData.members
-                        const isAlreadyInChat = chatData.members.some(
-                          (member) =>
-                            member.username ===
-                            (friend.username !== userData._id
-                              ? friend.username
-                              : friend.username2)
-                        );
-                        return !isAlreadyInChat;
-                      })
-                      .map((friend, key) => (
-                        <div key={key} className="flex justify-between">
-                          <p>
-                            {friend.username !== userData._id
-                              ? friend.username
-                              : friend.username2}
-                          </p>
-                          <button onClick={() => selectFriend(friend)}>
-                            Add
-                          </button>
-                        </div>
-                      ))}
-                </div>
-
-                <p>Picked friends:</p>
-                <div className="flex gap-x-5">
-                  {selectedFriends.length > 0 &&
-                    selectedFriends.map((friend) => {
-                      return (
-                        <div className="flex gap-x-1 items-center">
-                          <p>
-                            {friend.username !== userData._id
-                              ? friend.username
-                              : friend.username2}
-                          </p>
-                          <button
-                            onClick={() => unselectFriend(friend)}
-                            className="text-red-500 font-bold"
-                          >
-                            X
-                          </button>
-                        </div>
+                  {userData.friends && userData.friends.length > 0 ? (
+                    userData.friends.filter((friend) => {
+                      // Sprawdź, czy friend znajduje się już w chatData.members
+                      const isAlreadyInChat = chatData.members.some(
+                        (member) =>
+                          member.username ===
+                          (friend.username !== userData._id
+                            ? friend.username
+                            : friend.username2)
                       );
-                    })}
+                      return !isAlreadyInChat;
+                    }).length > 0 ? (
+                      userData.friends
+                        .filter((friend) => {
+                          const isAlreadyInChat = chatData.members.some(
+                            (member) =>
+                              member.username ===
+                              (friend.username !== userData._id
+                                ? friend.username
+                                : friend.username2)
+                          );
+                          return !isAlreadyInChat;
+                        })
+                        .map((friend, key) => (
+                          <div key={key} className="flex justify-between">
+                            <p>
+                              {friend.username !== userData._id
+                                ? friend.username
+                                : friend.username2}
+                            </p>
+                            <button
+                              onClick={() =>
+                                addNewMembers(
+                                  chatData._id,
+                                  friend.username !== userData._id
+                                    ? friend.username
+                                    : friend.username2
+                                )
+                              }
+                            >
+                              Add
+                            </button>
+                          </div>
+                        ))
+                    ) : (
+                      <p>No friends to add</p>
+                    )
+                  ) : (
+                    <p>Add some friends to start chatting</p>
+                  )}
                 </div>
-
-                <DialogClose>
-                  <p
-                    onClick={() => addNewMembers(chatData._id)}
-                    className="border-2 border-white mx-auto px-5 py-2"
-                  >
-                    {selectedFriends.length > 0 ? "Add member" : "Add more"}
-                  </p>
-                </DialogClose>
               </DialogContent>
             </Dialog>
             <input
