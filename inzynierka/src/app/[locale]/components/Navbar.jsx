@@ -20,6 +20,7 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import FriendList from "./FriendList";
 import { useRouter } from "next/navigation";
+import { FaMessage } from "react-icons/fa6";
 
 const Navbar = () => {
   const { userData, setUserData, isLogged, setIsLogged } =
@@ -112,12 +113,18 @@ const Navbar = () => {
         <Link href="/findPlayer">{t("navbar:findPlayer")}</Link>
         <Link href="/findProfile">{t("navbar:findProfile")}</Link>
         <Link href="/builds">{t("navbar:builds")}</Link>
+
         {isLogged && (
           <p onClick={logout} className="cursor-pointer">
             {t("navbar:logOut")}
           </p>
         )}
-        {isLogged && <FriendList />}
+        {isLogged && (
+          <Link href="/messenger">
+            <FaMessage className="cursor-pointer text-[20px]" />
+          </Link>
+        )}
+        {isLogged && <FriendList className="cursor-pointer text-[20px]" />}
         <LanguageChanger></LanguageChanger>
       </div>
     </div>
