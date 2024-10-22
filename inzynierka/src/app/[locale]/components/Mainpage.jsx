@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, act } from "react";
 import { UserContext } from "../context/UserContext";
 import useAxios from "../hooks/useAxios";
 import Image from "next/image";
@@ -13,6 +13,8 @@ const Mainpage = () => {
   const { version } = useContext(SearchContext);
 
   const [followedProfiles, setFollowedProfiles] = useState([]);
+
+  const [myAccounts, setMyAccounts] = useState([]);
 
   const api = useAxios();
   const router = useRouter();
@@ -42,14 +44,25 @@ const Mainpage = () => {
     const fetchFollowed = async () => {
       try {
         const response = await api.get(`/riot/getRiotProfiles`);
-        console.log(response.data);
+        console.log("followed profiles:", response.data);
         setFollowedProfiles(response.data);
       } catch (error) {
         console.log(error);
       }
     };
 
+    const fetchMyAccounts = async () => {
+      try {
+        const response = await api.get(`/riot/getMyRiotProfiles`);
+        console.log("claimed accounts: ", response.data);
+        setMyAccounts(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     fetchFollowed();
+    fetchMyAccounts();
   }, []);
 
   const redirectToProfile = async (puuid, server) => {
@@ -126,6 +139,41 @@ const Mainpage = () => {
             </div>
           ) : (
             <p>{t("noneFollowed")}</p>
+          )}
+          {Array.isArray(myAccounts) && myAccounts.length > 0 ? (
+            <div className="mt-8">
+              <h1 className="text-[36px]">Claimed accounts:</h1>
+              {myAccounts.map((account, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="flex gap-x-4 items-center hover:bg-[#1a1a1a] cursor-pointer rounded-2xl"
+                    onClick={() =>
+                      redirectToProfile(account.puuid, account.server)
+                    }
+                  >
+                    <Image
+                      src={
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/profileicon/" +
+                        account.profileIconId +
+                        ".png"
+                      }
+                      width={50}
+                      height={50}
+                      alt="summonerIcon"
+                      className="rounded-full border-2 border-white"
+                    />
+                    <p>{account.gameName}</p>
+                    <p>{account.server}</p>
+                    <p>{account.summonerLevel} lvl</p>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            "not fetched"
           )}
         </div>
       )}

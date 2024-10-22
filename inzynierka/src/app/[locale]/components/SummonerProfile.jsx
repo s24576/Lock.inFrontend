@@ -8,8 +8,6 @@ import Image from "next/image";
 import { UserContext } from "@/app/[locale]/context/UserContext";
 import Link from "next/link";
 import { BiWorld } from "react-icons/bi";
-import { FaLock, FaUnlock } from "react-icons/fa";
-import { CiLock } from "react-icons/ci";
 import { GoLock } from "react-icons/go";
 import { MdOutlineRefresh } from "react-icons/md";
 import { toast } from "sonner";
@@ -167,6 +165,24 @@ const SummonerProfile = () => {
     }
   };
 
+  const claimAccount = async () => {
+    const param = playerData.server + "_" + playerData.puuid;
+    try {
+      const response = await api.put(
+        `/profile/addMyAccount?server_puuid=${param}`,
+        {}
+      );
+
+      console.log("account claiming status:", response.status);
+      toast.success("You have claimed this account");
+    } catch (error) {
+      toast.error("An error occured", {
+        description: error,
+      });
+      console.log(error);
+    }
+  };
+
   const handleQueueFilter = async (value) => {
     setFilterValue(value);
     setShowMoreButton(true);
@@ -215,7 +231,10 @@ const SummonerProfile = () => {
         </div>
         <div className="flex items-center justify-center gap-x-3  mr-[15%]">
           <MdOutlineRefresh className="text-[64px] cursor-pointer" />
-          <GoLock className="text-[60px] cursor-pointer"></GoLock>
+          <GoLock
+            onClick={() => claimAccount()}
+            className="text-[60px] cursor-pointer"
+          ></GoLock>
         </div>
       </div>
 
