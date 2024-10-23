@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/Navbar";
+import ClientLayout from "./clientLayout";
 import { UserContextProvider } from "./context/UserContext";
 import { SearchContextProvider } from "./context/SearchContext";
 import { ProfileContextProvider } from "./context/ProfileContext";
@@ -40,8 +40,7 @@ export default async function RootLayout({ children, params: { locale } }) {
             <ProfileContextProvider>
               <SearchContextProvider>
                 <UserContextProvider>
-                  <Navbar></Navbar>
-                  {children}
+                  <ClientLayout>{children}</ClientLayout>
                   {/* <Toaster richColors position="bottom-right"></Toaster> */}
                 </UserContextProvider>
               </SearchContextProvider>

@@ -1,27 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import getMyRiotProfiles from "../../api/riot/getMyRiotProfiles";
 import getChampionNames from "../../api/ddragon/getChampionNames";
 import createDuo from "../../api/team/createDuo";
+import getDuos from "../../api/team/getDuos";
+import getRiotShortProfiles from "../../api/riot/getRiotShortProfiles";
 import { useQuery, useMutation } from "react-query";
 import useAxios from "../../hooks/useAxios";
 import Select from "react-select";
 import Image from "next/image";
 import { customStyles } from "@/lib/styles/championNamesList";
+import { SearchContext } from "../../context/SearchContext";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 
 const Duo = () => {
   const api = useAxios();
+
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const langRegex = /^\/([a-z]{2})\//;
+  const langMatch = pathname.match(langRegex);
+  const language = langMatch ? langMatch[1] : "en";
+
+  const { version } = useContext(SearchContext);
 
   const {
     data: riotProfiles,
     error,
     isLoading,
-  } = useQuery("myRiotProfiles", () => getMyRiotProfiles(api));
+  } = useQuery("myRiotProfiles", () => getMyRiotProfiles(api), {
+    refetchOnWindowFocus: false,
+  });
 
   const {
     data: championNames,
     error: championNamesError,
     isLoading: championNamesLoading,
-  } = useQuery("championNames", () => getChampionNames());
+  } = useQuery("championNames", () => getChampionNames(), {
+    refetchOnWindowFocus: false,
+  });
+
+  const {
+    data: duos,
+    error: duosError,
+    isLoading: duosLoading,
+  } = useQuery("duos", () => getDuos(language), {
+    refetchOnWindowFocus: false,
+  });
+
+  const {
+    data: riotShortProfiles,
+    error: riotShortProfilesError,
+    isLoading: riotShortProfilesLoading,
+  } = useQuery(
+    "riotShortProfiles",
+    () => getRiotShortProfiles(duos, language),
+    {
+      enabled: !!duos, // Włącz zapytanie tylko wtedy, gdy dane duos są dostępne
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const [formData, setFormData] = useState({
     puuid: "",
@@ -108,6 +147,17 @@ const Duo = () => {
 
   const handleSubmit = async () => {
     console.log(formData);
+
+    // Sprawdzenie, czy któreś z pól jest puste
+    const isEmptyField = Object.values(formData).some(
+      (value) => value === "" || (Array.isArray(value) && value.length === 0)
+    );
+
+    if (isEmptyField) {
+      console.error("Niektóre pola są puste");
+      return;
+    }
+
     try {
       await mutateAsync(formData);
     } catch (error) {
@@ -123,23 +173,26 @@ const Duo = () => {
     );
 
   return (
-    <div className="h-screen w-full flex flex-col justify-center items-center text-white">
+    <div className="pt-[100px] h-screen w-full flex flex-col items-center text-white">
       <p>Duo ogłoszenie</p>
+      <p className="pt-2">Konta do wyboru:</p>
       {riotProfiles.map((profile, index) => {
         return (
           <div
             key={index}
-            className="py-1 hover:bg-slate-800 cursor-pointer"
+            className=" hover:bg-slate-800 cursor-pointer"
             onClick={() =>
               setFormData((prevFormData) => ({
                 ...prevFormData,
-                puuid: profile.puuid,
+                puuid: profile.server + "_" + profile.puuid,
               }))
             }
           >
             <p
               className={
-                formData.puuid === profile.puuid ? "text-green-500" : ""
+                formData.puuid === profile.server + "_" + profile.puuid
+                  ? "text-green-500"
+                  : ""
               }
             >
               {profile.puuid}
@@ -341,6 +394,62 @@ const Duo = () => {
           Submit{" "}
         </button>
       </form>
+      <div className="grid grid-cols-4 gap-4 w-[80%]">
+        {Array.isArray(duos.content) &&
+          duos.content.length > 0 &&
+          duos.content.map((duo, index) => {
+            return (
+              <div key={index} className="text-white">
+                <p>DUO:</p>
+                {Array.isArray(riotShortProfiles) &&
+                  riotShortProfiles.length > 0 &&
+                  riotProfiles.map((profile, index) => {
+                    if (profile.puuid === duo.puuid.substring(5)) {
+                      return (
+                        <div
+                          className="flex gap-x-3 items-center"
+                          key={index}
+                          onClick={() => {
+                            router.push(
+                              `/summoner/${profile.server}/${profile.tagLine}/${profile.gameName}`
+                            );
+                          }}
+                        >
+                          <Image
+                            src={
+                              "https://ddragon.leagueoflegends.com/cdn/" +
+                              version +
+                              "/img/profileicon/" +
+                              profile.profileIconId +
+                              ".png"
+                            }
+                            width={50}
+                            height={50}
+                            alt="summonerIcon"
+                            className="rounded-full border-2 border-white"
+                          />
+                          <p>{profile.gameName}</p>
+                          <p>{profile.summonerLevel} lvl</p>
+                        </div>
+                      );
+                    }
+                  })}
+
+                <p>{duo.positions}</p>
+                <p>
+                  {duo.minRank} - {duo.maxRank}
+                </p>
+                <p>{duo.languages}</p>
+                <p>{duo.championIds}</p>
+                {duo.saved ? (
+                  <FaHeart className="text-[36px]"></FaHeart>
+                ) : (
+                  <FaRegHeart className="text-[36px]"></FaRegHeart>
+                )}
+              </div>
+            );
+          })}
+      </div>
     </div>
   );
 };

@@ -43,7 +43,7 @@ const Mainpage = () => {
   useEffect(() => {
     const fetchFollowed = async () => {
       try {
-        const response = await api.get(`/riot/getRiotProfiles`);
+        const response = await api.get(`/riot/getWatchlistRiotProfiles`);
         console.log("followed profiles:", response.data);
         setFollowedProfiles(response.data);
       } catch (error) {

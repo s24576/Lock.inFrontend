@@ -65,7 +65,7 @@ const SummonerProfile = () => {
       );
 
       setPlayerData(response.data);
-      console.log(response.data);
+      console.log("setplayer data: ", response.data);
 
       setLoading(false);
     } catch (error) {
@@ -127,10 +127,11 @@ const SummonerProfile = () => {
           ...prevUserData,
           watchList: response.data,
         }));
-        toast.success("You have followed");
+        toast.success("You have followed", { duration: 2000 });
       } catch (error) {
         toast.error("An error occured", {
           description: error,
+          duration: 2000,
         });
         console.log(error);
       }
@@ -174,10 +175,11 @@ const SummonerProfile = () => {
       );
 
       console.log("account claiming status:", response.status);
-      toast.success("You have claimed this account");
+      toast.success("You have claimed this account", { duration: 2000 });
     } catch (error) {
       toast.error("An error occured", {
         description: error,
+        duration: 2000,
       });
       console.log(error);
     }
