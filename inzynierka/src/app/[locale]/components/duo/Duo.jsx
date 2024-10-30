@@ -2,8 +2,8 @@ import React, { useState, useContext } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import getMyRiotProfiles from "../../api/riot/getMyRiotProfiles";
 import getChampionNames from "../../api/ddragon/getChampionNames";
-import createDuo from "../../api/team/createDuo";
-import getDuos from "../../api/team/getDuos";
+import createDuo from "../../api/duo/createDuo";
+import getDuos from "../../api/duo/getDuos";
 import getRiotShortProfiles from "../../api/riot/getRiotShortProfiles";
 import { useQuery, useMutation } from "react-query";
 import useAxios from "../../hooks/useAxios";
@@ -12,6 +12,7 @@ import Image from "next/image";
 import { customStyles } from "@/lib/styles/championNamesList";
 import { SearchContext } from "../../context/SearchContext";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { IoIosMore } from "react-icons/io";
 
 const Duo = () => {
   const api = useAxios();
@@ -148,10 +149,18 @@ const Duo = () => {
   const handleSubmit = async () => {
     console.log(formData);
 
-    // Sprawdzenie, czy któreś z pól jest puste
-    const isEmptyField = Object.values(formData).some(
-      (value) => value === "" || (Array.isArray(value) && value.length === 0)
-    );
+    // Sprawdzenie, czy któreś z pól jest puste, z wyjątkiem minRankDivision i maxRankDivision dla Master, Grandmaster, Challenger
+    const isEmptyField = Object.entries(formData).some(([key, value]) => {
+      if (
+        (key === "minRankDivision" &&
+          ["Master", "Grandmaster", "Challenger"].includes(formData.minRank)) ||
+        (key === "maxRankDivision" &&
+          ["Master", "Grandmaster", "Challenger"].includes(formData.maxRank))
+      ) {
+        return false;
+      }
+      return value === "" || (Array.isArray(value) && value.length === 0);
+    });
 
     if (isEmptyField) {
       console.error("Niektóre pola są puste");
@@ -395,45 +404,43 @@ const Duo = () => {
         </button>
       </form>
       <div className="grid grid-cols-4 gap-4 w-[80%]">
-        {Array.isArray(duos.content) &&
-          duos.content.length > 0 &&
+        {duos &&
+          Array.isArray(riotShortProfiles) &&
+          riotShortProfiles.length > 0 &&
           duos.content.map((duo, index) => {
             return (
-              <div key={index} className="text-white">
-                <p>DUO:</p>
-                {Array.isArray(riotShortProfiles) &&
-                  riotShortProfiles.length > 0 &&
-                  riotProfiles.map((profile, index) => {
-                    if (profile.puuid === duo.puuid.substring(5)) {
-                      return (
-                        <div
-                          className="flex gap-x-3 items-center"
-                          key={index}
-                          onClick={() => {
-                            router.push(
-                              `/summoner/${profile.server}/${profile.tagLine}/${profile.gameName}`
-                            );
-                          }}
-                        >
-                          <Image
-                            src={
-                              "https://ddragon.leagueoflegends.com/cdn/" +
-                              version +
-                              "/img/profileicon/" +
-                              profile.profileIconId +
-                              ".png"
-                            }
-                            width={50}
-                            height={50}
-                            alt="summonerIcon"
-                            className="rounded-full border-2 border-white"
-                          />
-                          <p>{profile.gameName}</p>
-                          <p>{profile.summonerLevel} lvl</p>
-                        </div>
-                      );
-                    }
-                  })}
+              <div key={index} className="text-white mt-6">
+                {riotShortProfiles.map((profile, index) => {
+                  if (profile.puuid === duo.puuid.substring(5)) {
+                    return (
+                      <div
+                        className="flex gap-x-3 items-center hover:bg-[#1a1a1a] cursor-pointer rounded-2xl"
+                        key={index}
+                        onClick={() => {
+                          router.push(
+                            `/summoner/${profile.server}/${profile.tagLine}/${profile.gameName}`
+                          );
+                        }}
+                      >
+                        <Image
+                          src={
+                            "https://ddragon.leagueoflegends.com/cdn/" +
+                            version +
+                            "/img/profileicon/" +
+                            profile.profileIconId +
+                            ".png"
+                          }
+                          width={50}
+                          height={50}
+                          alt="summonerIcon"
+                          className="rounded-full border-2 border-white"
+                        />
+                        <p>{profile.gameName}</p>
+                        <p>{profile.summonerLevel} lvl</p>
+                      </div>
+                    );
+                  }
+                })}
 
                 <p>{duo.positions}</p>
                 <p>
@@ -446,6 +453,12 @@ const Duo = () => {
                 ) : (
                   <FaRegHeart className="text-[36px]"></FaRegHeart>
                 )}
+                <IoIosMore
+                  className="text-[36px]"
+                  onClick={() => {
+                    router.push(`/duo/${duo._id}`);
+                  }}
+                />
               </div>
             );
           })}

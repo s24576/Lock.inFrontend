@@ -13,7 +13,7 @@ const createDuo = async (api, formData) => {
   console.log("zmielona data: ", data);
 
   try {
-    const response = await api.post(`/api/team/createDuo`, data);
+    const response = await api.post(`/api/duo/createDuo`, data);
     console.log("claimed accounts for duo: ", response.data);
     return response.data; // Zwracamy dane
   } catch (error) {

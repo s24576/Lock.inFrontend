@@ -31,7 +31,6 @@ const useAxios = () => {
   axiosInstance.interceptors.request.use(async (req) => {
     const user = jwtDecode(localStorage.getItem("loginToken"));
     const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
-    console.log("token po wymianie: ", token);
 
     if (!isExpired) return req;
 
