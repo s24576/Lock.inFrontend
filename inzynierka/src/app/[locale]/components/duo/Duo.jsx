@@ -5,6 +5,7 @@ import getChampionNames from "../../api/ddragon/getChampionNames";
 import createDuo from "../../api/duo/createDuo";
 import getDuos from "../../api/duo/getDuos";
 import getRiotShortProfiles from "../../api/riot/getRiotShortProfiles";
+import answerDuo from "../../api/duo/answerDuo";
 import { useQuery, useMutation } from "react-query";
 import useAxios from "../../hooks/useAxios";
 import Select from "react-select";
@@ -173,6 +174,18 @@ const Duo = () => {
       console.error(error);
     }
   };
+
+  const { mutateAsync: answerDuoMutation } = useMutation(
+    ({ puuid, duoId }) => answerDuo(api, puuid, duoId),
+    {
+      onSuccess: () => {
+        console.log("Duo answered successfully");
+      },
+      onError: () => {
+        console.error("Error answering duo");
+      },
+    }
+  );
 
   if (isLoading || championNamesLoading)
     return (
@@ -451,7 +464,16 @@ const Duo = () => {
                 {duo.saved ? (
                   <FaHeart className="text-[36px]"></FaHeart>
                 ) : (
-                  <FaRegHeart className="text-[36px]"></FaRegHeart>
+                  <FaRegHeart
+                    className="text-[36px]"
+                    onClick={() => {
+                      console.log("dodawanie duo");
+                      answerDuoMutation({
+                        puuid: riotProfiles[0].puuid,
+                        duoId: duo._id,
+                      });
+                    }}
+                  ></FaRegHeart>
                 )}
                 <IoIosMore
                   className="text-[36px]"

@@ -95,6 +95,9 @@ const Navbar = () => {
             <SheetClose asChild>
               <Link href="/duo">Duo</Link>
             </SheetClose>
+            <SheetClose asChild>
+              <Link href="/duo/invites">Duo invites</Link>
+            </SheetClose>
 
             <SheetDescription>
               Tssshis action cannot be undone. This will permanently delete your

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { SearchContext } from "../context/SearchContext";
+import { useQuery } from "react-query";
 
 const Mainpage = () => {
   const { userData, isLogged, setUserData, setIsLogged } =
@@ -64,6 +65,44 @@ const Mainpage = () => {
     fetchFollowed();
     fetchMyAccounts();
   }, []);
+
+  const { error: findPlayerError, isLoading: findPlayerIsLoading } = useQuery(
+    "findPlayer",
+    async () => {
+      try {
+        const response = await api.get(
+          `riot/findPlayer?server=eun1&tag=eune&name=Kicker7`
+        );
+        console.log(response.data);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { error: findPlayerError2, isLoading: findPlayerIsLoading2 } = useQuery(
+    "findPlayer2",
+    async () => {
+      try {
+        const response = await api.get(
+          `riot/findPlayer?server=eun1&tag=gbe&name=gbe%20chief%20keef`
+        );
+        console.log(response.data);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const redirectToProfile = async (puuid, server) => {
     try {
