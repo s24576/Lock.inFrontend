@@ -66,6 +66,7 @@ const Mainpage = () => {
     fetchMyAccounts();
   }, []);
 
+  //cache Kicker7
   const { error: findPlayerError, isLoading: findPlayerIsLoading } = useQuery(
     "findPlayer",
     async () => {
@@ -85,6 +86,7 @@ const Mainpage = () => {
     }
   );
 
+  //cache gbe chief keef
   const { error: findPlayerError2, isLoading: findPlayerIsLoading2 } = useQuery(
     "findPlayer2",
     async () => {

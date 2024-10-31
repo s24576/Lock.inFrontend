@@ -6,7 +6,6 @@ const page = () => {
   return (
     <div>
       <SummonerProfile></SummonerProfile>
-      <Toaster richColors position="top-center"></Toaster>
     </div>
   );
 };

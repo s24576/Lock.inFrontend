@@ -127,11 +127,13 @@ const SummonerProfile = () => {
           ...prevUserData,
           watchList: response.data,
         }));
-        toast.success("You have followed", { duration: 2000 });
+        toast.success("You have followed", {
+          duration: 1000,
+        });
       } catch (error) {
         toast.error("An error occured", {
           description: error,
-          duration: 2000,
+          duration: 1000,
         });
         console.log(error);
       }
@@ -154,10 +156,13 @@ const SummonerProfile = () => {
           ...prevUserData,
           watchList: response.data,
         }));
-        toast.success("You have unfollowed");
+        toast.success("You have unfollowed", {
+          duration: 1000,
+        });
       } catch (error) {
         toast.error("An error occured", {
           description: error,
+          duration: 1000,
         });
         console.log(error);
       }

@@ -9,6 +9,9 @@ export function UserContextProvider({ children }) {
   const [isLogged, setIsLogged] = useState(false);
   const [userData, setUserData] = useState({});
 
+  //db czy local storage?
+  const [duoSettings, setDuoSettings] = useState({});
+
   return (
     <UserContext.Provider
       value={{
@@ -16,6 +19,8 @@ export function UserContextProvider({ children }) {
         setIsLogged,
         userData,
         setUserData,
+        duoSettings,
+        setDuoSettings,
       }}
     >
       {children}

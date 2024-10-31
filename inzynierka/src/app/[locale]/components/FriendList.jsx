@@ -13,6 +13,7 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import useAxios from "../hooks/useAxios";
 import { UserContext } from "../context/UserContext";
+import { toast } from "sonner";
 
 const FriendList = () => {
   const { userData, setUserData, isLogged, setIsLogged } =
@@ -80,6 +81,11 @@ const FriendList = () => {
           (message) => {
             // console.log("Message received: ", message.body); // Debug incoming messages
             setReceivedMessage(message.body);
+            toast.message("Notification:", {
+              description: message.body,
+              duration: 2000,
+              position: "top-right",
+            });
           }
         );
 

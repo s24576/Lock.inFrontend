@@ -12,8 +12,10 @@ import Select from "react-select";
 import Image from "next/image";
 import { customStyles } from "@/lib/styles/championNamesList";
 import { SearchContext } from "../../context/SearchContext";
+import { UserContext } from "../../context/UserContext";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { IoIosMore } from "react-icons/io";
+import DuoSettings from "./DuoSettings";
 
 const Duo = () => {
   const api = useAxios();
@@ -26,6 +28,7 @@ const Duo = () => {
   const language = langMatch ? langMatch[1] : "en";
 
   const { version } = useContext(SearchContext);
+  const { duoSettings } = useContext(UserContext);
 
   const {
     data: riotProfiles,
@@ -127,7 +130,7 @@ const Duo = () => {
         label: (
           <div className="flex items-center">
             <Image
-              src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${championKey}.png`}
+              src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championKey}.png`}
               alt={championValue}
               width={20}
               height={20}
@@ -149,19 +152,32 @@ const Duo = () => {
 
   const handleSubmit = async () => {
     console.log(formData);
+    console.log(duoSettings.duoAccount);
+
+    // Nadpisanie pola puuid wartością z duoSettings
+    const updatedFormData = {
+      ...formData,
+      puuid: duoSettings.duoAccount.server + "_" + duoSettings.duoAccount.puuid,
+    };
 
     // Sprawdzenie, czy któreś z pól jest puste, z wyjątkiem minRankDivision i maxRankDivision dla Master, Grandmaster, Challenger
-    const isEmptyField = Object.entries(formData).some(([key, value]) => {
-      if (
-        (key === "minRankDivision" &&
-          ["Master", "Grandmaster", "Challenger"].includes(formData.minRank)) ||
-        (key === "maxRankDivision" &&
-          ["Master", "Grandmaster", "Challenger"].includes(formData.maxRank))
-      ) {
-        return false;
+    const isEmptyField = Object.entries(updatedFormData).some(
+      ([key, value]) => {
+        if (
+          (key === "minRankDivision" &&
+            ["Master", "Grandmaster", "Challenger"].includes(
+              updatedFormData.minRank
+            )) ||
+          (key === "maxRankDivision" &&
+            ["Master", "Grandmaster", "Challenger"].includes(
+              updatedFormData.maxRank
+            ))
+        ) {
+          return false;
+        }
+        return value === "" || (Array.isArray(value) && value.length === 0);
       }
-      return value === "" || (Array.isArray(value) && value.length === 0);
-    });
+    );
 
     if (isEmptyField) {
       console.error("Niektóre pola są puste");
@@ -169,7 +185,7 @@ const Duo = () => {
     }
 
     try {
-      await mutateAsync(formData);
+      await mutateAsync(updatedFormData);
     } catch (error) {
       console.error(error);
     }
@@ -196,37 +212,20 @@ const Duo = () => {
 
   return (
     <div className="pt-[100px] h-screen w-full flex flex-col items-center text-white">
-      <p>Duo ogłoszenie</p>
-      <p className="pt-2">Konta do wyboru:</p>
-      {riotProfiles.map((profile, index) => {
-        return (
-          <div
-            key={index}
-            className=" hover:bg-slate-800 cursor-pointer"
-            onClick={() =>
-              setFormData((prevFormData) => ({
-                ...prevFormData,
-                puuid: profile.server + "_" + profile.puuid,
-              }))
-            }
-          >
-            <p
-              className={
-                formData.puuid === profile.server + "_" + profile.puuid
-                  ? "text-green-500"
-                  : ""
-              }
-            >
-              {profile.puuid}
-            </p>
-          </div>
-        );
-      })}
+      <div className="relative w-full">
+        <p className="absolute left-1/2 transform -translate-x-1/2">
+          Duo ogłoszenie
+        </p>
+        <div className="absolute right-4">
+          <DuoSettings riotProfiles={riotProfiles} />
+        </div>
+      </div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
+        className="pt-5"
       >
         <div>
           <label>Positions:</label>

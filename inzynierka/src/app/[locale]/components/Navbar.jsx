@@ -16,14 +16,12 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/componentsShad/ui/sheet";
-import SockJS from "sockjs-client";
-import { Client } from "@stomp/stompjs";
 import FriendList from "./FriendList";
 import { useRouter } from "next/navigation";
 import { FaMessage } from "react-icons/fa6";
 
 const Navbar = () => {
-  const { userData, setUserData, isLogged, setIsLogged } =
+  const { userData, setUserData, isLogged, setIsLogged, setDuoSettings } =
     useContext(UserContext);
   const [loading, setLoading] = useState(true);
 
@@ -57,6 +55,7 @@ const Navbar = () => {
   const logout = () => {
     localStorage.removeItem("loginToken");
     setUserData({});
+    setDuoSettings({});
     setIsLogged(false);
     router.push("/");
   };
