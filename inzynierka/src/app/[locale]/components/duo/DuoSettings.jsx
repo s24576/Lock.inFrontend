@@ -19,6 +19,9 @@ const DuoSettings = ({ riotProfiles }) => {
   const { duoSettings, setDuoSettings } = useContext(UserContext);
   const { version } = useContext(SearchContext);
 
+  //duo settings musi byc z db, duo account z db, oprocz tego ustawianie interesujacych championow tez z db
+  //wszystko leci przez user context
+
   //mapowanie profili riot na obiekty do selecta
   const profileOptions = riotProfiles
     ? riotProfiles.map((profile) => ({
