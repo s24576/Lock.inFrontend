@@ -8,12 +8,23 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/componentsShad/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/componentsShad/ui/dialog";
 import { IoPeople, IoPersonAddSharp } from "react-icons/io5";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import useAxios from "../hooks/useAxios";
 import { UserContext } from "../context/UserContext";
 import { toast } from "sonner";
+import { MdDelete } from "react-icons/md";
+import { useMutation } from "react-query";
+import deleteFriend from "../api/profile/deleteFriend";
 
 const FriendList = () => {
   const { userData, setUserData, isLogged, setIsLogged } =
@@ -178,6 +189,22 @@ const FriendList = () => {
     }
   };
 
+  const { mutateAsync: handleDeleteFriend } = useMutation(
+    (friendId) => {
+      console.log(friendId);
+      console.log("deleting friend....");
+      deleteFriend(api, friendId);
+    },
+    {
+      onSuccess: (data) => {
+        console.log("Friend deleted succesfully:", data);
+      },
+      onError: (error) => {
+        console.error("Error deleting friend:", error);
+      },
+    }
+  );
+
   return (
     <Sheet>
       <SheetTrigger>
@@ -241,11 +268,40 @@ const FriendList = () => {
           <p className="text-[24px]">Your friends:</p>
           {isLogged && userData.friends && userData.friends.length > 0 ? (
             userData.friends.map((friend, key) => (
-              <p key={key}>
-                {friend.username !== userData._id
-                  ? friend.username
-                  : friend.username2}
-              </p>
+              <div key={key} className="flex justify-between">
+                <p>
+                  {friend.username !== userData._id
+                    ? friend.username
+                    : friend.username2}
+                </p>
+                <Dialog>
+                  <DialogTrigger className="text-[32px] hover:text-gray-400">
+                    <MdDelete></MdDelete>
+                  </DialogTrigger>
+                  <DialogContent className="bg-oxford-blue">
+                    <DialogTitle className="font-semibold">
+                      Delete from friendlist
+                    </DialogTitle>
+                    <p>Are you sure?</p>
+                    <DialogClose
+                      asChild
+                      className="flex gap-x-3 justify-center"
+                    >
+                      <div className="px-4 flex">
+                        <button
+                          onClick={() => handleDeleteFriend(friend._id)}
+                          className="px-4 py-1 border-[1px] border-white"
+                        >
+                          Yes
+                        </button>
+                        <button className="px-4 py-1 border-[1px] border-white">
+                          No
+                        </button>
+                      </div>
+                    </DialogClose>
+                  </DialogContent>
+                </Dialog>
+              </div>
             ))
           ) : (
             <p>No friends available</p>
