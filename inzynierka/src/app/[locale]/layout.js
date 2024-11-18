@@ -9,6 +9,8 @@ import initTranslations from "./i18n";
 import TranslationsProvider from "./components/TranslationsProvider";
 import { Toaster } from "sonner";
 
+// import { loadStripe } from "@stripe/stripe-js";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -24,6 +26,10 @@ const i18nNamespaces = [
   "login",
   "register",
 ];
+
+// const stripePromise = loadStripe(
+//   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+// );
 
 export default async function RootLayout({ children, params: { locale } }) {
   const { t, resources } = await initTranslations(locale, i18nNamespaces);
@@ -41,6 +47,7 @@ export default async function RootLayout({ children, params: { locale } }) {
               <SearchContextProvider>
                 <UserContextProvider>
                   <ClientLayout>{children}</ClientLayout>
+
                   {/* <Toaster richColors position="bottom-right"></Toaster> */}
                 </UserContextProvider>
               </SearchContextProvider>

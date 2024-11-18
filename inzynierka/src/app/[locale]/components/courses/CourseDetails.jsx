@@ -5,7 +5,22 @@ import useAxios from "../../hooks/useAxios";
 import getCourseById from "../../api/courses/getCourseById";
 import addFilm from "../../api/courses/addFilm";
 
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import CheckoutPage from "../stripe/CheckoutPage";
+import stripePromise from "@/lib/stripe";
+// import convertToSubcurrency from "@/lib/convertToSubcurrency";
+
+// console.log(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+
 const CourseDetails = () => {
+  const public_key = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
+  if (public_key === undefined) {
+    throw new Error("Stripe public key is not set");
+  }
+
+  const stripePromise = loadStripe(public_key);
+
   const axiosInstance = useAxios();
   const params = useParams();
 
@@ -70,9 +85,14 @@ const CourseDetails = () => {
               <p>{courseData.description}</p>
               <p className="text-[24px]">{courseData.price} PLN</p>
             </div>
+
+            <Elements stripe={stripePromise}>
+              <CheckoutPage courseId={courseData._id}></CheckoutPage>
+            </Elements>
+
             <p className="text-[28px]">Episodes:</p>
             <form
-              className="flex flex-col gap-y-2 text-black"
+              className="flex flex-col gap-y-2 text-black min-w-[800px]"
               onSubmit={handleSubmit}
             >
               <input
