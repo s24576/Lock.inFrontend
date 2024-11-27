@@ -32,13 +32,16 @@ const Register = () => {
         throw Error("Passwords are different");
       }
 
+      const registerForm = {
+        username: username,
+        email: email,
+        password: password,
+      };
+
+      console.log("przed axios", language);
       const response = await axios.post(
         "http://localhost:8080/user/register",
-        {
-          username: username,
-          email: email,
-          password: password,
-        },
+        registerForm,
         {
           headers: {
             "Accept-Language": language,
@@ -49,6 +52,7 @@ const Register = () => {
       setIsRegistered(true);
 
       console.log("dodano do db");
+
       // Tutaj możesz dodać kod obsługujący poprawną odpowiedź z serwera, na przykład przekierowanie użytkownika do innej strony
     } catch (error) {
       if (error.response) {
