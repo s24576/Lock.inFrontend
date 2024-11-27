@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { MdDelete } from "react-icons/md";
 import { useMutation } from "react-query";
 import deleteFriend from "../api/profile/deleteFriend";
+import ReportForm from "./reports/ReportForm";
 
 const FriendList = () => {
   const { userData, setUserData, isLogged, setIsLogged } =
@@ -274,33 +275,40 @@ const FriendList = () => {
                     ? friend.username
                     : friend.username2}
                 </p>
-                <Dialog>
-                  <DialogTrigger className="text-[32px] hover:text-gray-400">
-                    <MdDelete></MdDelete>
-                  </DialogTrigger>
-                  <DialogContent className="bg-oxford-blue">
-                    <DialogTitle className="font-semibold">
-                      Delete from friendlist
-                    </DialogTitle>
-                    <p>Are you sure?</p>
-                    <DialogClose
-                      asChild
-                      className="flex gap-x-3 justify-center"
-                    >
-                      <div className="px-4 flex">
-                        <button
-                          onClick={() => handleDeleteFriend(friend._id)}
-                          className="px-4 py-1 border-[1px] border-white"
-                        >
-                          Yes
-                        </button>
-                        <button className="px-4 py-1 border-[1px] border-white">
-                          No
-                        </button>
-                      </div>
-                    </DialogClose>
-                  </DialogContent>
-                </Dialog>
+                {/* report do osobnego komponentu */}
+                <div className="flex gap-x-4">
+                  <ReportForm
+                    objectId={friend._id}
+                    objectType={"member"}
+                  ></ReportForm>
+                  <Dialog>
+                    <DialogTrigger className="text-[32px] hover:text-gray-400">
+                      <MdDelete></MdDelete>
+                    </DialogTrigger>
+                    <DialogContent className="bg-oxford-blue">
+                      <DialogTitle className="font-semibold">
+                        Delete from friendlist
+                      </DialogTitle>
+                      <p>Are you sure?</p>
+                      <DialogClose
+                        asChild
+                        className="flex gap-x-3 justify-center"
+                      >
+                        <div className="px-4 flex">
+                          <button
+                            onClick={() => handleDeleteFriend(friend._id)}
+                            className="px-4 py-1 border-[1px] border-white"
+                          >
+                            Yes
+                          </button>
+                          <button className="px-4 py-1 border-[1px] border-white">
+                            No
+                          </button>
+                        </div>
+                      </DialogClose>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
             ))
           ) : (

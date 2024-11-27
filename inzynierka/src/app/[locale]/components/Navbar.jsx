@@ -121,6 +121,8 @@ const Navbar = () => {
         <Link href="/findPlayer">{t("navbar:findPlayer")}</Link>
         <Link href="/findProfile">{t("navbar:findProfile")}</Link>
         <Link href="/builds">{t("navbar:builds")}</Link>
+        <Link href="/user/my-reports">My reports</Link>
+        <Link href="/adminPanel">Admin</Link>
 
         {isLogged && (
           <p onClick={logout} className="cursor-pointer">
