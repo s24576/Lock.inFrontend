@@ -3,6 +3,7 @@ import { useMutation } from "react-query";
 import changePassword from "../../api/user/changePassword";
 import changeEmail from "../../api/user/changeEmail";
 import useAxios from "../../hooks/useAxios";
+import Link from "next/link";
 
 const Settings = () => {
   const [passwordData, setPasswordData] = useState({
@@ -73,6 +74,9 @@ const Settings = () => {
 
   return (
     <div className="p-[120px] flex flex-col h-screen items-center bg-linen text-black">
+      <Link href="/account/profile" className="underline">
+        Your Profile
+      </Link>
       <p className="text-xl mb-4">Change Password</p>
       <form
         className="flex flex-col gap-y-2 text-black w-[25%]"
