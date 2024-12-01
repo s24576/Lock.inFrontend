@@ -3,7 +3,6 @@ import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
 import useAxios from "../hooks/useAxios";
 import { UserContext } from "../context/UserContext";
-import { IoPeople, IoPersonAddSharp } from "react-icons/io5";
 import LanguageChanger from "./LanguageChanger";
 import { useTranslation } from "react-i18next";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -19,6 +18,7 @@ import {
 import FriendList from "./FriendList";
 import { useRouter } from "next/navigation";
 import { FaMessage } from "react-icons/fa6";
+import { FaUser } from "react-icons/fa";
 import { CiWarning } from "react-icons/ci";
 
 const Navbar = () => {
@@ -137,6 +137,11 @@ const Navbar = () => {
             </Link>
           )}
           {isLogged && <FriendList className="cursor-pointer text-[20px]" />}
+          {isLogged && (
+            <Link href="/account/settings">
+              <FaUser className="cursor-pointer text-[20px]"></FaUser>
+            </Link>
+          )}
           <LanguageChanger></LanguageChanger>
         </div>
       </div>
@@ -145,7 +150,7 @@ const Navbar = () => {
           <CiWarning className="text-[28px]"></CiWarning>
           <p className="font-semibold">
             Your account is not confirmed yet, click{" "}
-            <Link href="/confirmRegistration" className="underline">
+            <Link href="/login/confirmRegistration" className="underline">
               here
             </Link>{" "}
             to confirm

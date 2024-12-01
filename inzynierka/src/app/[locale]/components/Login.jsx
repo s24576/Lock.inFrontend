@@ -120,7 +120,7 @@ const Login = () => {
         />
         <div className="mt-4 flex justify-between w-[80%] text-[20px] text-gray-100 font-semibold">
           <Link href="/register">{t("login:registerRedirect")}</Link>
-          <Link href="/register">{t("login:forgotPassword")}</Link>
+          <Link href="/login/forgot-password">{t("login:forgotPassword")}</Link>
         </div>
 
         <button className="mt-4 w-[50%] text-gray-100 bg-oxford-blue py-1 text-[22px] font-semibold rounded-full shadow-gray-900 shadow-lg hover:scale-105 transition-all duration-150">
