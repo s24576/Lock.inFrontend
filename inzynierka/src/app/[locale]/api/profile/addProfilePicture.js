@@ -1,15 +1,23 @@
-const addProfilePicture = async (axiosInstance, picture) => {
-  console.log("siema", picture);
+import axios from "axios";
 
+const addProfilePicture = async (axiosInstance, formData) => {
+  for (const [key, value] of formData.entries()) {
+    console.log(`${key}: ${value}`);
+  }
   try {
     const response = await axiosInstance.post(
-      `/profile/addProfilePicture/`,
-      picture
+      "/profile/addProfilePicture",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
-    console.log("picture added: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
-    console.log("Error adding film:", error);
+    console.error("Error uploading profile picture:", error);
+    throw error;
   }
 };
 
