@@ -209,8 +209,8 @@ const SummonerProfile = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col justify-center items-center bg-linen">
-      <div className="mt-[80px] py-6 px-4 w-[80%] flex justify-between items-center bg-cordovan rounded-3xl">
+    <div className="min-h-screen w-full flex flex-col justify-center items-center bg-[#131313]">
+      <div className="mt-[80px] py-6 px-4 w-[80%] flex justify-between items-center rounded-3xl">
         <div className="flex items-center gap-x-3 ml-[15%]">
           <BiWorld className="text-[60px]"></BiWorld>
           <p className="text-[48px]">{params.server}</p>
@@ -278,7 +278,7 @@ const SummonerProfile = () => {
 
       <div className="flex w-[80%]">
         <div className="flex flex-col w-[35%]">
-          <div className="mt-8 flex justify-center gap-x-8 bg-oxford-blue py-7 rounded-3xl">
+          <div className="mt-8 flex justify-center gap-x-8  py-7 rounded-3xl border-[1px] border-[#f5f5f5]">
             {Array.isArray(playerData.ranks) && playerData.ranks.length > 0 ? (
               playerData.ranks.map((rank, key) => (
                 <div key={key} className="flex flex-col items-center">
@@ -308,7 +308,7 @@ const SummonerProfile = () => {
               </p>
             )}
           </div>
-          <div className="mt-8 flex justify-center items-center gap-x-6 bg-oxford-blue py-7 rounded-3xl">
+          <div className="mt-8 flex justify-center items-center gap-x-6  py-7 rounded-3xl border-[1px] border-[#f5f5f5]">
             {Array.isArray(playerData.mastery) &&
             playerData.mastery.length > 1 ? (
               playerData.mastery.map((mastery, key) => (
@@ -340,14 +340,18 @@ const SummonerProfile = () => {
             )}
           </div>
         </div>
-        <div className="ml-[5%] mt-8 w-[60%] py-6 bg-oxford-blue rounded-3xl flex flex-col gap-y-6 items-center justify-center">
+        <div className="ml-[5%] mt-8 w-[60%] py-6  rounded-3xl flex flex-col gap-y-6 items-center justify-center">
           {Array.isArray(playerData.matches) &&
           playerData.matches.length > 0 ? (
             playerData.matches.map((match, index) => {
               return (
                 <div
                   key={index}
-                  className="flex items-center gap-x-4 bg-air-force-blue w-[90%] py-1 px-8 rounded-3xl"
+                  className={
+                    match.win
+                      ? "flex items-center gap-x-4  w-[90%] py-1 px-8 rounded-3xl border-[1px] border-[#f5b800]"
+                      : "flex items-center gap-x-4  w-[90%] py-1 px-8 rounded-3xl border-[1px] border-[#afafaf]"
+                  }
                 >
                   <div className="flex gap-x-3 items-center">
                     <Image
@@ -364,26 +368,26 @@ const SummonerProfile = () => {
                     <p
                       className={
                         match.win
-                          ? "text-[#1FFB28] font-semibold text-[24px] w-[100px] text-center"
-                          : "text-[#DF1A0D] font-semibold text-[24px] w-[100px] text-center"
+                          ? "text-[#f5b800] font-semibold text-[24px] w-[100px] text-center"
+                          : "text-[#afafaf] font-semibold text-[24px] w-[100px] text-center"
                       }
                     >
                       {match.win ? "Victory" : "Loss"}
                     </p>
                   </div>
 
-                  <p className="w-[200px] text-center font-bold text-[20px]">
+                  <p className="w-[200px] text-center font-bold text-[20px] text-[#f5f5f5]">
                     {match.queueType}
                   </p>
 
                   <div className="flex gap-x-3 items-center">
-                    <p className="w-[100px] text-center font-bold text-[24px]">
+                    <p className="w-[100px] text-center font-bold text-[24px] text-[#f5f5f5]">
                       {" "}
                       {match.kills}/{match.deaths}/{match.assists}
                     </p>
                     <Link
                       href={"/match/" + match.matchId}
-                      className="ml-10 bg-arg-blue py-1 px-4 text-[24px] rounded-full hover:bg-arg-blue-dark"
+                      className="ml-10  py-1 px-4 text-[24px] rounded-full "
                     >
                       See more
                     </Link>
@@ -396,7 +400,7 @@ const SummonerProfile = () => {
           )}
           {showMoreButton && (
             <button
-              className="bg-arg-blue py-1 px-4 text-[24px] rounded-full hover:bg-arg-blue-dark"
+              className="bg-[#f5b800] text-[#131313] py-1 px-10 text-[24px] rounded-md "
               onClick={() => showMore()}
             >
               Show more

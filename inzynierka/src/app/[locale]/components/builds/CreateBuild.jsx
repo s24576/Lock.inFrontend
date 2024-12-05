@@ -145,7 +145,7 @@ const CreateBuild = () => {
       label: (
         <div className="flex items-center">
           <Image
-            src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${championKey}.png`}
+            src={`https://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${championKey}.png`}
             alt={championValue}
             width={20}
             height={20}

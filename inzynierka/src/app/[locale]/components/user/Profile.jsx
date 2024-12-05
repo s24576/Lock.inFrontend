@@ -95,7 +95,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="p-[120px] flex flex-col h-screen items-center bg-linen text-black">
+    <div className="p-[120px] flex flex-col h-screen items-center bg-[#131313] text-black">
       <p className="text-xl mb-4">Profile</p>
       <p>{userData._id}</p>
       <p>Your bio: {userData.bio}</p>

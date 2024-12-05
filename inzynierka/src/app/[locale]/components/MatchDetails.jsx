@@ -58,9 +58,9 @@ const MatchDetails = () => {
     }
   }, [redirectToProfile, redirectData, router]);
   return (
-    <div className="w-full min-h-screen flex justify-center text-black bg-linen">
+    <div className="w-full min-h-screen flex justify-center  bg-[#131313]">
       {Object.keys(matchData).length > 0 ? (
-        <div className="mt-[140px] flex flex-col items-center text-oxford-blue">
+        <div className="mt-[140px] flex flex-col items-center text-[#f5f5f5]">
           <h1 className="text-[40px] font-semibold">Match Details</h1>
           {matchData.info.queueId &&
             queueList &&
@@ -82,15 +82,16 @@ const MatchDetails = () => {
             {Math.floor(matchData.info.gameDuration / 60)}:
             {Math.floor(matchData.info.gameDuration % 60)}
           </p>
+
           <div className="flex items-center gap-x-5">
-            <div className="flex flex-col bg-azul py-8 px-10 gap-y-4 rounded-2xl">
+            <div className="flex flex-col  py-8 px-10 gap-y-4 rounded-2xl border-[2px] border-[#f5b800]">
               {matchData.info.participants
                 .slice(0, 5)
                 .map((participant, index) => {
                   return (
                     <div
                       key={index}
-                      className="flex bg-oxford-blue text-gray-300 py-1 px-2  items-center rounded-2xl gap-x-2"
+                      className="flex bg-[#131313] text-gray-300 py-1 px-2  items-center rounded-2xl gap-x-2"
                     >
                       <Image
                         src={
@@ -259,14 +260,14 @@ const MatchDetails = () => {
               <p>X DRAKES Y</p>
               <p>X BARONS Y</p>
             </div>
-            <div className="flex flex-col bg-cordovan py-8 px-10 gap-y-4 rounded-2xl">
+            <div className="flex flex-col  py-8 px-10 gap-y-4 rounded-2xl border-[2px] border-[#f5f5f5]">
               {matchData.info.participants
                 .slice(5, 10)
                 .map((participant, index) => {
                   return (
                     <div
                       key={index}
-                      className="flex bg-oxford-blue text-gray-300 py-1 px-2  items-center rounded-2xl gap-x-2"
+                      className="flex bg-[#131313] text-gray-300 py-1 px-2  items-center rounded-2xl gap-x-2"
                     >
                       <Image
                         src={

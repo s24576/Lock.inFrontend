@@ -73,7 +73,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="p-[120px] flex flex-col h-screen items-center bg-linen text-black">
+    <div className="p-[120px] flex flex-col h-screen items-center bg-[#131313] text-[#f5f5f5]">
       <Link href="/account/profile" className="underline">
         Your Profile
       </Link>
@@ -108,7 +108,7 @@ const Settings = () => {
         />
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded-md"
+          className="w-full bg-[#f5b800] text-[#131313] font-semibold p-2 rounded-md"
         >
           Change Password
         </button>
@@ -137,7 +137,7 @@ const Settings = () => {
         />
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded-md"
+          className="w-full border-[1px] border-[#afafaf] hover:text-[#f5b800] text-white p-2 rounded-md"
         >
           Change Email
         </button>

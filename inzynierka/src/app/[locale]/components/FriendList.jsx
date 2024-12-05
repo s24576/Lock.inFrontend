@@ -209,7 +209,7 @@ const FriendList = () => {
   return (
     <Sheet>
       <SheetTrigger>
-        <IoPeople className="text-[28px]"></IoPeople>
+        <IoPeople className="text-[28px] text-[#F5B800]"></IoPeople>
       </SheetTrigger>
       <SheetContent side={"right"} className="bg-oxford-blue">
         <h1 className="text-white">Friends</h1>

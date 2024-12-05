@@ -125,12 +125,12 @@ const Mainpage = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="h-screen w-full flex flex-col justify-center items-center text-white">
+    <div className="h-screen w-full flex flex-col justify-center items-center text-[#f5f5f5] bg-[#131313] ">
       <p>Mainpage</p>
       {isLogged && (
         <div>
           {isLogged && <p>Hello {userData.username}!</p>}
-          <h1 className="text-[36px]">{t("header")}</h1>
+          <h1 className="text-[36px] ">{t("header")}</h1>
           {Array.isArray(followedProfiles) && followedProfiles.length > 0 ? (
             <div className="flex flex-col gap-y-2">
               {followedProfiles.map((profile, index) => {

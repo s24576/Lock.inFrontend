@@ -1,6 +1,7 @@
 "use client";
 import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import useAxios from "../hooks/useAxios";
 import { UserContext } from "../context/UserContext";
 import LanguageChanger from "./LanguageChanger";
@@ -76,36 +77,37 @@ const Navbar = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="h-[72px] fixed bg-oxford-blue w-full text-gray-100 flex justify-between items-center px-4 z-20">
+      <div className="h-[72px] fixed bg-[#131313]  w-full text-gray-100 flex justify-between items-center px-4 z-20 ">
         <Sheet>
           <SheetTrigger>
-            <RxHamburgerMenu className="text-[28px]"></RxHamburgerMenu>
+            <RxHamburgerMenu className="text-[28px] text-[#F5B800]"></RxHamburgerMenu>
           </SheetTrigger>
-          <SheetContent side={"left"} className="bg-oxford-blue">
+          <SheetContent
+            side={"left"}
+            className="bg-[#131313] text-[#f5f5f5] border-r-[1px] border-r-[#f5f5f5]"
+          >
             <SheetHeader>
-              <SheetTitle>Sidebar</SheetTitle>
-              <SheetClose asChild>
+              <SheetClose asChild className="hover:text-[#f5b800] ">
                 <Link href="/builds/create">Create build</Link>
               </SheetClose>
-              <SheetClose asChild>
+              <SheetClose asChild className="hover:text-[#f5b800] ">
                 <Link href="/builds/me">My Builds</Link>
               </SheetClose>
-              <SheetClose asChild>
+              <SheetClose asChild className="hover:text-[#f5b800] ">
                 <Link href="/builds/saved">Saved Builds</Link>
               </SheetClose>
-              <SheetClose asChild>
+              <SheetClose asChild className="hover:text-[#f5b800] ">
                 <Link href="/duo">Duo</Link>
               </SheetClose>
-              <SheetClose asChild>
+              <SheetClose asChild className="hover:text-[#f5b800] ">
                 <Link href="/duo/invites">Duo invites</Link>
               </SheetClose>
-              <SheetClose asChild>
+              <SheetClose asChild className="hover:text-[#f5b800] ">
                 <Link href="/courses">Courses</Link>
               </SheetClose>
 
-              <SheetDescription>
-                Tssshis action cannot be undone. This will permanently delete
-                your account and remove your data from our servers.
+              <SheetDescription className="hidden">
+                description
               </SheetDescription>
             </SheetHeader>
           </SheetContent>
@@ -113,9 +115,9 @@ const Navbar = () => {
 
         <Link
           href="/"
-          className="text-[42px] absolute left-1/2 transform -translate-x-1/2"
+          className="text-[42px] absolute left-1/2 transform -translate-x-1/2 flex items-center"
         >
-          logo
+          <Image src="/logo2.svg" width={40} height={40} alt="logo"></Image>
         </Link>
         <div className="flex space-x-4 ml-auto items-center">
           {!isLogged && <Link href="/login">{t("navbar:logIn")}</Link>}
@@ -133,13 +135,13 @@ const Navbar = () => {
           )}
           {isLogged && (
             <Link href="/messenger">
-              <FaMessage className="cursor-pointer text-[20px]" />
+              <FaMessage className="cursor-pointer text-[20px] text-[#F5B800]" />
             </Link>
           )}
-          {isLogged && <FriendList className="cursor-pointer text-[20px]" />}
+          {isLogged && <FriendList className="cursor-pointer text-[20px] " />}
           {isLogged && (
             <Link href="/account/settings">
-              <FaUser className="cursor-pointer text-[20px]"></FaUser>
+              <FaUser className="cursor-pointer text-[20px] text-[#F5B800]"></FaUser>
             </Link>
           )}
           <LanguageChanger></LanguageChanger>
