@@ -5,7 +5,12 @@ const findByPuuid = async (matchId, puuid) => {
 
   try {
     const response = await axios.get(
-      `http://localhost:8080/riot/findPlayer?server=${server}&puuid=${puuid}`
+      `http://localhost:8080/riot/findPlayer?server=${server}&puuid=${puuid}`,
+      {
+        headers: {
+          "Accept-Language": "en",
+        },
+      }
     );
     return response.data;
   } catch (error) {

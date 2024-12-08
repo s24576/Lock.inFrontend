@@ -80,7 +80,12 @@ const SummonerProfile = () => {
       const response = await axios.get(
         `http://localhost:8080/riot/getMatchHistory?puuid=${
           playerData.puuid
-        }&count=${matchesShown + 5}&queue=${filterValue}`
+        }&count=${matchesShown + 5}&queue=${filterValue}`,
+        {
+          headers: {
+            "Accept-Language": "en",
+          },
+        }
       );
 
       if (response.data.length % 5 === 0) {
@@ -196,7 +201,12 @@ const SummonerProfile = () => {
     setMatchesShown(5);
     try {
       const response = await axios.get(
-        `http://localhost:8080/riot/getMatchHistory?puuid=${playerData.puuid}&queue=${value}`
+        `http://localhost:8080/riot/getMatchHistory?puuid=${playerData.puuid}&queue=${value}`,
+        {
+          headers: {
+            "Accept-Language": "en",
+          },
+        }
       );
       console.log(response.data);
       setPlayerData((prevData) => ({
@@ -213,7 +223,7 @@ const SummonerProfile = () => {
       <div className="mt-[80px] py-6 px-4 w-[80%] flex justify-between items-center rounded-3xl">
         <div className="flex items-center gap-x-3 ml-[15%]">
           <BiWorld className="text-[60px]"></BiWorld>
-          <p className="text-[48px]">{params.server}</p>
+          <p className="text-[48px]">{playerData.server}</p>
         </div>
         <div className="flex items-center gap-x-12">
           <Image
@@ -230,10 +240,8 @@ const SummonerProfile = () => {
             className="rounded-full border-2 border-white"
           />
           <div className="flex flex-col items-center justify-center">
-            <p className="text-[48px] font-semibold">
-              {decodeURIComponent(params.username)}
-            </p>
-            <p className="text-[40px]">#{params.tag}</p>
+            <p className="text-[48px] font-semibold">{playerData.gameName}</p>
+            <p className="text-[40px]">#{playerData.tagLine}</p>
           </div>
         </div>
         <div className="flex items-center justify-center gap-x-3  mr-[15%]">

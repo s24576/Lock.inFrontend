@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { FaMessage } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 import { CiWarning } from "react-icons/ci";
+import { MdLogout } from "react-icons/md";
 
 const Navbar = () => {
   const { userData, setUserData, isLogged, setIsLogged, setDuoSettings } =
@@ -88,6 +89,9 @@ const Navbar = () => {
           >
             <SheetHeader>
               <SheetClose asChild className="hover:text-[#f5b800] ">
+                <Link href="/builds">Builds</Link>
+              </SheetClose>
+              <SheetClose asChild className="hover:text-[#f5b800] ">
                 <Link href="/builds/create">Create build</Link>
               </SheetClose>
               <SheetClose asChild className="hover:text-[#f5b800] ">
@@ -104,6 +108,12 @@ const Navbar = () => {
               </SheetClose>
               <SheetClose asChild className="hover:text-[#f5b800] ">
                 <Link href="/courses">Courses</Link>
+              </SheetClose>
+              <SheetClose asChild className="hover:text-[#f5b800] ">
+                <Link href="/user/my-reports">My Reports</Link>
+              </SheetClose>
+              <SheetClose asChild className="hover:text-[#f5b800] ">
+                <Link href="/adminPanel">Admin</Link>
               </SheetClose>
 
               <SheetDescription className="hidden">
@@ -124,15 +134,7 @@ const Navbar = () => {
           {!isLogged && <Link href="/register">{t("navbar:register")}</Link>}
           <Link href="/findPlayer">{t("navbar:findPlayer")}</Link>
           <Link href="/findProfile">{t("navbar:findProfile")}</Link>
-          <Link href="/builds">{t("navbar:builds")}</Link>
-          <Link href="/user/my-reports">My reports</Link>
-          <Link href="/adminPanel">Admin</Link>
 
-          {isLogged && (
-            <p onClick={logout} className="cursor-pointer">
-              {t("navbar:logOut")}
-            </p>
-          )}
           {isLogged && (
             <Link href="/messenger">
               <FaMessage className="cursor-pointer text-[20px] text-[#F5B800]" />
@@ -143,6 +145,14 @@ const Navbar = () => {
             <Link href="/account/settings">
               <FaUser className="cursor-pointer text-[20px] text-[#F5B800]"></FaUser>
             </Link>
+          )}
+          {isLogged && (
+            <MdLogout
+              onClick={logout}
+              className="cursor-pointer text-[24px] text-[#f5b800]"
+            >
+              {t("navbar:logOut")}
+            </MdLogout>
           )}
           <LanguageChanger></LanguageChanger>
         </div>

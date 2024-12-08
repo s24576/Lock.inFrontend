@@ -30,6 +30,7 @@ const MatchDetails = () => {
           }
         );
         setMatchData(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error(error);
         throw error;
@@ -47,6 +48,11 @@ const MatchDetails = () => {
       setRedirectToProfile(true);
     } catch (error) {
       console.log(error);
+      return;
+    } finally {
+      router.push(
+        `/summoner/${response.data.server}/${reseponse.data.tagLine}/${response.data.gameName}`
+      );
     }
   };
 
@@ -65,6 +71,7 @@ const MatchDetails = () => {
           {matchData.info.queueId &&
             queueList &&
             queueList.map((queue, key) => {
+              // quelist nie istnieje bo nie ma w contextcie
               if (matchData.info.queueId == queue.queueId) {
                 return (
                   <p
@@ -80,7 +87,9 @@ const MatchDetails = () => {
             })}
           <p className="text-[32px] font-semibold">
             {Math.floor(matchData.info.gameDuration / 60)}:
-            {Math.floor(matchData.info.gameDuration % 60)}
+            {Math.floor(matchData.info.gameDuration % 60)
+              .toString()
+              .padStart(2, "0")}
           </p>
 
           <div className="flex items-center gap-x-5">
