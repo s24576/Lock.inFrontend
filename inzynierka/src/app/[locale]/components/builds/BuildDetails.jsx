@@ -6,6 +6,16 @@ import useAxios from "../../hooks/useAxios";
 import { useParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
+import { useQuery, useMutation } from "react-query";
+import getRunes from "../../api/ddragon/getRunes";
+import getCommentsById from "../../api/comments/getCommentsById";
+import addComment from "../../api/comments/addComment";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/componentsShad/ui/tooltip";
 
 const BuildDetails = () => {
   const { userData, isLogged } = useContext(UserContext);
@@ -19,6 +29,36 @@ const BuildDetails = () => {
   const params = useParams();
   const pathname = usePathname();
   const api = useAxios();
+
+  const {
+    data: runesData,
+    error: runesError,
+    isLoading: runesIsLoading,
+  } = useQuery("runesData", () => getRunes(), {
+    refetchOnWindowFocus: false,
+  });
+
+  const {
+    refetch: refetchComments,
+    data: commentsData,
+    error: commentsError,
+    isLoading: commentsIsLoading,
+  } = useQuery("commentsData", () => getCommentsById(params.buildId), {
+    refetchOnWindowFocus: false,
+  });
+
+  const { mutateAsync: addNewComment } = useMutation(
+    () => addComment(api, params.buildId, newComment),
+    {
+      onSuccess: (data) => {
+        console.log("comment created successfully:", data);
+        refetchComments();
+      },
+      onError: (error) => {
+        console.error("Error creating film:", error);
+      },
+    }
+  );
 
   useEffect(() => {
     const langRegex = /^\/([a-z]{2})\//;
@@ -52,25 +92,18 @@ const BuildDetails = () => {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(newComment);
+    console.log("New Comment:", newComment);
+    console.log("Build ID:", params.buildId);
+
+    if (!newComment.trim()) {
+      console.log("Comment is empty");
+      return;
+    }
 
     try {
-      const response = await axios.post(
-        `http://localhost:8080/build/addComment`,
-        {
-          buildId: params.buildId,
-          comment: newComment,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          },
-        }
-      );
-      console.log(response.data);
-      // Optionally, update the build data to include the new comment
+      await addNewComment();
     } catch (error) {
-      console.log(error);
+      console.error("Error creating comment:", error);
     }
 
     setNewComment("");
@@ -344,6 +377,144 @@ const BuildDetails = () => {
                 alt={buildData.item6}
               />
             </div>
+
+            <TooltipProvider>
+              <div className="flex gap-x-12">
+                <div className="flex gap-x-2">
+                  {runesData &&
+                    runesData.map((rune, key) => {
+                      if (
+                        rune.id.toString() === buildData.keystone1.id.toString()
+                      ) {
+                        return (
+                          <div
+                            key={key}
+                            className="flex flex-col items-center gap-y-4"
+                          >
+                            <Image
+                              src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
+                              alt={"test"}
+                              width={40}
+                              height={40}
+                            />
+
+                            <div className="flex flex-col gap-y-4 items-center">
+                              {rune.slots.map((slot, slotIndex) => (
+                                <div key={slotIndex} className="flex gap-x-3">
+                                  {slot.runes.map((rune, runeIndex) => {
+                                    const isSelected = buildData.runes1.some(
+                                      (selectedRune) =>
+                                        selectedRune.id === rune.id
+                                    );
+                                    return (
+                                      <div key={runeIndex}>
+                                        <Tooltip>
+                                          <TooltipTrigger>
+                                            <Image
+                                              src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
+                                              alt={rune.name}
+                                              width={40}
+                                              height={40}
+                                              className={
+                                                isSelected
+                                                  ? "opacity-100"
+                                                  : "opacity-40"
+                                              }
+                                            />
+                                          </TooltipTrigger>
+                                          <TooltipContent className="max-w-[350px]">
+                                            <div
+                                              dangerouslySetInnerHTML={{
+                                                __html: rune.longDesc,
+                                              }}
+                                            />
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      }
+                    })}
+                </div>
+
+                <div className="flex gap-x-2">
+                  {runesData &&
+                    runesData.map((rune, key) => {
+                      if (
+                        rune.id.toString() === buildData.keystone2.id.toString()
+                      ) {
+                        return (
+                          <div
+                            key={key}
+                            className="flex flex-col items-center gap-y-4"
+                          >
+                            <Image
+                              src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
+                              alt={"test"}
+                              width={40}
+                              height={40}
+                            />
+
+                            <div className="flex flex-col gap-y-4 items-center">
+                              {rune.slots
+                                .filter((_, slotIndex) => slotIndex !== 0)
+                                .map((slot, slotIndex) => (
+                                  <div key={slotIndex} className="flex gap-x-3">
+                                    {slot.runes.map((rune, runeIndex) => {
+                                      const isSelected = buildData.runes2.some(
+                                        (selectedRune) =>
+                                          selectedRune.id === rune.id
+                                      );
+                                      return (
+                                        <div key={runeIndex}>
+                                          <Tooltip>
+                                            <TooltipTrigger>
+                                              <Image
+                                                src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
+                                                alt={rune.name}
+                                                width={40}
+                                                height={40}
+                                                className={
+                                                  isSelected
+                                                    ? "opacity-100"
+                                                    : "opacity-40"
+                                                }
+                                              />
+                                            </TooltipTrigger>
+                                            <TooltipContent className="max-w-[350px]">
+                                              <div
+                                                dangerouslySetInnerHTML={{
+                                                  __html: rune.longDesc,
+                                                }}
+                                              />
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                ))}
+                            </div>
+                          </div>
+                        );
+                      }
+                    })}
+                </div>
+
+                <div className="flex flex-col gap-y-2 mt-12">
+                  {buildData &&
+                    buildData.runes.statShards.map((rune, key) => {
+                      return <p key={key}>{rune}</p>;
+                    })}
+                </div>
+              </div>
+            </TooltipProvider>
+
             <div className="flex items-center justify-center gap-x-4">
               <div className="flex flex-col items-center cursor-pointer ">
                 <AiOutlineLike
@@ -401,15 +572,19 @@ const BuildDetails = () => {
           </button>
         </form>
         <p className="text-[36px] mt-5">Comments</p>
-        <div className="flex flex-col">
-          {Array.isArray(comments.content) && comments.content.length > 0 ? (
-            comments.content.map((comment, index) => {
+        <div className="flex flex-col gap-y-4">
+          {commentsData &&
+          Array.isArray(commentsData.content) &&
+          commentsData.content.length > 0 ? (
+            commentsData.content.map((comment, index) => {
               return (
                 <div key={index}>
-                  <p>{comment.author}</p>
+                  <p className="font-semibold">{comment.username} said </p>
                   <p>{comment.comment}</p>
-                  <p>Upvotes: {comment.upVotes}</p>
-                  <p>Downvotes: {comment.downVotes}</p>
+                  <div className="flex gap-x-3">
+                    <p>Likes: {comment.likesCount}</p>
+                    <p>Dislikes: {comment.dislikesCount}</p>
+                  </div>
                 </div>
               );
             })
