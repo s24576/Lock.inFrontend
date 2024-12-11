@@ -18,6 +18,11 @@ module.exports = {
     },
     extend: {
       colors: {
+        night: "#131313",
+        amber: "#F5B800",
+        "white-smoke": "#F5F5F5",
+        silver: "#AFAFAF",
+
         "oxford-blue": "#001427",
         cordovan: "#9C3848",
         "cordovan-light": "#AF515F",
