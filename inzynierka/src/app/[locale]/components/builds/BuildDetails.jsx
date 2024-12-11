@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import useAxios from "../../hooks/useAxios";
 import { useParams, usePathname } from "next/navigation";
 import Image from "next/image";
@@ -13,6 +14,8 @@ import getRunes from "../../api/ddragon/getRunes";
 import getCommentsById from "../../api/comments/getCommentsById";
 import getResponsesById from "../../api/comments/getResponsesById";
 import addComment from "../../api/comments/addComment";
+import deleteComment from "../../api/comments/deleteComment";
+import deleteBuild from "../../api/builds/deleteBuild";
 import react from "../../api/comments/react";
 import {
   Tooltip,
@@ -46,6 +49,7 @@ const BuildDetails = () => {
   const params = useParams();
   const pathname = usePathname();
   const api = useAxios();
+  const router = useRouter();
 
   const {
     data: runesData,
@@ -129,16 +133,38 @@ const BuildDetails = () => {
       onSuccess: (data) => {
         console.log("comment created successfully:", data);
 
-        // Odśwież komentarze
         refetchComments();
-
-        // Jeżeli akcja to nie "showMore", dodaj nowy komentarz do allRepliesData
-        console.log("action", commentIdToFetch.action);
-
         refetchReplies();
       },
       onError: (error) => {
         console.error("Error creating comment:", error);
+      },
+    }
+  );
+
+  const { mutateAsync: deleteCommentMutation } = useMutation(
+    (commentId) => deleteComment(api, commentId),
+    {
+      onSuccess: () => {
+        console.log("comment deleted:");
+        refetchComments();
+        refetchReplies();
+      },
+      onError: (error) => {
+        console.error("Error creating reaction:", error);
+      },
+    }
+  );
+
+  const { mutateAsync: deleteBuildMutation } = useMutation(
+    (buildId) => deleteBuild(api, buildId),
+    {
+      onSuccess: () => {
+        console.log("build deleted:");
+        router.push("/builds");
+      },
+      onError: (error) => {
+        console.error("Error creating reaction:", error);
       },
     }
   );
@@ -150,6 +176,7 @@ const BuildDetails = () => {
         console.log("reaction created successfully:");
         refetchComments();
         refetchReplies();
+        fetchBuild();
       },
       onError: (error) => {
         console.error("Error creating reaction:", error);
@@ -157,28 +184,28 @@ const BuildDetails = () => {
     }
   );
 
+  const langRegex = /^\/([a-z]{2})\//;
+  const langMatch = pathname.match(langRegex);
+  const language = langMatch ? langMatch[1] : "en";
+
+  const fetchBuild = async () => {
+    try {
+      const response = await api.get(
+        `http://localhost:8080/build/getBuildById?buildId=${params.buildId}`,
+        {
+          headers: {
+            "Accept-Language": language,
+          },
+        }
+      );
+      console.log(response.data);
+      setBuildData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const langRegex = /^\/([a-z]{2})\//;
-    const langMatch = pathname.match(langRegex);
-    const language = langMatch ? langMatch[1] : "en";
-
-    const fetchBuild = async () => {
-      try {
-        const response = await api.get(
-          `http://localhost:8080/build/getBuildById?buildId=${params.buildId}`,
-          {
-            headers: {
-              "Accept-Language": language,
-            },
-          }
-        );
-        console.log(response.data);
-        setBuildData(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     fetchBuild();
   }, []);
 
@@ -206,150 +233,6 @@ const BuildDetails = () => {
     setNewComment("");
     setNewReply("");
     setShowReplyInput("");
-  };
-
-  const handleLike = async () => {
-    if (isLogged && !isLikeLoading) {
-      setIsLikeLoading(true);
-      //lajkowanie
-      if (buildData.canReact) {
-        try {
-          const response = await api.put(
-            `/comments/react?objectId=${buildData._id}&value=true`
-          );
-          console.log(response.data);
-
-          setBuildData((prevData) => ({
-            ...prevData,
-            likesCount: prevData.likesCount + 1,
-            canReact: false,
-          }));
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsLikeLoading(false);
-        }
-      }
-      //cofanie lajka
-      if (buildData.canReact === false && buildData.reaction === true) {
-        try {
-          const response = await api.delete(
-            `/comments/deleteReaction?objectId=${buildData._id}`
-          );
-          console.log(response.data);
-
-          setBuildData((prevData) => ({
-            ...prevData,
-            likesCount: prevData.likesCount - 1,
-            canReact: true,
-          }));
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsLikeLoading(false);
-        }
-      }
-      //przestawianie lajka z false na true
-      if (buildData.canReact === false && buildData.reaction === false) {
-        try {
-          const response = await api.put(
-            `/comments/react?objectId=${buildData._id}&value=true`
-          );
-          console.log(response.data);
-
-          setBuildData((prevData) => ({
-            ...prevData,
-            likesCount: prevData.likesCount + 1,
-            dislikesCount: prevData.dislikesCount - 1,
-            reaction: true,
-          }));
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsLikeLoading(false);
-        }
-      }
-    }
-  };
-
-  const handleDislike = async () => {
-    if (isLogged && !isDislikeLoading) {
-      setIsDislikeLoading(true);
-      //dislike
-      if (buildData.canReact) {
-        try {
-          const response = await api.put(
-            `/comments/react?objectId=${buildData._id}&value=false`
-          );
-          console.log(response.data);
-
-          setBuildData((prevData) => ({
-            ...prevData,
-            dislikesCount: prevData.dislikesCount + 1,
-            canReact: false,
-          }));
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsDislikeLoading(false);
-        }
-      }
-      //cofniecie dislike
-      if (buildData.canReact === false && buildData.reaction === false) {
-        try {
-          const response = await api.delete(
-            `/comments/deleteReaction?objectId=${buildData._id}`
-          );
-          console.log(response.data);
-
-          setBuildData((prevData) => ({
-            ...prevData,
-            dislikesCount: prevData.dislikesCount - 1,
-            canReact: true,
-          }));
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsDislikeLoading(false);
-        }
-      }
-
-      //zmiana z lajka na dislike
-      if (buildData.canReact === false && buildData.reaction === true) {
-        try {
-          const response = await api.put(
-            `/comments/react?objectId=${buildData._id}&value=false`
-          );
-          console.log(response.data);
-
-          setBuildData((prevData) => ({
-            ...prevData,
-            likesCount: prevData.likesCount - 1,
-            dislikesCount: prevData.dislikesCount + 1,
-            reaction: false,
-          }));
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsDislikeLoading(false);
-        }
-      }
-    }
-  };
-
-  const deleteBuild = async (buildId) => {
-    try {
-      const response = await api.delete(
-        `/build/deleteBuild?buildId=${buildId}`
-      );
-      console.log(response.data);
-      setBuilds((prevBuilds) => ({
-        ...prevBuilds,
-        content: prevBuilds.content.filter((build) => build._id !== buildId),
-      }));
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const saveBuild = async (buildId) => {
@@ -392,7 +275,7 @@ const BuildDetails = () => {
                 {isLogged && ( //do zmiany isLogged na usera
                   <button
                     onClick={() => {
-                      deleteBuild(buildData._id);
+                      deleteBuildMutation(buildData._id);
                     }}
                     className="mt-3"
                   >
@@ -414,31 +297,19 @@ const BuildDetails = () => {
               <div className="flex items-center justify-center">
                 <div className="flex flex-col items-center cursor-pointer ">
                   <AiOutlineLike
-                    onClick={handleLike}
-                    className={`text-[36px] hover:scale-110 transition-all duration-150 ${
-                      isLikeLoading ? "cursor-not-allowed" : ""
-                    } ${
-                      buildData.canReact === false &&
-                      buildData.reaction === true
-                        ? "text-green-400"
-                        : ""
-                    }`}
-                    disabled={isLikeLoading}
+                    onClick={() =>
+                      leaveReaction({ objectId: buildData._id, value: true })
+                    }
+                    className={`text-[36px] hover:scale-110 transition-all duration-150`}
                   />
                   <p>{buildData.likesCount}</p>
                 </div>
                 <div className="flex flex-col items-center cursor-pointer ">
                   <AiOutlineDislike
-                    onClick={handleDislike}
-                    className={`text-[36px] hover:scale-110 transition-all duration-150 ${
-                      isDislikeLoading ? "cursor-not-allowed" : ""
+                    onClick={() =>
+                      leaveReaction({ objectId: buildData._id, value: false })
                     }
-                  ${
-                    buildData.canReact === false && buildData.reaction === false
-                      ? "text-red-400"
-                      : ""
-                  }`}
-                    disabled={isDislikeLoading}
+                    className={`text-[36px] hover:scale-110 transition-all duration-150 `}
                   />
                   <p>{buildData.dislikesCount}</p>
                 </div>
@@ -672,6 +543,7 @@ const BuildDetails = () => {
           placeholder="Add comment"
           value={newComment}
           onChange={handleCommentChange}
+          onFocus={() => setShowReplyInput("")}
         />
         <button
           type="submit"
@@ -696,6 +568,10 @@ const BuildDetails = () => {
                     <p>Likes: {comment.likesCount}</p>
                     <p>Dislikes: {comment.dislikesCount}</p>
                   </div>
+                  <MdDelete
+                    className="text-[28px]"
+                    onClick={() => deleteCommentMutation(comment._id)}
+                  ></MdDelete>
                   <div className="flex justify-between items-center mt-3">
                     <AiOutlineLike
                       className="text-[28px] cursor-pointer hover:text-green-500"
@@ -767,6 +643,10 @@ const BuildDetails = () => {
                                 <p className="">Likes: {reply.likesCount}</p>
                                 <p>Dislikes: {reply.dislikesCount}</p>
                               </div>
+                              <MdDelete
+                                className="text-[28px]"
+                                onClick={() => deleteCommentMutation(reply._id)}
+                              ></MdDelete>
                               <div className="flex justify-between items-center mt-3">
                                 <AiOutlineLike
                                   className="text-[24px] cursor-pointer hover:text-green-500"
