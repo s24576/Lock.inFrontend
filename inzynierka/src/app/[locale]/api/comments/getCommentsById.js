@@ -1,14 +1,22 @@
 import axios from "axios";
 
-const getCommentsById = async (objectId) => {
+const getCommentsById = async (objectId, token, size) => {
+  console.log(token);
+  console.log("size,", size);
+
   try {
+    const headers = {
+      "Accept-Language": "en",
+    };
+
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
     const response = await axios.get(
-      `http://localhost:8080/comments/getComments?objectId=${objectId}`,
+      `http://localhost:8080/comments/getComments?objectId=${objectId}&size=${size}`,
       {
-        headers: {
-          // Ustawienie pustego nagłówka Authorization, aby upewnić się, że nie jest dodawany
-          "Accept-Language": "en",
-        },
+        headers,
       }
     );
     console.log("comments:", response.data);

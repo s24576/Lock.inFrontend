@@ -78,7 +78,7 @@ const Navbar = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="h-[72px] fixed bg-[#131313]  w-full text-gray-100 flex justify-between items-center px-4 z-20 ">
+      <div className="h-[72px] fixed bg-transparent  w-full text-gray-100 flex justify-between items-center px-4 z-20 ">
         <Sheet>
           <SheetTrigger>
             <RxHamburgerMenu className="text-[28px] text-[#F5B800]"></RxHamburgerMenu>

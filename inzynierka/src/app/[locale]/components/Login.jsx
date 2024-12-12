@@ -95,13 +95,13 @@ const Login = () => {
   }, [isLogged, router]);
 
   return (
-    <div className="text-white h-screen w-full flex flex-col items-center justify-center bg-linen">
+    <div className="text-white-smoke h-screen w-full flex flex-col items-center justify-center bg-night">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col w-[28%] p-10 text-oxford-blue bg-cordovan items-center rounded-3xl"
+        className="flex flex-col w-[28%] p-10 text-white-smoke  items-center rounded-3xl"
       >
         {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-        <p className="text-oxford-blue font-semibold text-[48px]">
+        <p className="text-white-smoke  font-semibold text-[48px]">
           {t("login:header")}
         </p>
         <input
@@ -109,21 +109,21 @@ const Login = () => {
           placeholder={t("login:username")}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="mt-12 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
+          className="mt-12 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg text-night"
         />
         <input
           type="password"
           placeholder={t("login:password")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-5 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
+          className="mt-5 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg text-night"
         />
         <div className="mt-4 flex justify-between w-[80%] text-[20px] text-gray-100 font-semibold">
           <Link href="/register">{t("login:registerRedirect")}</Link>
           <Link href="/login/forgot-password">{t("login:forgotPassword")}</Link>
         </div>
 
-        <button className="mt-4 w-[50%] text-gray-100 bg-oxford-blue py-1 text-[22px] font-semibold rounded-full shadow-gray-900 shadow-lg hover:scale-105 transition-all duration-150">
+        <button className="mt-4 w-[50%] text-gray-100 py-1 text-[22px] font-semibold rounded-full border-2 border-silver shadow-lg hover:scale-105 transition-all duration-150">
           {t("login:logIn")}
         </button>
         <div className="mt-6 flex gap-x-4 text-gray-100 text-[48px]">
