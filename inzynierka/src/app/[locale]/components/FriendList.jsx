@@ -87,6 +87,26 @@ const FriendList = () => {
       onConnect: () => {
         // console.log("Connected");
 
+        //nasluchiwanie do wiadomosci
+        client.subscribe(
+          `/user/${userData.username}/messenger/message`,
+          (message) => {
+            console.log("Message received: ", message.body); // Debug incoming messages
+            const parsed = JSON.parse(message.body);
+            console.log("Message received2: ", parsed); // Debug incoming messages
+            toast.message("New message:", {
+              description: `${parsed.userId} : ${parsed.message}`,
+              duration: 2000,
+              position: "top-right",
+            });
+            setNewMessageReceived(parsed.message);
+            setChatMessages((prev) => ({
+              ...prev, // Kopiuj poprzedni stan
+              content: [...prev.content, parsed], // Dodaj nową wiadomość do tablicy content
+            }));
+          }
+        );
+
         //nasluchiwanie do powiadomienia
         client.subscribe(
           `/user/${userData.username}/notification`,

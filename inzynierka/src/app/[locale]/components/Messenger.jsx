@@ -151,6 +151,19 @@ const Messenger = () => {
     }
   };
 
+  const leaveChat = async () => {
+    try {
+      const response = await api.delete(
+        `/messenger/leaveChat?chatId=${chatData._id}`
+      );
+      console.log(response.status);
+      getAllChats();
+      setSelectedChat(0);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const selectFriend = (friend) => {
     setSelectedFriends((prev) => {
       // Sprawdzamy, czy przyjaciel już istnieje w tablicy na podstawie `_id`
@@ -407,24 +420,32 @@ const Messenger = () => {
               return <p key={key}>{member.username}</p>;
             })}
 
-            <Dialog>
-              <DialogTrigger className="border-2 border-white px-4 py-2">
-                Delete chat
-              </DialogTrigger>
-              <DialogContent className="bg-oxford-blue">
-                <DialogTitle className="font-semibold">Delete chat</DialogTitle>
-                <p>Are you sure?</p>
-                <DialogClose className="flex gap-x-3 justify-center">
-                  <div
-                    className="px-4 py-2 border-white border-2"
-                    onClick={() => deleteChat()}
-                  >
-                    Yes
-                  </div>
-                  <div className="px-4 py-2 border-white border-2">No</div>
-                </DialogClose>
-              </DialogContent>
-            </Dialog>
+            <button onClick={() => leaveChat()}>Leave chat</button>
+            {chatData.privateChat === true ? (
+              ""
+            ) : (
+              <Dialog>
+                <DialogTrigger className="border-2 border-white px-4 py-2">
+                  Delete chat
+                </DialogTrigger>
+                <DialogContent className="bg-oxford-blue">
+                  <DialogTitle className="font-semibold">
+                    Delete chat
+                  </DialogTitle>
+                  <p>Are you sure?</p>
+                  <DialogClose className="flex gap-x-3 justify-center">
+                    <div
+                      className="px-4 py-2 border-white border-2"
+                      onClick={() => deleteChat()}
+                    >
+                      Yes
+                    </div>
+                    <div className="px-4 py-2 border-white border-2">No</div>
+                  </DialogClose>
+                </DialogContent>
+              </Dialog>
+            )}
+
             <Dialog>
               <DialogTrigger className="border-2 border-white px-4 py-2">
                 Add new members
