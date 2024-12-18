@@ -3,6 +3,8 @@
   "findProfile": "Find Profile",
   "logIn": "Log In",
   "logOut": "Log Out",
-  "register": "Register",
-  "builds": "Builds"
+  "builds": "Builds",
+  "courses": "Courses",
+  "team-up": "Team Up",
+  "desktop": "Desktop"
 }

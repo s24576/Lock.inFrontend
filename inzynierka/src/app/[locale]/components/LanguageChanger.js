@@ -60,42 +60,36 @@ export default function LanguageChanger() {
   };
 
   return (
-    <ul>
+    <ul className="text-[24px]">
       <li
         ref={languagesRef}
         className="px-2 cursor-pointer flex items-center relative"
       >
-        <Image
-          src={"/flags/" + currentLocale + ".svg"}
-          alt={currentLocale}
-          className="cursor-pointer border-[1px] border-gray-100 rounded-full"
-          width={45}
-          height={45}
+        <span
+          className="cursor-pointer rounded-full px-3 py-1"
           onClick={toggleDropdown}
-        />
+        >
+          {currentLocale === "en" ? "ENG" : "PL"}
+        </span>
         {showLanguages && (
-          <div className="absolute top-full left-0 mt-1 bg-oxford-blue rounded-md">
+          <div className="absolute top-full left-0 mt-1  rounded-md">
             <ul className="py-1">
               {languages
                 .filter((locale) => locale !== currentLocale)
                 .map((locale) => (
                   <li key={locale} className="p-2">
-                    <Image
-                      src={`/flags/${locale}.svg`}
-                      alt={locale}
-                      className="cursor-pointer border-[1px] border-gray-100 rounded-full"
-                      width={45}
-                      height={45}
+                    <span
+                      className="cursor-pointer  rounded-full px-3 py-1"
                       onClick={() => handleChange(locale)}
-                    />
+                    >
+                      {locale === "en" ? "ENG" : "PL"}
+                    </span>
                   </li>
                 ))}
             </ul>
           </div>
         )}
       </li>
-      <li></li>
-      <li></li>
     </ul>
   );
 }

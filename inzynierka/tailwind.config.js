@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const { fontFamily } = require("tailwindcss/defaultTheme");
+
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -64,6 +66,10 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      fontFamily: {
+        bangers: ["Bangers", "sans-serif"],
+        chewy: ["Chewy", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

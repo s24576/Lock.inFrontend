@@ -3,6 +3,8 @@
   "findProfile": "Znajdź profil",
   "logIn": "Zaloguj",
   "logOut": "Wyloguj",
-  "register": "Zarejestruj się",
-  "builds": "Buildy"
+  "builds": "Buildy",
+  "courses": "Kursy",
+  "team-up": "Drużyna",
+  "desktop": "Desktopowa"
 }

@@ -158,7 +158,11 @@ const Messenger = () => {
       );
       console.log(response.status);
       getAllChats();
-      setSelectedChat(0);
+      if (selectedChat === 0) {
+        setSelectedChat(1);
+      } else {
+        setSelectedChat(0);
+      }
     } catch (error) {
       console.log(error);
     }

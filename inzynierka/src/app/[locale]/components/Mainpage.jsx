@@ -126,7 +126,7 @@ const Mainpage = () => {
 
   return (
     <div className="h-screen w-full flex flex-col justify-center items-center text-[#f5f5f5] bg-[#131313] ">
-      <p>Mainpage</p>
+      <p className=" font-bangers text-[46px]">Mainpage</p>
       {isLogged && (
         <div>
           {isLogged && <p>Hello {userData.username}!</p>}

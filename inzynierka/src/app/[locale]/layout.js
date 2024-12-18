@@ -1,4 +1,6 @@
 import { Inter } from "next/font/google";
+import "@fontsource/bangers"; // Import czcionki Bangers
+import "@fontsource/chewy";
 import "./globals.css";
 import ClientLayout from "./clientLayout";
 import { UserContextProvider } from "./context/UserContext";
