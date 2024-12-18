@@ -36,13 +36,17 @@ body {
     text-align: center; /* Center the placeholder text */
   }
 
-  .placeholder-gray::placeholder {
-    color: #f3f4f6;
+  .placeholder-white-smoke::placeholder {
+    color: #f5f5f5;
     text-align: center;
   }
 
-  .placeholder-gray:focus::placeholder {
+  .placeholder-white-smoke:focus::placeholder {
     color: transparent;
+  }
+
+  .placeholder-white-smoke:hover::placeholder {
+    color: #f5b800;
   }
 }
 

@@ -7,6 +7,33 @@ import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { SearchContext } from "../context/SearchContext";
 import { useQuery } from "react-query";
+import { FaGlobeAmericas, FaGlobeEurope } from "react-icons/fa";
+import { BiSolidLock } from "react-icons/bi";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/componentsShad/ui/select";
+
+const servers = [
+  {
+    name: "EUNE",
+    value: "eun1",
+    icon: <FaGlobeEurope className="text-[28px]" />,
+  },
+  {
+    name: "EUW",
+    value: "euw1",
+    icon: <FaGlobeEurope className="text-[28px]" />,
+  },
+  {
+    name: "NA",
+    value: "na1",
+    icon: <FaGlobeAmericas className="text-[28px]" />,
+  },
+];
 
 const Mainpage = () => {
   const { userData, isLogged, setUserData, setIsLogged } =
@@ -125,99 +152,71 @@ const Mainpage = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="h-screen w-full flex flex-col justify-center items-center text-[#f5f5f5] bg-[#131313] ">
-      <p className=" font-bangers text-[46px]">Mainpage</p>
-      {isLogged && (
-        <div>
-          {isLogged && <p>Hello {userData.username}!</p>}
-          <h1 className="text-[36px] ">{t("header")}</h1>
-          {Array.isArray(followedProfiles) && followedProfiles.length > 0 ? (
-            <div className="flex flex-col gap-y-2">
-              {followedProfiles.map((profile, index) => {
-                if (profile.gameName !== null) {
-                  return (
-                    <div
-                      key={index}
-                      className="flex gap-x-4 items-center hover:bg-[#1a1a1a] cursor-pointer rounded-2xl"
-                      onClick={() =>
-                        redirectToProfile(profile.puuid, profile.server)
-                      }
-                    >
-                      <Image
-                        src={
-                          "https://ddragon.leagueoflegends.com/cdn/" +
-                          version +
-                          "/img/profileicon/" +
-                          profile.profileIconId +
-                          ".png"
-                        }
-                        width={50}
-                        height={50}
-                        alt="summonerIcon"
-                        className="rounded-full border-2 border-white"
-                      />
-                      <p>{profile.gameName}</p>
-                      <p>{profile.server}</p>
-                      <p>{profile.summonerLevel} lvl</p>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div
-                      key={index}
-                      className="flex gap-x-4"
-                      onClick={() =>
-                        redirectToProfile(profile.puuid, profile.server)
-                      }
-                    >
-                      <p>Summoner</p>
-                      <p>{profile.server}</p>
-                      <p>puuid: {profile.puuid}</p>
-                    </div>
-                  );
-                }
-              })}
+    <div className="flex flex-col font-bangers">
+      <div className="h-screen">
+        <div
+          className="absolute inset-0 bg-cover"
+          style={{
+            backgroundImage: `url('/mainpage-photo1.webp')`,
+            opacity: 0.3,
+          }}
+        ></div>
+
+        <div className="top-[25%] flex flex-col items-center  gap-y-10 z-10 relative h-full">
+          <div className="flex items-center gap-x-8">
+            <p className="text-[112px]">Lock.in</p>
+            <div className="flex flex-col items-center">
+              <p className="text-[32px]">No. 1 League of Legends</p>
+              <p className="text-[32px]">Social Media</p>
             </div>
-          ) : (
-            <p>{t("noneFollowed")}</p>
-          )}
-          {Array.isArray(myAccounts) && myAccounts.length > 0 ? (
-            <div className="mt-8">
-              <h1 className="text-[36px]">Claimed accounts:</h1>
-              {myAccounts.map((account, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="flex gap-x-4 items-center hover:bg-[#1a1a1a] cursor-pointer rounded-2xl"
-                    onClick={() =>
-                      redirectToProfile(account.puuid, account.server)
-                    }
-                  >
-                    <Image
-                      src={
-                        "https://ddragon.leagueoflegends.com/cdn/" +
-                        version +
-                        "/img/profileicon/" +
-                        account.profileIconId +
-                        ".png"
-                      }
-                      width={50}
-                      height={50}
-                      alt="summonerIcon"
-                      className="rounded-full border-2 border-white"
-                    />
-                    <p>{account.gameName}</p>
-                    <p>{account.server}</p>
-                    <p>{account.summonerLevel} lvl</p>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            "not fetched"
-          )}
+          </div>
+
+          <div
+            className="rounded-md"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
+          >
+            <form className="flex py-3 pr-6 items-center">
+              <Select>
+                <SelectTrigger className="flex items-center gap-x-2 bg-transparent text-[24px] text-white-smoke focus:border-none focus:outline-none hover:text-amber px-10 w-[150px]">
+                  <FaGlobeAmericas className="text-[28px] "></FaGlobeAmericas>
+                  <p>EUNE</p>
+                </SelectTrigger>
+                <SelectContent
+                  className="text-white-smoke mt-2"
+                  style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
+                >
+                  {servers.map((server, key) => {
+                    return (
+                      <SelectItem key={key} value={server.value}>
+                        <div className="flex font-bangers text-[28px] items-center gap-x-2 hover:bg-transparent">
+                          {server.icon}
+                          <p className="text-[24px]">{server.name}</p>
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+              <input
+                type="text"
+                className="border-x-2 border-x-white-smoke px-4 bg-transparent text-white-smoke focus:outline-none text-[24px] placeholder-white-smoke w-[350px]"
+                placeholder="Username"
+              />
+              <input
+                type="text"
+                className=" px-4 bg-transparent text-white-smoke focus:outline-none text-[24px] placeholder-white-smoke w-[180px]"
+                placeholder="Tag"
+              />
+              <button type="submit">
+                <BiSolidLock className="text-[48px] hover:text-amber transition-colors duration-100"></BiSolidLock>
+              </button>
+            </form>
+          </div>
         </div>
-      )}
+      </div>
+
+      {/* Second div */}
+      <div className="h-screen bg-[#131313]"></div>
     </div>
   );
 };

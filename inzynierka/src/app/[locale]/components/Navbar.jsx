@@ -67,6 +67,7 @@ const Navbar = () => {
     router.push("/");
   };
 
+  //loading state do zrobienia przy okazji navbara dla zalogowanych
   if (loading) {
     return (
       <div className="h-[72px] fixed bg-transparent w-full text-amber flex justify-center items-center z-20">
