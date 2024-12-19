@@ -3,12 +3,25 @@ import React, { useState, useContext, useEffect, act } from "react";
 import { UserContext } from "../context/UserContext";
 import useAxios from "../hooks/useAxios";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { SearchContext } from "../context/SearchContext";
 import { useQuery } from "react-query";
-import { FaGlobeAmericas, FaGlobeEurope } from "react-icons/fa";
+import {
+  FaGlobeAmericas,
+  FaGlobeEurope,
+  FaGooglePlay,
+  FaComment,
+  FaBookOpen,
+} from "react-icons/fa";
 import { BiSolidLock } from "react-icons/bi";
+import {
+  IoDesktopOutline,
+  IoGameControllerOutline,
+  IoPeople,
+} from "react-icons/io5";
+import { RITeamFill, RISwordFill } from "@icongo/ri";
 import {
   Select,
   SelectContent,
@@ -32,6 +45,48 @@ const servers = [
     name: "NA",
     value: "na1",
     icon: <FaGlobeAmericas className="text-[28px]" />,
+  },
+];
+
+const tiles = [
+  {
+    title: "Looking for duo?",
+    description:
+      "Connect your account and use Lock.in filters to find a perfect partner to play with",
+    icon: <IoGameControllerOutline className="text-[64px]" />,
+  },
+
+  {
+    title: "Let's compete!",
+    description: "Join other squad for Clash or find numbers for your team",
+    icon: <RITeamFill fill="#F5F5F5" className="text-[64px] " />,
+  },
+
+  {
+    title: "Chats",
+    description:
+      "Text with your friends about the game in private or group chats",
+    icon: <FaComment className="text-[64px]" />,
+  },
+
+  {
+    title: "Builds",
+    description: "Browse and create builds and strategies for every champion",
+    icon: <RISwordFill fill="#F5F5F5" className="text-[64px] " />,
+  },
+
+  {
+    title: "Courses",
+    description:
+      "Learn from the best to help you level up your game and climb the ranks",
+    icon: <FaBookOpen className="text-[64px]" />,
+  },
+
+  {
+    title: "Become friends",
+    description:
+      "Add new people you found on Lock.in or connect with your life-long buddies",
+    icon: <IoPeople className="text-[64px]" />,
   },
 ];
 
@@ -216,7 +271,46 @@ const Mainpage = () => {
       </div>
 
       {/* Second div */}
-      <div className="h-screen bg-[#131313]"></div>
+      <div className="h-screen bg-gradient-to-b from-[#1A0E05] to-night to-80% font-chewy flex items-center justify-center px-[8%] gap-x-[8%]">
+        <div className="flex flex-col items-center justify-center gap-y-12 w-[35%] ">
+          <p className="text-[64px] text-center">
+            What are you getting with Lock.in...
+          </p>
+          <div className="flex items-center gap-x-12">
+            <Link
+              href="/courses"
+              className="flex items-center gap-x-2 hover:text-amber transition-colors duration-100"
+            >
+              <FaGooglePlay className="text-[28px]"></FaGooglePlay>
+              <p className="text-[24px]">Lock.in Mobile</p>
+            </Link>
+
+            <Link
+              href="/courses"
+              className="flex items-center gap-x-2 hover:text-amber transition-colors duration-100"
+            >
+              <IoDesktopOutline className="text-[28px]"></IoDesktopOutline>
+              <p className="text-[24px]">Lock.in Desktop</p>
+            </Link>
+          </div>
+        </div>
+        <div className="w-[65%] grid grid-cols-3 gap-8">
+          {tiles.map((tile, key) => {
+            return (
+              <div
+                key={key}
+                className="flex items-center justify-center gap-x-6 px-3 h-[18vh] border-2 border-white-smoke rounded-xl cursor-pointer hover:bg-white-smoke hover:bg-opacity-5 transition-colors duration-100"
+              >
+                {tile.icon}
+                <div className="flex flex-col gap-y-2 w-[60%] text-center">
+                  <p>{tile.title}</p>
+                  <p>{tile.description}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };

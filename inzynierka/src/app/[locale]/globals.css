@@ -42,11 +42,12 @@ body {
   }
 
   .placeholder-white-smoke:focus::placeholder {
-    color: transparent;
+    opacity: 0;
   }
 
   .placeholder-white-smoke:hover::placeholder {
     color: #f5b800;
+    transition: 0.1s;
   }
 }
 
