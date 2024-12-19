@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/componentsShad/ui/select";
+import Footer from "./Footer";
 
 const servers = [
   {
@@ -311,6 +312,8 @@ const Mainpage = () => {
           })}
         </div>
       </div>
+
+      <Footer></Footer>
     </div>
   );
 };
