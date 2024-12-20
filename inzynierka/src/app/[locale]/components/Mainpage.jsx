@@ -4,50 +4,20 @@ import { UserContext } from "../context/UserContext";
 import useAxios from "../hooks/useAxios";
 import Image from "next/image";
 import Link from "next/link";
+import FindPlayerForm from "./riot/FindPlayerForm";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { SearchContext } from "../context/SearchContext";
 import { useQuery } from "react-query";
-import {
-  FaGlobeAmericas,
-  FaGlobeEurope,
-  FaGooglePlay,
-  FaComment,
-  FaBookOpen,
-} from "react-icons/fa";
-import { BiSolidLock } from "react-icons/bi";
+import { FaGooglePlay, FaComment, FaBookOpen } from "react-icons/fa";
 import {
   IoDesktopOutline,
   IoGameControllerOutline,
   IoPeople,
 } from "react-icons/io5";
 import { RITeamFill, RISwordFill } from "@icongo/ri";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/componentsShad/ui/select";
-import Footer from "./Footer";
 
-const servers = [
-  {
-    name: "EUNE",
-    value: "eun1",
-    icon: <FaGlobeEurope className="text-[28px]" />,
-  },
-  {
-    name: "EUW",
-    value: "euw1",
-    icon: <FaGlobeEurope className="text-[28px]" />,
-  },
-  {
-    name: "NA",
-    value: "na1",
-    icon: <FaGlobeAmericas className="text-[28px]" />,
-  },
-];
+import Footer from "./Footer";
 
 const tiles = [
   {
@@ -149,62 +119,6 @@ const Mainpage = () => {
     fetchMyAccounts();
   }, []);
 
-  //cache Kicker7
-  const { error: findPlayerError, isLoading: findPlayerIsLoading } = useQuery(
-    "findPlayer",
-    async () => {
-      try {
-        const response = await api.get(
-          `riot/findPlayer?server=eun1&tag=eune&name=Kicker7`
-        );
-        console.log(response.data);
-        return response.data;
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    },
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  //cache gbe chief keef
-  const { error: findPlayerError2, isLoading: findPlayerIsLoading2 } = useQuery(
-    "findPlayer2",
-    async () => {
-      try {
-        const response = await api.get(
-          `riot/findPlayer?server=eun1&tag=gbe&name=gbe%20chief%20keef`
-        );
-        console.log(response.data);
-        return response.data;
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    },
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  const redirectToProfile = async (puuid, server) => {
-    try {
-      const response = await api.get(
-        `/riot/findPlayer?puuid=${puuid}&server=${server}`
-      );
-      console.log(response.data);
-      if (response.status === 200) {
-        router.push(
-          `/summoner/${response.data.server}/${response.data.tagLine}/${response.data.gameName}`
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const { t } = useTranslation();
 
   return (
@@ -227,47 +141,7 @@ const Mainpage = () => {
             </div>
           </div>
 
-          <div
-            className="rounded-md"
-            style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
-          >
-            <form className="flex py-3 pr-6 items-center">
-              <Select>
-                <SelectTrigger className="flex items-center gap-x-2 bg-transparent text-[24px] text-white-smoke focus:border-none focus:outline-none hover:text-amber px-10 w-[150px]">
-                  <FaGlobeAmericas className="text-[28px] "></FaGlobeAmericas>
-                  <p>EUNE</p>
-                </SelectTrigger>
-                <SelectContent
-                  className="text-white-smoke mt-2"
-                  style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
-                >
-                  {servers.map((server, key) => {
-                    return (
-                      <SelectItem key={key} value={server.value}>
-                        <div className="flex font-bangers text-[28px] items-center gap-x-2 hover:bg-transparent">
-                          {server.icon}
-                          <p className="text-[24px]">{server.name}</p>
-                        </div>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-              <input
-                type="text"
-                className="border-x-2 border-x-white-smoke px-4 bg-transparent text-white-smoke focus:outline-none text-[24px] placeholder-white-smoke w-[350px]"
-                placeholder="Username"
-              />
-              <input
-                type="text"
-                className=" px-4 bg-transparent text-white-smoke focus:outline-none text-[24px] placeholder-white-smoke w-[180px]"
-                placeholder="Tag"
-              />
-              <button type="submit">
-                <BiSolidLock className="text-[48px] hover:text-amber transition-colors duration-100"></BiSolidLock>
-              </button>
-            </form>
-          </div>
+          <FindPlayerForm></FindPlayerForm>
         </div>
       </div>
 
