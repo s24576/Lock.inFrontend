@@ -6,6 +6,9 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "react-query";
+import getLocale from "../api/user/getLocale";
+import useAxios from "../hooks/useAxios";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -22,6 +25,8 @@ const Login = () => {
   const langRegex = /^\/([a-z]{2})\//;
   const langMatch = pathname.match(langRegex);
   const language = langMatch ? langMatch[1] : "en";
+
+  const axiosInstance = useAxios();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -61,6 +66,24 @@ const Login = () => {
     }
   };
 
+  const { refetch: languageRefetch, isLoading: languageIsLoading } = useQuery(
+    "languageChange",
+    () => getLocale(axiosInstance),
+    {
+      enabled: false,
+      refetchOnWindowFocus: false, // Opcjonalnie wyłącz odświeżanie przy zmianie okna
+      onSuccess: (data) => {
+        setUserData((prevData) => {
+          return {
+            ...prevData,
+            locale: data,
+          };
+        });
+      },
+    }
+  );
+
+  //get user info i getLocale
   const getUserInfo = async () => {
     console.log("getting user info:", userData.token);
 
@@ -81,6 +104,7 @@ const Login = () => {
       );
       console.log("got user info:", response.data);
       setUserData(response.data);
+      languageRefetch();
       router.push("/");
     } catch (error) {
       console.log(error);

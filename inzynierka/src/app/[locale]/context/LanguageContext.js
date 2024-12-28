@@ -17,7 +17,6 @@ export function LanguageContextProvider({ children }) {
     const lang = langMatch ? langMatch[1] : "en";
 
     setLanguage(lang);
-    console.log("ustawiono język: ", lang);
   }, []);
 
   return (

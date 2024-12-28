@@ -11,8 +11,8 @@ export default async function Home({ params: { locale } }) {
 
   return (
     <main className="flex h-screen flex-col">
-      <Mainpage></Mainpage>
-      {/* <Test></Test> */}
+      {/* <Mainpage></Mainpage> */}
+      <Test></Test>
     </main>
   );
 }

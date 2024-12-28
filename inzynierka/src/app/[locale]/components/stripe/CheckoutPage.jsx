@@ -26,7 +26,7 @@ const CheckoutPage = ({ courseId }) => {
       const response = await axiosInstance.post(
         "/api/stripe/createCheckoutSession",
         {
-          objectId: "d2a315a6-6e34-4856-81c1-d910ea4b79fb",
+          objectId: courseId,
         }
       );
 

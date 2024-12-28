@@ -5,7 +5,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import { useMutation } from "react-query";
+import useAxios from "../hooks/useAxios";
 import i18nConfig from "../../../../i18nConfig";
+import changeLocale from "../api/user/changeLocale";
 
 export default function LanguageChanger() {
   const { i18n } = useTranslation();
@@ -14,6 +17,20 @@ export default function LanguageChanger() {
   const currentPathname = usePathname();
 
   const languages = i18nConfig.locales; // Assuming this array contains all available locales
+
+  const axiosInstance = useAxios();
+
+  const { mutateAsync: handleChangeLocale } = useMutation(
+    (newLocale) => changeLocale(axiosInstance, newLocale),
+    {
+      onSuccess: (data) => {
+        console.log("locale changed successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Error locale change:", error);
+      },
+    }
+  );
 
   const handleChange = (newLocale) => {
     // set cookie for next-i18n-router
@@ -28,14 +45,13 @@ export default function LanguageChanger() {
       currentLocale === i18nConfig.defaultLocale &&
       !i18nConfig.prefixDefault
     ) {
+      handleChangeLocale(newLocale);
       router.push("/" + newLocale + currentPathname);
     } else {
       router.push(
         currentPathname.replace(`/${currentLocale}`, `/${newLocale}`)
       );
     }
-
-    router.refresh();
   };
 
   const [showLanguages, setShowLanguages] = useState(false);
