@@ -23,9 +23,10 @@ import useAxios from "../hooks/useAxios";
 import { UserContext } from "../context/UserContext";
 import { toast } from "sonner";
 import { MdDelete } from "react-icons/md";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import deleteFriend from "../api/profile/deleteFriend";
 import ReportForm from "./reports/ReportForm";
+import getNotifications from "../api/profile/getNotifications";
 
 const FriendList = () => {
   const { userData, setUserData, isLogged, setIsLogged } =
@@ -61,6 +62,14 @@ const FriendList = () => {
 
   const [stompClient, setStompClient] = useState(null);
   const [receivedMessage, setReceivedMessage] = useState("");
+
+  const {
+    refetch: notificationsRefetch,
+    data: notificationsData,
+    isLoading: notificationsIsLoading,
+  } = useQuery("getNotifications", () => getNotifications(api), {
+    refetchOnWindowFocus: false, // Opcjonalnie wyłącz odświeżanie przy zmianie okna
+  });
 
   useEffect(() => {
     //fetchuje friendsow do ktorych jest wyslane zapro albo od ktorych jest
@@ -118,6 +127,7 @@ const FriendList = () => {
               duration: 2000,
               position: "top-right",
             });
+            notificationsRefetch();
           }
         );
 
@@ -284,6 +294,17 @@ const FriendList = () => {
             })}
         </div>
         <p className="mt-3">Last notification</p>
+        {notificationsData && notificationsData.content.length > 0 ? (
+          notificationsData.content.map((notification, key) => {
+            return (
+              <div key={key} className="flex gap-x-2">
+                <p>siema {key}</p>
+              </div>
+            );
+          })
+        ) : (
+          <p>No notifications</p>
+        )}
         <p>{receivedMessage}</p>
         <div className="mt-4">
           <p className="text-[24px]">Your friends:</p>
