@@ -1,8 +1,10 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useRouter, usePathname } from "next/navigation";
-import axios from "axios";
+import { useQuery } from "react-query";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 import findByPuuid from "../api/riot/findByPuuid";
+import findNameAndTag from "../api/riot/findNameAndTag";
 import Image from "next/image";
 import { SearchContext } from "../context/SearchContext";
 
@@ -14,20 +16,13 @@ const MatchDetails = () => {
   const params = useParams();
   const router = useRouter();
   const pathname = usePathname();
+  const axiosInstance = useAxiosPublic();
 
-  const langRegex = /^\/([a-z]{2})\//;
-  const langMatch = pathname.match(langRegex);
-  const language = langMatch ? langMatch[1] : "en";
   useEffect(() => {
     const getMatchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/riot/getMatchInfo?matchId=${params.matchId}`,
-          {
-            headers: {
-              "Accept-Language": language,
-            },
-          }
+        const response = await axiosInstance.get(
+          `http://localhost:8080/riot/getMatchInfo?matchId=${params.matchId}`
         );
         setMatchData(response.data);
         console.log(response.data);
@@ -40,21 +35,21 @@ const MatchDetails = () => {
     getMatchData();
   }, [params.matchId]);
 
-  const handleFindByPuuid = async (matchId, puuid) => {
-    try {
-      const data = await findByPuuid(matchId, puuid);
-      setRedirectData(data);
-      console.log(data);
-      setRedirectToProfile(true);
-    } catch (error) {
-      console.log(error);
-      return;
-    } finally {
-      router.push(
-        `/summoner/${response.data.server}/${reseponse.data.tagLine}/${response.data.gameName}`
-      );
-    }
-  };
+  const { data: dataProfileToRedirect, isLoading: isLoadingProfileToRedirect } =
+    useQuery(
+      ["profileToRedirect", redirectData.server, redirectData.puuid], // Dynamiczny klucz oparty na redirectData
+      () =>
+        findNameAndTag(axiosInstance, redirectData.server, redirectData.puuid),
+      {
+        enabled: !!redirectData.server && !!redirectData.puuid, // Fetch tylko, gdy dane są dostępne
+        refetchOnWindowFocus: false, // Opcjonalnie wyłącz odświeżanie przy zmianie okna
+        onSuccess: (data) => {
+          router.push(
+            `/summoner/${data.server}/${data.tagLine}/${data.gameName}`
+          );
+        },
+      }
+    );
 
   useEffect(() => {
     if (redirectToProfile) {
@@ -140,7 +135,10 @@ const MatchDetails = () => {
                       <div>
                         <p
                           onClick={() =>
-                            handleFindByPuuid(params.matchId, participant.puuid)
+                            setRedirectData({
+                              server: matchData.metadata.server,
+                              puuid: participant.puuid,
+                            })
                           }
                           className="cursor-pointer"
                         >
@@ -316,7 +314,10 @@ const MatchDetails = () => {
                       <div>
                         <p
                           onClick={() =>
-                            handleFindByPuuid(params.matchId, participant.puuid)
+                            setRedirectData({
+                              server: matchData.metadata.server,
+                              puuid: participant.puuid,
+                            })
                           }
                           className="cursor-pointer"
                         >

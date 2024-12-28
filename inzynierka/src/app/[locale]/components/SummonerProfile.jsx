@@ -123,7 +123,7 @@ const SummonerProfile = () => {
       console.log(param);
       try {
         const response = await api.put(
-          `/profile/addWatchList?server_puuid=${param}`,
+          `/profile/manageWatchlist?server_puuid=${param}`,
           {}
         );
 
@@ -152,7 +152,7 @@ const SummonerProfile = () => {
       const param = playerData.server + "_" + playerData.puuid;
       try {
         const response = await api.put(
-          `/profile/removeWatchList?server_puuid=${param}`,
+          `/profile/manageWatchlist?server_puuid=${param}`,
           {}
         );
 
