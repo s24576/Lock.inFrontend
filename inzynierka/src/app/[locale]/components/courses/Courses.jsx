@@ -101,7 +101,7 @@ const Courses = () => {
             <div
               key={index}
               className="flex justify-between items-center bg-oxford-blue px-12 py-4 gap-x-4 rounded-2xl hover:bg-[#001E34] cursor-pointer"
-              onClick={() => router.push(`/courses/${course._id}`)}
+              onClick={() => router.push(`/courses/preview/${course._id}`)}
             >
               <div className="flex flex-col gap-y-2">
                 <p className="text-white text-[32px]">{course.title}</p>

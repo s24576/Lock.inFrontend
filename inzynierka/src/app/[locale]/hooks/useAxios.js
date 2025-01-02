@@ -21,7 +21,7 @@ const useAxios = () => {
 
   const { userData, setUserData } = context;
   const token =
-    typeof window !== "undefined" ? localStorage.getItem("loginToken") : null;
+    typeof window !== "undefined" ? sessionStorage.getItem("loginToken") : null;
 
   const axiosInstance = axios.create({
     baseURL,
@@ -29,7 +29,7 @@ const useAxios = () => {
   });
 
   axiosInstance.interceptors.request.use(async (req) => {
-    const user = jwtDecode(localStorage.getItem("loginToken"));
+    const user = jwtDecode(sessionStorage.getItem("loginToken"));
     const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
 
     if (!isExpired) return req;
@@ -39,13 +39,13 @@ const useAxios = () => {
       {},
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("loginToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("loginToken")}`,
           "Accept-Language": language,
         },
       }
     );
 
-    localStorage.setItem("loginToken", response.data);
+    sessionStorage.setItem("loginToken", response.data);
 
     setUserData((prevData) => ({
       ...prevData,

@@ -60,7 +60,7 @@ const Navbar = () => {
   const { t } = useTranslation();
 
   const logout = () => {
-    localStorage.removeItem("loginToken");
+    sessionStorage.removeItem("loginToken");
     setUserData({});
     setDuoSettings({});
     setIsLogged(false);

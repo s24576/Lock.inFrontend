@@ -76,7 +76,7 @@ const BuildDetails = () => {
     () =>
       getCommentsById(
         params.buildId,
-        localStorage.getItem("loginToken"),
+        sessionStorage.getItem("loginToken"),
         numberOfComments
       ),
     {
@@ -137,7 +137,7 @@ const BuildDetails = () => {
     () =>
       getResponsesById(
         commentIdToFetch.commentId,
-        localStorage.getItem("loginToken")
+        sessionStorage.getItem("loginToken")
       ),
     {
       enabled: !!commentIdToFetch.commentId,

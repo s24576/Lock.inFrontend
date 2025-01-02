@@ -49,7 +49,7 @@ const Login = () => {
       const token = response.data;
 
       if (token) {
-        localStorage.setItem("loginToken", token);
+        sessionStorage.setItem("loginToken", token);
         setUserData({ token: token });
         setIsLogged(true);
       }

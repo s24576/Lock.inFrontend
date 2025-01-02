@@ -5,22 +5,7 @@ import useAxios from "../../hooks/useAxios";
 import getCourseById from "../../api/courses/getCourseById";
 import addFilm from "../../api/courses/addFilm";
 
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import CheckoutPage from "../stripe/CheckoutPage";
-import stripePromise from "@/lib/stripe";
-// import convertToSubcurrency from "@/lib/convertToSubcurrency";
-
-// console.log(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
-
 const CourseDetails = () => {
-  const public_key = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
-  if (public_key === undefined) {
-    throw new Error("Stripe public key is not set");
-  }
-
-  const stripePromise = loadStripe(public_key);
-
   const axiosInstance = useAxios();
   const params = useParams();
 
@@ -40,11 +25,11 @@ const CourseDetails = () => {
 
   const {
     refetch: refetchCourse,
-    data: courseData,
+    data: courseDetailsData,
     error: courseError,
     isLoading: courseIsLoading,
   } = useQuery(
-    "courseData",
+    ["courseDetailsData", params.courseId],
     () => getCourseById(axiosInstance, params.courseId),
     {
       refetchOnWindowFocus: false,
@@ -78,17 +63,13 @@ const CourseDetails = () => {
     <div className="min-h-screen w-full pt-[100px] flex justify-center">
       <div className="flex flex-col items-center w-[50%]">
         <p>Course details</p>
-        {courseData && (
+        {courseDetailsData && (
           <div className="mt-6 flex flex-col">
-            <p className="text-[32px]">{courseData.title}</p>
+            <p className="text-[32px]">{courseDetailsData.title}</p>
             <div className="flex justify-between items-center gap-x-6">
-              <p>{courseData.description}</p>
-              <p className="text-[24px]">{courseData.price} PLN</p>
+              <p>{courseDetailsData.description}</p>
+              <p className="text-[24px]">{courseDetailsData.price} PLN</p>
             </div>
-
-            <Elements stripe={stripePromise}>
-              <CheckoutPage courseId={courseData._id}></CheckoutPage>
-            </Elements>
 
             <p className="text-[28px]">Episodes:</p>
             <form
@@ -125,9 +106,9 @@ const CourseDetails = () => {
                 Add Film
               </button>
             </form>
-            {courseData &&
-              courseData.films.length > 0 &&
-              courseData.films.map((film) => {
+            {courseDetailsData &&
+              courseDetailsData.films.length > 0 &&
+              courseDetailsData.films.map((film) => {
                 return (
                   <div className="mt-8">
                     <p className="text-[36px]">{film.title}</p>

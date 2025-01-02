@@ -76,7 +76,7 @@ export default function LanguageChanger() {
   };
 
   return (
-    <ul className="text-[24px]">
+    <ul className="text-[24px] z-20">
       <li
         ref={languagesRef}
         className="px-2 cursor-pointer flex items-center relative"
