@@ -67,9 +67,15 @@ const FriendList = () => {
     refetch: notificationsRefetch,
     data: notificationsData,
     isLoading: notificationsIsLoading,
-  } = useQuery("getNotifications", () => getNotifications(api), {
-    refetchOnWindowFocus: false, // Opcjonalnie wyłącz odświeżanie przy zmianie okna
-  });
+  } = useQuery(
+    "getNotifications",
+    () => getNotifications(api), // Funkcja zawsze zwraca aktualne dane
+    {
+      refetchOnWindowFocus: false, // Wyłącz odświeżanie przy zmianie okna
+      cacheTime: 0, // Opcjonalnie wymuś odświeżanie danych zawsze
+      staleTime: 0, // Opcjonalnie ustaw brak czasu "świeżości" danych
+    }
+  );
 
   useEffect(() => {
     //fetchuje friendsow do ktorych jest wyslane zapro albo od ktorych jest
@@ -293,12 +299,12 @@ const FriendList = () => {
               );
             })}
         </div>
-        <p className="mt-3">Last notification</p>
+        <p>Notifications:</p>
         {notificationsData && notificationsData.content.length > 0 ? (
           notificationsData.content.map((notification, key) => {
             return (
               <div key={key} className="flex gap-x-2">
-                <p>siema {key}</p>
+                <p>{notification.value}</p>
               </div>
             );
           })

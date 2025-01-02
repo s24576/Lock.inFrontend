@@ -10,9 +10,10 @@ const Test = () => {
   };
 
   return (
-    <div className="h-screen w-full flex items-center justify-center text-white">
+    <div className="h-screen w-full flex flex-col items-center justify-center text-white">
       <p onClick={() => click()}>Test</p>
       <p>{userData.locale}</p>
+      <p>{userData.username}</p>
     </div>
   );
 };

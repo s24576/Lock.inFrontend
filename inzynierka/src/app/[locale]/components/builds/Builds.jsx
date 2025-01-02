@@ -3,54 +3,75 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import axios from "axios";
 import { usePathname } from "next/navigation";
+import { useQuery } from "react-query";
+import Select from "react-select";
+import getBuilds from "../../api/ddragon/getBuilds";
+import getChampionNames from "../../api/ddragon/getChampionNames";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import { customStyles } from "@/lib/styles/championNamesList";
 
 const Builds = () => {
-  const [builds, setBuilds] = useState([]);
-  const [championNames, setChampionNames] = useState([]);
+  const [filterParams, setFilterParams] = useState({
+    page: 0,
+    author: "",
+    championId: "",
+  });
 
-  const pathname = usePathname();
+  //potrzebne do selecta z championami
+  const [championOptions, setChampionOptions] = useState([]);
 
-  useEffect(() => {
-    const langRegex = /^\/([a-z]{2})\//;
-    const langMatch = pathname.match(langRegex);
-    const language = langMatch ? langMatch[1] : "en";
-    console.log("language, ", language);
+  const axiosInstance = useAxiosPublic();
 
-    const fetchBuild = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/build/getBuilds?page=0&size=15",
-          {
-            headers: {
-              "Accept-Language": language,
-            },
-          }
-        );
-        console.log(response.data);
-        setBuilds(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const {
+    refetch: refetchBuilds,
+    data: buildsData,
+    error: buildsError,
+    isLoading: buildsIsLoading,
+  } = useQuery(
+    "buildsData",
+    () =>
+      getBuilds(
+        axiosInstance,
+        filterParams.page,
+        filterParams.author,
+        filterParams.championId
+      ),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
-    const fetchChampionNames = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/ddragon/getChampionNames"
-        );
+  const {
+    data: championNamesData,
+    error: championNamesError,
+    isLoading: championNamesIsLoading,
+  } = useQuery("championNamesData", () => getChampionNames(axiosInstance), {
+    refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      const options = Object.entries(data).map(
+        ([championKey, championValue]) => ({
+          value: championKey,
+          label: (
+            <div className="flex items-center">
+              <Image
+                src={`https://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${championKey}.png`}
+                alt={championValue}
+                width={20}
+                height={20}
+              />
+              <span className="ml-2">{championValue}</span>
+            </div>
+          ),
+        })
+      );
+      setChampionOptions(options);
+    },
+  });
 
-        console.log(response.data);
-        setChampionNames(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchBuild();
-    fetchChampionNames();
-  }, []);
+  const handleFilter = async () => {
+    await refetchBuilds();
+  };
 
   return (
     <div className="h-screen text-white flex flex-col items-center">
@@ -63,30 +84,34 @@ const Builds = () => {
           Create Build
         </Link>
       </div>
-      <input
-        type="text"
-        className="px-3 py-1 mt-3"
-        placeholder="Search by ? "
-      />
-      {/* by champion, by tags?, by author */}
       <div className="flex items-center mt-3 gap-x-3">
         <p>Sort by: </p>
-        <select className="text-black">
-          <option value="">Aatrox</option>
-          <option value="">Ahri</option>
-          <option value="">Anivia</option>
-        </select>
-        <input type="text" className="px-3 py-1" placeholder="tags" />
-        <input type="text" className="px-3 py-1" placeholder="Author name" />
-        <select className="text-black">
-          <option value="">12</option>
-          <option value="">24</option>
-          <option value="">36</option>
-        </select>
+        <Select
+          styles={customStyles}
+          options={championOptions}
+          onChange={(selectedOption) =>
+            setFilterParams((prev) => ({
+              ...prev,
+              championId: selectedOption.value,
+            }))
+          }
+          className="w-40"
+        />
+        <input
+          type="text"
+          className="px-3 py-1"
+          placeholder="Author name"
+          value={filterParams.author}
+          onChange={(e) =>
+            setFilterParams((prev) => ({ ...prev, author: e.target.value }))
+          }
+        />
+
+        <button onClick={() => handleFilter()}>Filter</button>
       </div>
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {Array.isArray(builds.content) && builds.content.length > 0 ? (
-          builds.content.map((build, index) => {
+        {Array.isArray(buildsData?.content) && buildsData.content.length > 0 ? (
+          buildsData.content.map((build, index) => {
             return (
               <Link
                 href={"/builds/" + build._id}

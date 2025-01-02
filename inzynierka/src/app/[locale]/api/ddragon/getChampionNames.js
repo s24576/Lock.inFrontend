@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const getChampionNames = async () => {
+const getChampionNames = async (axiosInstance) => {
   try {
-    const response = await axios.get(
-      "http://localhost:8080/ddragon/getChampionNames"
-    );
+    const response = await axiosInstance.get("/ddragon/getChampionNames");
     const sortedChampionNames = Object.entries(response.data).sort(
       ([, a], [, b]) => a.localeCompare(b)
     );
