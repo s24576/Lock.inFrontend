@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import useAxios from "../../hooks/useAxios";
 import getCourses from "../../api/courses/getCourses";
 import createCourse from "../../api/courses/createCourse";
+import Link from "next/link";
 
 const Courses = () => {
   const axiosInstance = useAxios();
@@ -56,6 +57,7 @@ const Courses = () => {
 
   return (
     <div className="h-screen w-full pt-[100px] flex flex-col items-center">
+      <Link href="/courses/my">My courses</Link>
       <p className="text-xl mb-4">Create a course</p>
       <form
         className="flex flex-col gap-y-2 text-black w-[25%]"

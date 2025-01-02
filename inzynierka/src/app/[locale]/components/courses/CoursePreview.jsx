@@ -1,6 +1,8 @@
-import React from "react";
+import React, { use, useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 import { useQuery } from "react-query";
 import { useParams } from "next/navigation";
+import useAxios from "../../hooks/useAxios";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import getCoursePreviewById from "../../api/courses/getCoursePreviewById";
 import { Elements } from "@stripe/react-stripe-js";
@@ -9,8 +11,12 @@ import CheckoutPage from "../stripe/CheckoutPage";
 import Link from "next/link";
 
 const CoursePreview = () => {
+  const { isLogged } = useContext(UserContext);
   const params = useParams();
-  const axiosInstance = useAxiosPublic();
+
+  const axiosPublic = useAxiosPublic();
+  const axiosPrivate = useAxios();
+  const axiosInstance = isLogged ? axiosPrivate : axiosPublic;
 
   const {
     refetch: refetchCourse,
@@ -41,6 +47,7 @@ const CoursePreview = () => {
           <h1>title :{courseData.title}</h1>
           <p>description: {courseData.description}</p>
           <p>price: {courseData.price} zł</p>
+          <p>is owned? {courseData.owned ? "yes" : "no"}</p>
           <p className="mt-3">films ({courseData.films.length}):</p>
           {courseData.films.map((film, key) => {
             return (
