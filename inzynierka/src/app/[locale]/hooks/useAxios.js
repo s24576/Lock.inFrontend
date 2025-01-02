@@ -41,6 +41,7 @@ const useAxios = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("loginToken")}`,
           "Accept-Language": language,
+          "Content-Type": "application/json",
         },
       }
     );
