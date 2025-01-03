@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar/Navbar";
 import { Toaster } from "sonner";
 
 const ClientLayout = ({ children }) => {
