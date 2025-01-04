@@ -36,6 +36,14 @@ body {
     text-align: center; /* Center the placeholder text */
   }
 
+  .placeholder-white::placeholder {
+    color: #f5f5f5;
+  }
+
+  .placeholder-white:focus::placeholder {
+    opacity: 0;
+  }
+
   .placeholder-white-smoke::placeholder {
     color: #f5f5f5;
     text-align: center;

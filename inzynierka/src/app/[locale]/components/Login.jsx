@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
@@ -119,42 +120,59 @@ const Login = () => {
   }, [isLogged, router]);
 
   return (
-    <div className="text-white-smoke h-screen w-full flex flex-col items-center justify-center bg-night">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col w-[28%] p-10 text-white-smoke  items-center rounded-3xl"
-      >
-        {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-        <p className="text-white-smoke  font-semibold text-[48px]">
+    <div className="h-screen w-full flex ">
+      <div className="w-[50%] bg-night flex flex-col items-center justify-center">
+        <p className="text-[96px] font-bangers text-amber">
           {t("login:header")}
         </p>
-        <input
-          type="text"
-          placeholder={t("login:username")}
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="mt-12 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg text-night"
-        />
-        <input
-          type="password"
-          placeholder={t("login:password")}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mt-5 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg text-night"
-        />
-        <div className="mt-4 flex justify-between w-[80%] text-[20px] text-gray-100 font-semibold">
-          <Link href="/register">{t("login:registerRedirect")}</Link>
-          <Link href="/login/forgot-password">{t("login:forgotPassword")}</Link>
+        <form
+          onSubmit={handleSubmit}
+          className="font-chewy w-full flex flex-col items-center gap-y-4"
+        >
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-[50%] border-2 border-amber bg-transparent rounded-xl py-3 px-4 text-white-smoke text-[24px] focus:outline-none focus:border-amber placeholder-white"
+            placeholder={t("login:username")}
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-[50%] border-2 border-amber bg-transparent rounded-xl py-3 px-4 text-white-smoke text-[24px] focus:outline-none focus:border-amber placeholder-white"
+            placeholder={t("login:password")}
+          />
+          <div className="w-[50%] flex justify-end">
+            <Link
+              className="text-[18px] text-white-smoke hover:text-silver transform-colors duration-100"
+              href={"/login/forgot-password"}
+            >
+              <p>{t("login:forgotPassword")}</p>
+            </Link>
+          </div>
+          <button className="bg-amber w-[50%] py-1 rounded-3xl text-night text-[36px] hover:bg-silver transform-colors duration-150">
+            <p>{t("login:signIn")}</p>
+          </button>
+        </form>
+        <div className="flex items-center font-chewy mt-6 gap-x-1 text-[18px]">
+          <p>{t("login:registerRedirect1")}</p>
+          <Link
+            href={"/register"}
+            className="text-amber hover:text-silver transorm-colors duration-100"
+          >
+            {t("login:registerRedirect2")}
+          </Link>
         </div>
-
-        <button className="mt-4 w-[50%] text-gray-100 py-1 text-[22px] font-semibold rounded-full border-2 border-silver shadow-lg hover:scale-105 transition-all duration-150">
-          {t("login:logIn")}
-        </button>
-        <div className="mt-6 flex gap-x-4 text-gray-100 text-[48px]">
-          <FaGoogle className="cursor-pointer"></FaGoogle>
-          <FaFacebook className="cursor-pointer"></FaFacebook>
-        </div>
-      </form>
+      </div>
+      <div className="w-[50%] z-30">
+        <img
+          src={"/login-photo.jpg"}
+          width={400}
+          height={400}
+          className="w-full h-screen object-cover opacity-80"
+        />
+      </div>
     </div>
   );
 };

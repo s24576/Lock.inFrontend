@@ -25,9 +25,20 @@ const Navbar = () => {
 
   const pathname = usePathname();
   const languages = i18nConfig.locales;
-  const navbarBg = languages.includes(pathname.slice(1))
-    ? "bg-transparent"
-    : "bg-night";
+  const isRootOrLocaleOnly =
+    pathname === "/" ||
+    languages.some(
+      (locale) => pathname === `/${locale}` || pathname === `/${locale}/`
+    );
+
+  const navbarBg = isRootOrLocaleOnly ? "bg-transparent" : "bg-night";
+
+  const navbarHidden =
+    pathname === "/register" ||
+    pathname === "/login" ||
+    languages.some((locale) =>
+      [`/${locale}/register`, `/${locale}/login`].includes(pathname)
+    );
 
   const [isFixed, setIsFixed] = useState(true);
 
@@ -83,7 +94,7 @@ const Navbar = () => {
           (isFixed ? "fixed" : "hidden")
         }
       >
-        {isLogged && (
+        {isLogged && !navbarHidden && (
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-x-5">
               <Sidebar></Sidebar>
@@ -146,7 +157,7 @@ const Navbar = () => {
           </div>
         )}
 
-        {!isLogged && (
+        {!isLogged && !navbarHidden && (
           <div className="flex items-center justify-between w-full gap-x-12">
             <Link href="/" className="flex">
               <BiSolidLock className="text-[40px]"></BiSolidLock>
@@ -197,6 +208,16 @@ const Navbar = () => {
                 Sign In
               </Link>
             </div>
+          </div>
+        )}
+
+        {navbarHidden && (
+          <div className="w-[50%] flex justify-between items-center pr-4">
+            <Link href="/" className="flex">
+              <BiSolidLock className="text-[40px]"></BiSolidLock>
+              <p className="text-[32px] pt-[1px]">Lock.in</p>
+            </Link>
+            <LanguageChanger></LanguageChanger>
           </div>
         )}
       </div>
