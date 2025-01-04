@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import { useQuery, useQueries, useMutation } from "react-query";
 import useAxios from "../hooks/useAxios";
@@ -19,6 +19,8 @@ import ShortMatch from "./riot/ShortMatch";
 
 const HomePage = () => {
   const [profileUsername, setProfileUsername] = useState("");
+  const [showClaimedAccounts, setShowClaimedAccounts] = useState(false);
+  const claimedAccountsRef = useRef(null);
 
   const { userData, isLogged } = useContext(UserContext);
 
@@ -34,6 +36,23 @@ const HomePage = () => {
     refetchOnWindowFocus: false,
     enabled: isLogged,
   });
+
+  useEffect(() => {
+    // Close the dropdown if clicked outside
+    const handleClickOutside = (e) => {
+      if (
+        claimedAccountsRef.current &&
+        !claimedAccountsRef.current.contains(e.target)
+      ) {
+        setShowClaimedAccounts(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   //po sukcesie wybranie 5 ostatnich meczy z kazdych kont, narazie brak pelnych danych w matches od findPlayer
   const detailedAccountsData = useQueries(
@@ -143,9 +162,81 @@ const HomePage = () => {
               </div>
             )}
             <p className="text-[28px]">{userData.bio}</p>
-            <div className="flex items-center gap-x-1">
-              <p className="text-[20px]">Claimed Accounts</p>
-              <GoChevronDown className="text-[20px] cursor-pointer hover:text-amber transition-colors duration-150"></GoChevronDown>
+            <div className="flex flex-col gap-y-2 relative">
+              <div
+                className="flex items-center gap-x-1 cursor-pointer"
+                onClick={() => setShowClaimedAccounts(!showClaimedAccounts)}
+              >
+                <p className="text-[20px]">Claimed Accounts</p>
+                <GoChevronDown className="text-[20px] cursor-pointer" />
+              </div>
+              {showClaimedAccounts && (
+                <div
+                  ref={claimedAccountsRef}
+                  className="absolute top-full left-0 mt-1 rounded-2xl z-10 bg-night w-full"
+                >
+                  <ul className="py-2">
+                    {claimedAccountsData && claimedAccountsData.length > 0 ? (
+                      claimedAccountsData.map((account, index) => (
+                        <Link
+                          href={
+                            "/summoner/" +
+                            account.server +
+                            "/" +
+                            account.tagLine +
+                            "/" +
+                            account.gameName
+                          }
+                        >
+                          <li
+                            key={index}
+                            className="p-2 cursor-pointer hover:bg-silver hover:bg-opacity-5
+                          transform-all duration-100 flex justify-between gap-x-2 items-center"
+                          >
+                            <div className="flex items-center gap-x-2">
+                              <Image
+                                src={
+                                  "https://ddragon.leagueoflegends.com/cdn/" +
+                                  "14.11.1" +
+                                  "/img/profileicon/" +
+                                  account.profileIconId +
+                                  ".png"
+                                }
+                                height={40}
+                                width={40}
+                                className="border-[1px] border-white-smoke rounded-full"
+                              />
+                              <span className="text-[16px]">
+                                {account.gameName}
+                              </span>
+                              <p className="text-[14px] text-silver">
+                                {account.tagLine}
+                              </p>
+                            </div>
+                            <div className="flex items-center">
+                              {account.tier ? (
+                                <Image
+                                  src={"/rank_emblems/" + account.tier + ".png"}
+                                  width={48}
+                                  height={48}
+                                  alt="ranktier"
+                                />
+                              ) : (
+                                <p className="text-[14px]">Unranked</p>
+                              )}
+                              {account.rank && (
+                                <p className="text-[16px]">{account.rank}</p>
+                              )}
+                            </div>
+                          </li>
+                        </Link>
+                      ))
+                    ) : (
+                      <li className="p-2 text-gray-500">No claimed accounts</li>
+                    )}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -203,7 +294,7 @@ const HomePage = () => {
                     {/* dodac linki do chatow a nie samego messengera */}
                     <Link
                       href="/messenger"
-                      className="bg-white-smoke w-full p-2 rounded-2xl flex flex-col"
+                      className="bg-white-smoke w-full p-2 rounded-2xl flex flex-col hover:bg-[#E6E6E6] hover:bg-opacity-100 transition-colors duration-100"
                     >
                       <p className="text-night">{chat.lastMessage.userId}</p>
                       <p className="text-night">{chat.lastMessage.message}</p>
@@ -275,7 +366,7 @@ const HomePage = () => {
               })}
             </div>
           )}
-          {/* followed profiles strona */}
+          {/* followed profiles strona do dorobienia*/}
           <Link
             href="/messenger"
             className="mt-3 text-end text-[18px] hover:text-silver transition-colors duration-150"
