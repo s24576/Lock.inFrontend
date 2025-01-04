@@ -82,7 +82,7 @@ export default function LanguageChanger() {
         className="px-2 cursor-pointer flex items-center relative"
       >
         <span
-          className="cursor-pointer rounded-full px-3 py-1 hover:text-silver transition-colors duration-200"
+          className="cursor-pointer rounded-full px-3 py-1 hover:text-silver transition-colors duration-200 "
           onClick={toggleDropdown}
         >
           {currentLocale === "en" ? "ENG" : "PL"}
@@ -95,7 +95,7 @@ export default function LanguageChanger() {
                 .map((locale) => (
                   <li key={locale} className="p-2">
                     <span
-                      className="cursor-pointer  rounded-full px-3 py-1 hover:text-silver transition-colors duration-200"
+                      className="cursor-pointer  rounded-full px-3 py-1 hover:text-silver transition-colors duration-200 "
                       onClick={() => handleChange(locale)}
                     >
                       {locale === "en" ? "ENG" : "PL"}

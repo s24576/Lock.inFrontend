@@ -105,7 +105,7 @@ const Login = () => {
       console.log("got user info:", response.data);
       setUserData(response.data);
       languageRefetch();
-      router.push("/");
+      router.push("/home");
     } catch (error) {
       console.log(error);
     }

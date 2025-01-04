@@ -9,6 +9,7 @@ const findPlayer = async (axiosInstance, server, name, tag) => {
     const response = await axiosInstance.get(
       `riot/findPlayer?server=${server}&name=${name}&tag=${tag}`
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);

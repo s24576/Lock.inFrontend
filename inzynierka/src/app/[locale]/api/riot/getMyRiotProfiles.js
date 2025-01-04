@@ -1,6 +1,6 @@
-const getMyRiotProfiles = async (api) => {
+const getMyRiotProfiles = async (axiosInstance) => {
   try {
-    const response = await api.get(`/riot/getMyRiotProfiles`);
+    const response = await axiosInstance.get(`/riot/getMyRiotProfiles`);
     console.log("claimed accounts for duo: ", response.data);
     return response.data; // Zwracamy dane
   } catch (error) {

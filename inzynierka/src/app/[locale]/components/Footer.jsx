@@ -15,11 +15,11 @@ const Footer = () => {
         >
           {/* <RILock2Fill fill="#f5b800" className="text-[40px]"></RILock2Fill> */}
           <BiSolidLock className="text-[40px]"></BiSolidLock>
-          <p className="text-[32px] pt-[1px]">Lock.in</p>
+          <p className="text-[32px] pt-[1px] font-bangers">Lock.in</p>
         </Link>
 
         <div className="flex flex-col gap-y-3">
-          <p className="text-[32px]">Menu</p>
+          <p className="text-[32px] font-bangers">Menu</p>
           <div className="flex flex-col gap-y-1 font-chewy text-[16px]">
             <Link
               href="/builds"
@@ -49,7 +49,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col gap-y-3">
-          <p className="text-[32px]">Apps</p>
+          <p className="text-[32px] font-bangers">Apps</p>
           <div className="flex flex-col gap-y-1 font-chewy text-[16px]">
             <Link
               href="/builds"
@@ -67,7 +67,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col gap-y-3">
-          <p className="text-[32px]">Resources</p>
+          <p className="text-[32px] font-bangers">Resources</p>
           <div className="flex flex-col gap-y-1 font-chewy text-[16px]">
             <Link
               href="/builds"
@@ -91,7 +91,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col gap-y-3">
-          <p className="text-[32px]">Contact</p>
+          <p className="text-[32px] font-bangers">Contact</p>
           <div className="flex flex-col gap-y-1 font-chewy text-[16px]">
             <Link
               href="/builds"

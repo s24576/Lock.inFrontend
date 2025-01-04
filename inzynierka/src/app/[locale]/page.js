@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Mainpage from "./components/Mainpage";
+import Footer from "./components/Footer";
 import Test from "./components/Test";
 import initTranslations from "./i18n";
 import TranslationsProvider from "./components/TranslationsProvider";
@@ -12,6 +12,7 @@ export default async function Home({ params: { locale } }) {
   return (
     <main className="flex h-screen flex-col">
       <Mainpage></Mainpage>
+      <Footer></Footer>
       {/* <Test></Test> */}
     </main>
   );

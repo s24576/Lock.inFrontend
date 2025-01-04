@@ -1,30 +1,51 @@
 "use client";
 import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { usePathname } from "next/navigation";
+import i18nConfig from "../../../../../i18nConfig";
 import useAxios from "../../hooks/useAxios";
 import { UserContext } from "../../context/UserContext";
 import LanguageChanger from "../LanguageChanger";
 import { useTranslation } from "react-i18next";
 import Sidebar from "./Sidebar";
 import FriendList from "../FriendList";
-import { useRouter } from "next/navigation";
 import { FaComment, FaBookOpen } from "react-icons/fa6";
-import { FaUser } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { CiWarning } from "react-icons/ci";
-import { MdLogout } from "react-icons/md";
 import { BiSolidLock } from "react-icons/bi";
-import { RISwordFill, RILock2Fill, RITeamFill } from "@icongo/ri";
-import { GoDeviceDesktop } from "react-icons/go";
-import { IoDesktopOutline, IoNotifications } from "react-icons/io5";
+import { RISwordFill, RITeamFill } from "@icongo/ri";
+import { IoDesktopOutline, IoNotifications, IoHome } from "react-icons/io5";
 
 const Navbar = () => {
-  const { userData, setUserData, isLogged, setIsLogged, setDuoSettings } =
+  const { userData, setUserData, isLogged, setIsLogged } =
     useContext(UserContext);
   const [loading, setLoading] = useState(true);
 
   const api = useAxios();
-  const router = useRouter();
+
+  const pathname = usePathname();
+  const languages = i18nConfig.locales;
+  const navbarBg = languages.includes(pathname.slice(1))
+    ? "bg-transparent"
+    : "bg-night";
+
+  const [isFixed, setIsFixed] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > window.innerHeight) {
+        setIsFixed(false); // Przestań być fixed po przejściu h-screen
+      } else {
+        setIsFixed(true); // Pozostaje fixed, jeśli w obrębie h-screen
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -50,26 +71,30 @@ const Navbar = () => {
 
   const { t } = useTranslation();
 
-  const logout = () => {
-    sessionStorage.removeItem("loginToken");
-    setUserData({});
-    setDuoSettings({});
-    setIsLogged(false);
-    router.push("/");
-  };
-
   if (loading) {
     return <div className="w-full bg-transparent"></div>;
   }
 
   return (
     <div className="flex flex-col font-bangers">
-      <div className="h-[72px] fixed bg-transparent  w-full text-amber flex items-center px-4 z-20 ">
+      <div
+        className={
+          `h-[72px] ${navbarBg}  w-full text-amber flex items-center px-4 z-20 ` +
+          (isFixed ? "fixed" : "hidden")
+        }
+      >
         {isLogged && (
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-x-5">
               <Sidebar></Sidebar>
               <div className="flex gap-x-7 items-center">
+                <Link
+                  href="/home"
+                  className="flex items-center gap-x-1 hover:scale-105 transition-all duration-200"
+                >
+                  <FaHome className="text-[28px]"></FaHome>
+                  <p className="text-[24px]">{t("navbar:home")}</p>
+                </Link>
                 <Link
                   href="/builds"
                   className="flex items-center gap-x-1 hover:scale-105 transition-all duration-200"
@@ -99,14 +124,6 @@ const Navbar = () => {
                   ></RITeamFill>
                   <p className="text-[24px] pt-[2px]">{t("navbar:team-up")}</p>
                 </Link>
-
-                <Link
-                  href="/courses"
-                  className="flex items-center gap-x-1 hover:scale-105 transition-all duration-200"
-                >
-                  <IoDesktopOutline className="text-[28px]"></IoDesktopOutline>
-                  <p className="text-[24px] pt-[1px]">{t("navbar:desktop")}</p>
-                </Link>
               </div>
             </div>
 
@@ -120,11 +137,11 @@ const Navbar = () => {
 
             <div className="flex gap-x-1 items-center mr-2">
               <LanguageChanger></LanguageChanger>
-              <FriendList className="cursor-pointer" />
+              <FriendList className="cursor-pointer " />
               <Link href="/messenger">
-                <FaComment className="cursor-pointer text-[26px] text-[#F5B800]" />
+                <FaComment className="cursor-pointer text-[26px] text-[#F5B800] hover:text-silver transition-colors duration-150" />
               </Link>
-              <IoNotifications className="text-[28px] cursor-pointer" />
+              <IoNotifications className="text-[28px] cursor-pointer hover:text-silver transition-colors duration-150" />
             </div>
           </div>
         )}
@@ -183,18 +200,6 @@ const Navbar = () => {
           </div>
         )}
       </div>
-      {userData.confirmedAccount === false && (
-        <div className="h-[40px] flex items-center fixed w-full z-20 bg-yellow-500 mt-[70px] px-4 gap-x-5">
-          <CiWarning className="text-[28px]"></CiWarning>
-          <p className="font-semibold">
-            Your account is not confirmed yet, click{" "}
-            <Link href="/login/confirmRegistration" className="underline">
-              here
-            </Link>{" "}
-            to confirm
-          </p>
-        </div>
-      )}
     </div>
   );
 };
