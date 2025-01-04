@@ -1,10 +1,13 @@
 {
-  "header": "Register",
+  "header": "Hi, Join us!",
+  "email": "E-mail",
   "username": "Username",
   "password": "Password",
   "repeatPassword": "Repeat password",
-  "loginRedirect": "Have an account?",
-  "loginRedirect2": "Log In here",
+  "loginRedirect": "Already have an account?",
+  "loginRedirect2": "Sign In",
   "forgotPassword": "Forgot Password?",
-  "register": "Register"
+  "register": "Sign Up",
+  "termsOfService": "I accept the",
+  "termsOfService2": "terms of Service"
 }

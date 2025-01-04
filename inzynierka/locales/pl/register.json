@@ -1,10 +1,13 @@
 {
-  "header": "Utwórz konto",
-  "username": "Nazwa użytkownika",
-  "password": "Hasło",
-  "repeatPassword": "Powtórz hasło",
-  "loginRedirect": "Masz już konto?",
-  "loginRedirect2": "Zaloguj się",
-  "forgotPassword": "Zapomniałeś hasła?",
-  "register": "Utwórz"
+  "header": "Dołącz do nas!",
+  "username": "Nazwa ",
+  "email": "E-mail",
+  "password": "Haslo",
+  "repeatPassword": "Powtorz haslo",
+  "loginRedirect": "Masz juz konto?",
+  "loginRedirect2": "Zaloguj sie",
+  "forgotPassword": "Zapomniales hasla?",
+  "register": "Utworz konto",
+  "termsOfService": "Akceptuje",
+  "termsOfService2": "warunki korzystania z serwisu Lock.in"
 }

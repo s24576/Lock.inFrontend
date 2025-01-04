@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import { Checkbox } from "@/componentsShad/ui/checkbox";
 
 const Register = () => {
   const { t } = useTranslation();
@@ -13,6 +14,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -37,6 +39,8 @@ const Register = () => {
         email: email,
         password: password,
       };
+
+      console.log(registerForm);
 
       console.log("przed axios", language);
       const response = await axios.post(
@@ -74,59 +78,80 @@ const Register = () => {
   }, [isRegistered, router]);
 
   return (
-    <div className="text-white h-screen w-full flex flex-col items-center justify-center bg-linen">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col w-[28%] p-10 text-oxford-blue bg-cordovan items-center rounded-3xl"
-      >
-        <p className="text-oxford-blue font-semibold text-[48px]">
+    <div className="h-screen w-full flex ">
+      <div className="w-[50%] bg-night flex flex-col items-center justify-center">
+        <p className="text-[96px] font-bangers text-amber">
           {t("register:header")}
         </p>
-        <input
-          type="text"
-          placeholder={t("register:username")}
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="mt-12 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
-        />
-        <input
-          type="email"
-          placeholder="E-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mt-4 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
-        />
-        <input
-          type="password"
-          placeholder={t("register:password")}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mt-4 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
-        />
-        <input
-          type="password"
-          placeholder={t("register:repeatPassword")}
-          value={repeatPassword}
-          onChange={(e) => setRepeatPassword(e.target.value)}
-          className="mt-4 w-[85%] px-2 py-2 text-[22px] rounded-full font-semibold placeholder-oxford-blue focus:outline-none shadow-gray-800 shadow-lg"
-        />
-        <div className="mt-4 flex justify-between w-[80%] text-[18px] text-gray-100 font-semibold">
-          <Link href="/login" className="block">
-            <span>{t("register:loginRedirect")}</span>
-            <span className="block text-center">
-              {t("register:loginRedirect2")}
-            </span>
+        <form
+          onSubmit={handleSubmit}
+          className="font-chewy w-full flex flex-col items-center gap-y-4"
+        >
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-[50%] border-2 border-amber bg-transparent rounded-xl py-3 px-4 text-white-smoke text-[24px] focus:outline-none focus:border-amber placeholder-white"
+            placeholder={t("register:username")}
+          />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-[50%] border-2 border-amber bg-transparent rounded-xl py-3 px-4 text-white-smoke text-[24px] focus:outline-none focus:border-amber placeholder-white"
+            placeholder={t("register:email")}
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-[50%] border-2 border-amber bg-transparent rounded-xl py-3 px-4 text-white-smoke text-[24px] focus:outline-none focus:border-amber placeholder-white"
+            placeholder={t("register:password")}
+          />
+          <input
+            type="password"
+            value={repeatPassword}
+            onChange={(e) => setRepeatPassword(e.target.value)}
+            className="w-[50%] border-2 border-amber bg-transparent rounded-xl py-3 px-4 text-white-smoke text-[24px] focus:outline-none focus:border-amber placeholder-white"
+            placeholder={t("register:repeatPassword")}
+          />
+          <div className="w-[50%] flex items-center justify-start ml-2">
+            {/* accept terms */}
+            <Checkbox
+              className="w-5 h-5 border-[2px] border-amber bg-transparent rounded-sm text-amber focus:ring-amber focus:ring-offset-amber checked:bg-amber checked:border-amber hover:bg-silver hover:bg-opacity-10  transform-colors duration-100"
+              checked={termsAccepted}
+              onCheckedChange={(checked) => setTermsAccepted(checked)}
+            />
+            <p className="pl-2">{t("register:termsOfService")}</p>
+            <Link
+              href={"/messenger"}
+              className="pl-1 underline hover:text-silver transorm-colors duration-100"
+            >
+              {t("register:termsOfService2")}
+            </Link>
+          </div>
+          <button className="bg-amber w-[50%] py-1 rounded-3xl text-night text-[36px] hover:bg-silver transform-colors duration-150">
+            <p>{t("register:register")}</p>
+          </button>
+        </form>
+        <div className="flex items-center font-chewy mt-6 gap-x-1 text-[18px]">
+          <p>{t("register:loginRedirect")}</p>
+          <Link
+            href={"/login"}
+            className="text-amber hover:text-silver transorm-colors duration-100"
+          >
+            {t("register:loginRedirect2")}
           </Link>
-          <Link href="/register">{t("register:forgotPassword")}</Link>
         </div>
-        <button className="mt-4 w-[50%] text-gray-100 bg-oxford-blue py-1 text-[22px] font-semibold rounded-full shadow-gray-900 shadow-lg hover:scale-105 transition-all duration-150">
-          {t("register:register")}
-        </button>
-        <div className="mt-6 flex gap-x-4 text-gray-100 text-[48px]">
-          <FaGoogle className="cursor-pointer"></FaGoogle>
-          <FaFacebook className="cursor-pointer"></FaFacebook>
-        </div>
-      </form>
+      </div>
+      <div className="w-[50%] z-30">
+        <img
+          src={"/login-photo.jpg"}
+          width={400}
+          height={400}
+          className="w-full h-screen object-cover opacity-80"
+        />
+      </div>
     </div>
   );
 };
