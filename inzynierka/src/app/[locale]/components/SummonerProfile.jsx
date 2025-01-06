@@ -180,7 +180,7 @@ const SummonerProfile = () => {
     const param = playerData.server + "_" + playerData.puuid;
     try {
       const response = await api.put(
-        `/profile/addMyAccount?server_puuid=${param}`,
+        `/profile/manageMyAccount?server_puuid=${param}`,
         {}
       );
 

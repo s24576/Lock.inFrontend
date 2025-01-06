@@ -183,6 +183,15 @@ const FriendList = () => {
             fetchRequests();
           }
         );
+
+        //nasluchiwanie do tworzenia chatow itp
+        client.subscribe(
+          `/user/${userData.username}/messenger/members/`,
+          (message) => {
+            //refetch chatu po id z message.body
+            fetchRequests();
+          }
+        );
       },
       onStompError: (frame) => {
         // console.error("STOMP Error: ", frame.headers["message"]);

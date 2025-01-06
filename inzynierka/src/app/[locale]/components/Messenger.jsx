@@ -52,7 +52,7 @@ const Messenger = () => {
 
   const getAllChats = async () => {
     try {
-      const response = await api.get(`/messenger/getChats`);
+      const response = await api.get(`/messenger/getChats?size=20`);
 
       console.log("all chats", response.data);
       setAllChats(response.data);
@@ -109,7 +109,11 @@ const Messenger = () => {
       return { username }; // Zwracamy nowy obiekt z polem `username`
     });
 
-    console.log("members::::::", members);
+    const members2 = selectedFriends.map((friend) =>
+      friend.username !== userData._id ? friend.username : friend.username2
+    );
+
+    console.log("members::::::", members2);
 
     //dodaj do members samego siebie
 
@@ -117,7 +121,7 @@ const Messenger = () => {
       // Wykonujemy żądanie z nową tablicą członków (`members`)
       const response = await api.post(`/messenger/createChat`, {
         name: newChatName,
-        members: members, // Przekazujemy tablicę obiektów
+        members: members2, // Przekazujemy tablicę obiektów
       });
 
       console.log("Chat created:", response.data);

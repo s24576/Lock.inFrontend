@@ -29,7 +29,7 @@ const DuoCreation = () => {
     error: championNamesError,
     isLoading: championNamesLoading,
     //dopisac axiosInstance do getChampionNames
-  } = useQuery("championNames", () => getChampionNames(), {
+  } = useQuery("championNames", () => getChampionNames(axiosInstance), {
     refetchOnWindowFocus: false,
   });
 

@@ -167,7 +167,7 @@ const Login = () => {
       </div>
       <div className="w-[50%] z-30">
         <img
-          src={"/login-photo.jpg"}
+          src={"/login-photo.webp"}
           width={400}
           height={400}
           className="w-full h-screen object-cover opacity-80"
