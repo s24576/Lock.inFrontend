@@ -51,6 +51,7 @@ const CreateBuild = () => {
         const response = await axios.get(
           "http://localhost:8080/ddragon/getFinalItems"
         );
+        console.log(response.data);
         setAllItems(response.data);
 
         const uniqueTags = new Set();
@@ -190,25 +191,30 @@ const CreateBuild = () => {
 
     console.log("siema");
 
+    const buildObject = {
+      championId: formValues.champion,
+      title: formValues.title,
+      description: formValues.description,
+      item1: chosenItemsIds[0],
+      item2: chosenItemsIds[1],
+      item3: chosenItemsIds[2],
+      item4: chosenItemsIds[3],
+      item5: chosenItemsIds[4],
+      item6: chosenItemsIds[5],
+      runes: {
+        keyStone1Id: runesData[runeTree].id,
+        runes1: primaryRunes,
+        keyStone2Id: runesData[runeTreeSecondary].id,
+        runes2: secondaryRunes,
+        statShards: statShards,
+      },
+      position: "Bottom",
+      patch: "14.11.1",
+    };
+    console.log(buildObject);
+
     try {
-      const response = await api.post("/build/createBuild", {
-        championId: formValues.champion,
-        title: formValues.title,
-        description: formValues.description,
-        item1: chosenItemsIds[0],
-        item2: chosenItemsIds[1],
-        item3: chosenItemsIds[2],
-        item4: chosenItemsIds[3],
-        item5: chosenItemsIds[4],
-        item6: chosenItemsIds[5],
-        runes: {
-          keyStone1Id: runesData[runeTree].id,
-          runes1: primaryRunes,
-          keyStone2Id: runesData[runeTreeSecondary].id,
-          runes2: secondaryRunes,
-          statShards: statShards,
-        },
-      });
+      const response = await api.post("/build/createBuild", buildObject);
 
       console.log(response.data);
     } catch (error) {

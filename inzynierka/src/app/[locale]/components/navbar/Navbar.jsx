@@ -28,9 +28,12 @@ const Navbar = () => {
   const isRootOrLocaleOnly =
     pathname === "/" ||
     languages.some(
-      (locale) => pathname === `/${locale}` || pathname === `/${locale}/`
+      (locale) =>
+        pathname === `/${locale}` ||
+        pathname === `/${locale}/` ||
+        pathname === `/builds` ||
+        pathname === `/${locale}/builds`
     );
-
   const navbarBg = isRootOrLocaleOnly ? "bg-transparent" : "bg-night";
 
   const navbarHidden =
@@ -44,7 +47,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > window.innerHeight) {
+      if (window.scrollY > 180) {
         setIsFixed(false); // Przestań być fixed po przejściu h-screen
       } else {
         setIsFixed(true); // Pozostaje fixed, jeśli w obrębie h-screen

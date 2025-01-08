@@ -24,6 +24,7 @@ module.exports = {
         amber: "#F5B800",
         "white-smoke": "#F5F5F5",
         silver: "#AFAFAF",
+        "silver-hover": "rgba(217,217,217,0.15)",
 
         "oxford-blue": "#001427",
         cordovan: "#9C3848",

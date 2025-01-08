@@ -1,5 +1,5 @@
 const getBuilds = async (axiosInstance, page, author, championId) => {
-  const size = 16;
+  const size = 15;
 
   if (page === undefined) {
     page = 0;
