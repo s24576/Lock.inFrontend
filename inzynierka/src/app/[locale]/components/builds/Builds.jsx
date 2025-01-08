@@ -298,6 +298,8 @@ const Builds = () => {
                   key={key}
                   build={build}
                   shortProfilesData={shortProfilesData}
+                  delete={false}
+                  save={false}
                 />
               );
             })}

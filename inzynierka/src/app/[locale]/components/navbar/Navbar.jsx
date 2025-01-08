@@ -34,7 +34,9 @@ const Navbar = () => {
         pathname === `/builds` ||
         pathname === `/${locale}/builds` ||
         pathname === `/builds/me` ||
-        pathname === `/${locale}/builds/me`
+        pathname === `/${locale}/builds/me` ||
+        pathname === `/builds/saved` ||
+        pathname === `/${locale}/builds/saved`
     );
   const navbarBg = isRootOrLocaleOnly ? "bg-transparent" : "bg-night";
 

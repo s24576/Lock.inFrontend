@@ -1,24 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
 import { useQuery, useMutation } from "react-query";
-
 import useAxios from "../../hooks/useAxios";
 import getRunes from "../../api/ddragon/getRunes";
 import deleteBuild from "../../api/builds/deleteBuild";
-import { BiLike, BiDislike } from "react-icons/bi";
+import saveBuild from "../../api/builds/saveBuild";
+import {
+  BiLike,
+  BiDislike,
+  BiSolidLock,
+  BiSolidLockOpen,
+} from "react-icons/bi";
 import { FaUser } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 import Link from "next/link";
 
-const ShortBuild = ({ build, shortProfilesData, delete: deleteFlag }) => {
+const ShortBuild = ({
+  build,
+  shortProfilesData,
+  delete: deleteFlag,
+  saved: savedFlag,
+}) => {
   //wyswietlanie czasu od dodania builda
   dayjs.extend(relativeTime);
 
   const image = shortProfilesData?.[build.username]?.image;
 
   const axiosInstance = useAxios();
+
+  const [isHovered, setIsHovered] = useState(false);
 
   const {
     data: runesData,
@@ -37,6 +49,19 @@ const ShortBuild = ({ build, shortProfilesData, delete: deleteFlag }) => {
       },
       onError: (error) => {
         console.error("Error deleting build:", error);
+      },
+    }
+  );
+
+  const { mutateAsync: handleSaveBuild } = useMutation(
+    () => saveBuild(axiosInstance, build._id),
+    {
+      onSuccess: () => {
+        // Przeładowanie strony po udanym usunięciu buildu
+        window.location.reload();
+      },
+      onError: (error) => {
+        console.error("Error saving build:", error);
       },
     }
   );
@@ -265,6 +290,22 @@ const ShortBuild = ({ build, shortProfilesData, delete: deleteFlag }) => {
           onClick={() => handleDeleteBuild()}
           className="z-40 ml-3 text-[28px] cursor-pointer hover:text-amber duration-100 transition-colors"
         ></AiOutlineDelete>
+      )}
+      {savedFlag && (
+        <div
+          className="z-40 ml-3 text-[28px] cursor-pointer hover:text-amber duration-100 transition-colors"
+          onMouseEnter={() => setIsHovered(true)} // Zmieniamy stan na true, gdy najedziesz
+          onMouseLeave={() => setIsHovered(false)} // Przy wyjściu ustawiamy stan na false
+          onClick={() => handleSaveBuild()}
+        >
+          {isHovered || !build.saved ? (
+            // Wyświetlamy otwartą klodkę, gdy hover lub build.saved jest false
+            <BiSolidLockOpen />
+          ) : (
+            // Wyświetlamy zamkniętą klodkę, gdy build.saved jest true
+            <BiSolidLock />
+          )}
+        </div>
       )}
     </div>
   );
