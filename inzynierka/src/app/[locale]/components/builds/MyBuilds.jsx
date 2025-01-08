@@ -1,27 +1,67 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios";
-import Link from "next/link";
+import { useQuery } from "react-query";
+import getMyBuilds from "../../api/builds/getMyBuilds";
+import getShortProfiles from "../../api/profile/getShortProfiles";
+import ShortBuild from "./ShortBuild";
 import Image from "next/image";
 
 export const MyBuilds = () => {
-  const [builds, setBuilds] = useState([]);
+  const [filterParams, setFilterParams] = useState({
+    page: 0,
+  });
 
-  const api = useAxios();
+  const [usernamesToFetch, setUsernamesToFetch] = useState([]);
+  const [championOptions, setChampionOptions] = useState([]);
 
-  useEffect(() => {
-    const fetchBuilds = async () => {
-      try {
-        const response = await api.get(`/build/getMyBuilds`);
-        console.log(response.data);
-        setBuilds(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const axiosInstance = useAxios();
 
-    fetchBuilds();
-  }, []);
+  const {
+    refetch: refetchBuilds,
+    data: buildsData,
+    error: buildsError,
+    isLoading: buildsIsLoading,
+  } = useQuery(
+    "buildsData",
+    () => getMyBuilds(axiosInstance, filterParams.page),
+    {
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        // Wyekstrahuj username z każdego obiektu i przypisz do zmiennej
+        const usernames = data.content.map((build) => build.username);
+        // Przypisz do odpowiedniej zmiennej lub użyj setUsernamesToFollow
+        setUsernamesToFetch(usernames);
+      },
+    }
+  );
+
+  const {
+    refetch: shortProfilesRefetch,
+    data: shortProfilesData,
+    error: shortProfilesError,
+    isLoading: shortProfilesIsLoading,
+  } = useQuery(
+    "shortProfilesData",
+    () => getShortProfiles(axiosInstance, usernamesToFetch),
+    {
+      refetchOnWindowFocus: false,
+      enabled: usernamesToFetch.length > 0,
+    }
+  );
+
+  //page
+  const handlePageChange = async (newPage) => {
+    // Zaktualizuj tylko numer strony
+    setFilterParams((prev) => ({
+      ...prev,
+      page: newPage,
+    }));
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    // Ponowne pobranie danych po zmianie strony
+    await refetchBuilds();
+  };
 
   const deleteBuild = async (buildId) => {
     try {
@@ -39,119 +79,85 @@ export const MyBuilds = () => {
   };
 
   return (
-    <div className="min-h-screen w-full pt-[70px] flex flex-col items-center">
-      <h1 className="mt-[100px] text-[40px]">My Builds</h1>
+    <div className="min-h-screen flex flex-col items-center relative">
+      <div
+        className="absolute inset-0 bg-cover bg-fixed"
+        style={{
+          backgroundImage: `url('/background-images/mybuilds.webp')`,
+          opacity: "0.4",
+          backgroundSize: "cover", // Nie powiększa obrazu
+          backgroundPosition: "center", // Ustawienie środka obrazu
+          backgroundRepeat: "no-repeat", // Zapobiega powtarzaniu
+          width: "100%",
+          height: "100vh", // Obraz będzie rozciągał się na wysokość widoku
+        }}
+      ></div>
+      <div
+        className="absolute top-[100vh] inset-0"
+        style={{
+          background: "linear-gradient(to bottom, #16182F, #131313)",
+        }}
+      ></div>
 
-      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {Array.isArray(builds.content) && builds.content.length > 0 ? (
-          builds.content.map((build, index) => {
-            return (
-              <div className="flex flex-col items-center" key={index}>
-                <Link
-                  href={"/builds/" + build._id}
-                  className="flex flex-col justify-center items-center border-2 border-white p-5 cursor-pointer 
-                hover:bg-[#1a1a1a]"
-                >
-                  <h1>{build.username}</h1>
-                  <Image
-                    src={
-                      "https://ddragon.leagueoflegends.com/cdn/" +
-                      "14.11.1" +
-                      "/img/champion/" +
-                      //tutaj
-                      build.championId +
-                      ".png"
-                    }
-                    width={50}
-                    height={50}
-                    alt={build.championId}
-                  />
-                  <p>{build.champion}</p>
-                  <div className="flex">
-                    <Image
-                      src={
-                        "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
-                        build.item1 +
-                        ".png"
-                      }
-                      height={50}
-                      width={50}
-                      alt={build.item1}
-                    />
+      <p className="mt-[10%] font-bangers text-[96px] text-amber z-20">
+        My Builds
+      </p>
+      <div className="z-20 bg-night bg-opacity-50 w-full px-[14%] mt-[7%] py-[2%] font-chewy">
+        {buildsData?.content && (
+          <div className="flex flex-col gap-y-4">
+            {buildsData.content.map((build, key) => {
+              return (
+                <ShortBuild
+                  key={key}
+                  build={build}
+                  shortProfilesData={shortProfilesData}
+                  delete={true}
+                />
+              );
+            })}
+          </div>
+        )}
+        {buildsData && (
+          <div className="flex justify-center items-center gap-x-4 mt-12 py-6 text-[20px]">
+            {/* Jeśli strona jest większa niż 1, wyświetl przycisk "Back" */}
+            {filterParams.page > 0 && (
+              <p
+                className="cursor-pointer hover:text-amber duration-100 transition-colors"
+                onClick={() => handlePageChange(filterParams.page - 1)}
+              >
+                Back
+              </p>
+            )}
 
-                    <Image
-                      src={
-                        "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
-                        build.item2 +
-                        ".png"
-                      }
-                      height={50}
-                      width={50}
-                      alt={build.item2}
-                    />
+            {/* Wyświetl numery stron w zakresie 5 stron */}
+            {Array.from({ length: 5 }, (_, i) => {
+              const pageNumber = filterParams.page + i - 2; // Tworzymy tablicę z 5 stron
+              if (pageNumber >= 0 && pageNumber < buildsData.page.totalPages) {
+                return (
+                  <p
+                    key={pageNumber}
+                    onClick={() => handlePageChange(pageNumber)}
+                    className={`cursor-pointer hover:text-amber duration-100 transition-colors px-3 py-1 ${
+                      filterParams.page === pageNumber ? " text-amber" : ""
+                    }`}
+                  >
+                    {pageNumber + 1}
+                  </p>
+                );
+              }
+              return null;
+            })}
 
-                    <Image
-                      src={
-                        "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
-                        build.item3 +
-                        ".png"
-                      }
-                      height={50}
-                      width={50}
-                      alt={build.item3}
-                    />
-
-                    <Image
-                      src={
-                        "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
-                        build.item4 +
-                        ".png"
-                      }
-                      height={50}
-                      width={50}
-                      alt={build.item4}
-                    />
-
-                    <Image
-                      src={
-                        "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
-                        build.item5 +
-                        ".png"
-                      }
-                      height={50}
-                      width={50}
-                      alt={build.item5}
-                    />
-
-                    <Image
-                      src={
-                        "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" +
-                        build.item6 +
-                        ".png"
-                      }
-                      height={50}
-                      width={50}
-                      alt={build.item6}
-                    />
-                  </div>
-                  <div className="flex items-center justify-center gap-x-3">
-                    <p>Likes: {build.likesCount}</p>
-                    <p>Disikes: {build.dislikesCount}</p>
-                  </div>
-                </Link>
-                <button
-                  onClick={() => {
-                    deleteBuild(build._id);
-                  }}
-                  className="mt-3 text-red-600 px-3 py-2 border-[1px] border-white hover:bg-red-500 hover:text-white"
-                >
-                  Delete build
-                </button>
-              </div>
-            );
-          })
-        ) : (
-          <p className="">No builds</p>
+            {/* Jeśli strona jest mniejsza niż ostatnia, wyświetl przycisk "Next" */}
+            {filterParams.page < buildsData.page.totalPages - 1 && (
+              <p
+                className="cursor-pointer hover:text-amber duration-100 transition-colors"
+                onClick={() => handlePageChange(filterParams.page + 1)}
+              >
+                Next
+              </p>
+            )}
+          </div>
         )}
       </div>
     </div>

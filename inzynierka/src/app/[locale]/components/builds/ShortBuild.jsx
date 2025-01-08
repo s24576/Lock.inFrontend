@@ -2,17 +2,23 @@ import React from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
+
+import useAxios from "../../hooks/useAxios";
 import getRunes from "../../api/ddragon/getRunes";
+import deleteBuild from "../../api/builds/deleteBuild";
 import { BiLike, BiDislike } from "react-icons/bi";
 import { FaUser } from "react-icons/fa";
+import { AiOutlineDelete } from "react-icons/ai";
 import Link from "next/link";
 
-const ShortBuild = ({ build, shortProfilesData }) => {
+const ShortBuild = ({ build, shortProfilesData, delete: deleteFlag }) => {
   //wyswietlanie czasu od dodania builda
   dayjs.extend(relativeTime);
 
   const image = shortProfilesData?.[build.username]?.image;
+
+  const axiosInstance = useAxios();
 
   const {
     data: runesData,
@@ -22,6 +28,19 @@ const ShortBuild = ({ build, shortProfilesData }) => {
     refetchOnWindowFocus: false,
   });
 
+  const { mutateAsync: handleDeleteBuild } = useMutation(
+    () => deleteBuild(axiosInstance, build._id),
+    {
+      onSuccess: () => {
+        // Przeładowanie strony po udanym usunięciu buildu
+        window.location.reload();
+      },
+      onError: (error) => {
+        console.error("Error deleting build:", error);
+      },
+    }
+  );
+
   const getImageSrc = (image) => {
     if (image && image.data) {
       return `data:${image.contentType};base64,${image.data}`;
@@ -30,10 +49,7 @@ const ShortBuild = ({ build, shortProfilesData }) => {
   };
 
   return (
-    <Link
-      href={"/builds/" + build._id}
-      className="flex items-center border-[1px] border-amber px-3 py-3 rounded-xl gap-x-4 w-full hover:bg-silver-hover transition-colors duration-50"
-    >
+    <div className="flex items-center border-[1px] border-amber px-3 py-3 rounded-xl gap-x-4 w-full hover:bg-silver-hover transition-colors duration-50">
       <p className="w-[10%] text-[18px] text-center">
         {dayjs(build.timestamp * 1000).fromNow()}
       </p>
@@ -67,9 +83,12 @@ const ShortBuild = ({ build, shortProfilesData }) => {
           />
         )}
       </div>
-      <p className="w-[18%] truncate text-[24px] text-amber px-1">
+      <Link
+        href={"/builds/" + build._id}
+        className="w-[18%] truncate text-[24px] text-amber px-1"
+      >
         {build.title}
-      </p>
+      </Link>
       <div className="relative">
         {runesData &&
           runesData.map((runeData, runeDataIndex) => {
@@ -241,7 +260,13 @@ const ShortBuild = ({ build, shortProfilesData }) => {
           {build.username}
         </Link>
       </div>
-    </Link>
+      {deleteFlag && (
+        <AiOutlineDelete
+          onClick={() => handleDeleteBuild()}
+          className="z-40 ml-3 text-[28px] cursor-pointer hover:text-amber duration-100 transition-colors"
+        ></AiOutlineDelete>
+      )}
+    </div>
   );
 };
 

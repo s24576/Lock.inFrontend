@@ -1,12 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useQuery } from "react-query";
 import Select from "react-select";
-import getBuilds from "../../api/ddragon/getBuilds";
+import getBuilds from "../../api/builds/getBuilds";
 import getShortProfiles from "../../api/profile/getShortProfiles";
 import getChampionNames from "../../api/ddragon/getChampionNames";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
@@ -23,6 +21,8 @@ const Builds = () => {
 
   //potrzebne do selecta z championami
   const [championOptions, setChampionOptions] = useState([]);
+
+  //potrzebne do pobrania profili
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
 
   const axiosInstance = useAxiosPublic();
@@ -94,11 +94,13 @@ const Builds = () => {
     },
   });
 
+  //author
   const handleFilter = async (e) => {
     e.preventDefault();
     await refetchBuilds();
   };
 
+  //champion
   const handleFilterChange = async (selectedOption) => {
     setFilterParams((prev) => ({
       ...prev,
@@ -109,6 +111,7 @@ const Builds = () => {
     await refetchBuilds();
   };
 
+  //page
   const handlePageChange = async (newPage) => {
     // Zaktualizuj tylko numer strony
     setFilterParams((prev) => ({
@@ -118,6 +121,17 @@ const Builds = () => {
 
     await new Promise((resolve) => setTimeout(resolve, 0));
     // Ponowne pobranie danych po zmianie strony
+    await refetchBuilds();
+  };
+
+  const resetFilters = async () => {
+    setFilterParams({
+      page: 0,
+      author: "",
+      championId: "",
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
     await refetchBuilds();
   };
 
@@ -269,7 +283,10 @@ const Builds = () => {
             </svg>
             <p className="text-[20px]">Support</p>
           </div>
-          <div className="border-[1px] border-amber rounded-md px-5 py-[5px] flex items-center justify-center gap-x-2 text-[24px] cursor-pointer hover:bg-silver-hover transition-colors duration-150">
+          <div
+            onClick={() => resetFilters()}
+            className="border-[1px] border-amber rounded-md px-5 py-[5px] flex items-center justify-center gap-x-2 text-[24px] cursor-pointer hover:bg-silver-hover transition-colors duration-150"
+          >
             <p className="text-[20px]">Reset</p>
           </div>
         </div>

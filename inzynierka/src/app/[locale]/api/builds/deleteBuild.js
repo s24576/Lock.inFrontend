@@ -4,10 +4,10 @@ const deleteBuild = async (axiosIstance, buildId) => {
     const response = await axiosIstance.delete(
       `/build/deleteBuild?buildId=${buildId}`
     );
-    console.log("deleted comment");
+    console.log("deleted build");
   } catch (error) {
     console.error(error);
-    throw new Error("Error deleting comment");
+    throw new Error("Error deleting build");
   }
 };
 
