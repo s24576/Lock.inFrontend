@@ -470,7 +470,7 @@ const BuildDetails = () => {
           <p className="mt-3">{buildData?.description}</p>
         </div>
       </div>
-      <div className="absolute top-[100vh] w-full bg-gradient-to-b from-[#202020] to-night">
+      <div className="absolute top-[100vh] w-full bg-night">
         {buildData && <CommentsSection id={buildData._id} />}
       </div>
     </div>

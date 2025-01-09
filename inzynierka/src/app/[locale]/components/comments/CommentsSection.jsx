@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { UserContext } from "../../context/UserContext";
 import { useQuery, useMutation } from "react-query";
 import getCommentsById from "../../api/comments/getCommentsById";
@@ -10,8 +10,16 @@ import react from "../../api/comments/react";
 import { useRouter } from "next/navigation";
 import useAxios from "../../hooks/useAxios";
 import Image from "next/image";
-import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
+import {
+  AiOutlineLike,
+  AiOutlineDislike,
+  AiOutlineDelete,
+} from "react-icons/ai";
+import { BiLike, BiDislike } from "react-icons/bi";
 import { MdDelete, MdReply, MdNavigateNext } from "react-icons/md";
+import { IoMdMore } from "react-icons/io";
+import { FaExclamation } from "react-icons/fa6";
+import Footer from "../Footer";
 
 const CommentsSection = ({ id: objectId }) => {
   const { userData, isLogged } = useContext(UserContext);
@@ -231,256 +239,278 @@ const CommentsSection = ({ id: objectId }) => {
   };
 
   return (
-    <div className="w-[80%] flex  mx-auto border-t-2 border-t-silver mt-8">
-      <div className="flex flex-col w-[40%]">
-        <p className="py-5 text-[36px] font-semibold text-center">
-          Leave comment
-        </p>
+    <div className="w-full flex flex-col">
+      <div className="w-full px-[10%] flex justify-between  mt-8 font-chewy">
+        <div className="flex flex-col w-[40%]">
+          <p className="py-5 text-[32px]  text-center">Leave comment</p>
 
-        <form
-          className="flex flex-col items-center text-black pb-8"
-          onSubmit={(e) => {
-            handleCommentSubmit(e, newComment);
-          }}
-        >
-          <textarea
-            cols={30}
-            rows={6}
-            className="px-3 py-2 w-[75%] h-[200px] border-[1px] border-black"
-            placeholder="Add comment"
-            value={newComment}
-            onChange={handleCommentChange}
-            onFocus={() => setShowReplyInput("")}
-          />
-          <button
-            type="submit"
-            className="bg-[#f5b800] text-[#131313] px-4 py-2 w-[45%] mt-5 rounded-md font-semibold "
+          <form
+            className="flex flex-col items-center text-black pb-8"
+            onSubmit={(e) => {
+              handleCommentSubmit(e, newComment);
+            }}
           >
-            Add comment
-          </button>
-        </form>
-      </div>
+            <textarea
+              cols={30}
+              rows={6}
+              className="px-3 py-2 w-[75%] h-[200px] bg-transparent border-[1px] border-white-smoke rounded-xl text-[18px] text-white-smoke"
+              placeholder="Add comment..."
+              value={newComment}
+              onChange={handleCommentChange}
+              onFocus={() => setShowReplyInput("")}
+            />
+            <button
+              type="submit"
+              className="bg-transparent px-4 py-2 w-[45%] mt-8 rounded-3xl text-white text-[20px] border-[1px] border-white-smoke hover:text-amber duration-150 transition-all hover:border-amber"
+            >
+              Comment
+            </button>
+          </form>
+        </div>
 
-      <div className="flex flex-col w-[60%] items-center">
-        <p className="py-5 text-[36px] font-semibold text-center">Comments</p>
-        <div className="flex flex-col gap-y-8 mx-auto py-3 ">
-          {allCommentsData &&
-          Array.isArray(allCommentsData.content) &&
-          allCommentsData.content.length > 0 ? (
-            allCommentsData.content.map((comment, index) => {
-              if (comment.replyingTo === null)
-                return (
-                  <div
-                    name={comment._id}
-                    key={index}
-                    className="flex flex-col py-6 border-b-2 border-b-silver "
-                  >
-                    <div className="flex justify-between gap-x-4">
-                      <Image
-                        src="/profilePicture.jpg"
-                        width={60}
-                        height={60}
-                        className="w-[60px] h-[60px] rounded-full object-cover aspect-square border-2 border-silver"
-                      />
-                      <div className="flex flex-col w-[320px] break-words whitespace-normal">
-                        <p className="font-semibold">
-                          {comment.username} said{" "}
-                        </p>
-
-                        <p className="">{comment.comment}</p>
-                      </div>
-
-                      <div className="flex items-center gap-x-2">
-                        <div className="flex flex-col items-center gap-y-1">
-                          <p className="">{comment.likesCount}</p>
-                          <AiOutlineLike
-                            className={
-                              comment.reaction === true &&
-                              comment.canReact === false
-                                ? "text-[28px] cursor-pointer text-green-500"
-                                : "text-[28px] cursor-pointer hover:text-green-500"
-                            }
-                            onClick={() => {
-                              leaveReaction({
-                                objectId: comment._id,
-                                value: true,
-                              });
-                            }}
-                          ></AiOutlineLike>
-                        </div>
-
-                        <div className="flex flex-col items-center gap-y-1">
-                          <p>{comment.dislikesCount}</p>
-                          <AiOutlineDislike
-                            className={
-                              comment.reaction === false &&
-                              comment.canReact === false
-                                ? "text-[28px] cursor-pointer text-red-500"
-                                : "text-[28px] cursor-pointer hover:text-red-500"
-                            }
-                            onClick={() => {
-                              leaveReaction({
-                                objectId: comment._id,
-                                value: false,
-                              });
-                            }}
-                          ></AiOutlineDislike>
-                        </div>
-                        <div className="flex justify-between items-center mt-3">
-                          <MdReply
-                            className="text-[24px] cursor-pointer hover:text-amber"
-                            onClick={() => setShowReplyInput(comment._id)}
-                          ></MdReply>
-                        </div>
-                        {isLogged && userData.username === comment.username && (
-                          <MdDelete
-                            className="text-[24px] mt-3 cursor-pointer hover:text-amber"
-                            onClick={() => deleteCommentMutation(comment._id)}
-                          ></MdDelete>
-                        )}
-                      </div>
-                    </div>
-                    {showReplyInput === comment._id && (
-                      <form
-                        onSubmit={(e) => {
-                          handleCommentSubmit(e, newReply, comment._id);
-                          setCommentIdToFetch({ commentId: comment._id });
-                        }}
-                        className="pt-4 text-black flex justify-between w-full "
-                      >
-                        <input
-                          type="text"
-                          value={newReply}
-                          onChange={(e) => setNewReply(e.target.value)}
-                          className="border p-2 w-full"
-                          placeholder="Add a comment"
+        <div className="flex flex-col w-[40%] items-center">
+          <p className="py-5 text-[36px] text-center">Comments</p>
+          <div className="flex flex-col gap-y-8 w-full py-3 ">
+            {allCommentsData &&
+            Array.isArray(allCommentsData.content) &&
+            allCommentsData.content.length > 0 ? (
+              allCommentsData.content.map((comment, index) => {
+                if (comment.replyingTo === null)
+                  return (
+                    <div
+                      name={comment._id}
+                      key={index}
+                      className="flex flex-col py-6  w-full"
+                    >
+                      <div className="flex justify-between gap-x-4 w-full">
+                        <Image
+                          src="/profilePicture.jpg"
+                          width={60}
+                          height={60}
+                          className="w-[60px] h-[60px] rounded-full object-cover aspect-square border-2 border-silver"
                         />
-                        <button
-                          type="submit"
-                          className="ml-2 p-2 bg-amber text-night rounded-md font-semibold"
-                        >
-                          Submit
-                        </button>
-                      </form>
-                    )}
-                    <div className="flex flex-col">
-                      {allRepliesData &&
-                        allRepliesData.content &&
-                        allRepliesData.content.map((reply, key) => {
-                          if (reply.replyingTo === comment._id)
-                            return (
-                              <div
-                                key={key}
-                                className="flex justify-between gap-x-4 py-8 ml-8"
+                        <div className="flex flex-col w-full break-words whitespace-normal">
+                          <p className="text-[20px]">@{comment.username}</p>
+
+                          <p className="text-[18px]">{comment.comment}</p>
+                          <div className="flex items-center gap-x-2 mt-3">
+                            <div
+                              className={
+                                comment.reaction === true &&
+                                comment.canReact === false
+                                  ? "flex items-center gap-x-1 text-[28px]  text-amber hover:text-white-smoke duration-100 transition-colors"
+                                  : "flex items-center gap-x-1 text-[28px]  hover:text-amber duration-100 transition-colors"
+                              }
+                            >
+                              <BiLike
+                                onClick={() => {
+                                  leaveReaction({
+                                    objectId: comment._id,
+                                    value: true,
+                                  });
+                                }}
+                                className="cursor-pointer"
+                              ></BiLike>
+                              <p className="text-[20px]">
+                                {comment.likesCount}
+                              </p>
+                            </div>
+
+                            <div
+                              className={
+                                comment.reaction === false &&
+                                comment.canReact === false
+                                  ? "flex items-center gap-x-1 text-[28px]  text-amber hover:text-white-smoke duration-100 transition-colors"
+                                  : "flex items-center gap-x-1 text-[28px]  hover:text-amber duration-100 transition-colors"
+                              }
+                            >
+                              <BiDislike
+                                onClick={() => {
+                                  leaveReaction({
+                                    objectId: comment._id,
+                                    value: false,
+                                  });
+                                }}
+                                className="cursor-pointer"
+                              ></BiDislike>
+                              <p className="text-[20px]">
+                                {comment.dislikesCount}
+                              </p>
+                            </div>
+                            <div className="flex justify-between items-center px-2">
+                              <p
+                                className="text-[20px] cursor-pointer hover:text-amber duration-150 transition-all"
+                                onClick={() => setShowReplyInput(comment._id)}
                               >
-                                <Image
-                                  src="/profilePicture.jpg"
-                                  alt="test"
-                                  width={60}
-                                  height={60}
-                                  className="w-[60px] h-[60px] rounded-full object-cover aspect-square border-2 border-silver"
-                                />
-                                <div className="flex flex-col w-[320px] break-words whitespace-normal">
-                                  <p className="font-semibold">
-                                    {reply.username} said{" "}
-                                  </p>
+                                Reply
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          {userData.username === comment.username && (
+                            <AiOutlineDelete
+                              onClick={() => deleteCommentMutation(comment._id)}
+                              className="text-[24px] cursor-pointer hover:text-amber duration-150 transition-all"
+                            />
+                          )}
+                          {isLogged && (
+                            <FaExclamation className="text-[24px] cursor-pointer hover:text-amber duration-150 transition-all" />
+                          )}
+                        </div>
+                      </div>
+                      {showReplyInput === comment._id && (
+                        <form
+                          onSubmit={(e) => {
+                            handleCommentSubmit(e, newReply, comment._id);
+                            setCommentIdToFetch({ commentId: comment._id });
+                          }}
+                          className="pt-4 text-black flex flex-col items-center justify-between pl-[76px] "
+                        >
+                          <textarea
+                            rows={3}
+                            type="text"
+                            value={newReply}
+                            onChange={(e) => setNewReply(e.target.value)}
+                            className="border p-2 w-full bg-transparent rounded-md text-white-smoke"
+                            placeholder="Add a comment"
+                          />
+                          <button
+                            type="submit"
+                            className="w-[40%] mt-4 p-2 bg-transparent text-white-smoke rounded-3xl border-[1px] border-white-smoke hover:text-amber duration-150 transition-all hover:border-amber"
+                          >
+                            Submit
+                          </button>
+                        </form>
+                      )}
+                      <div className="flex flex-col">
+                        {allRepliesData &&
+                          allRepliesData.content &&
+                          allRepliesData.content.map((reply, key) => {
+                            if (reply.replyingTo === comment._id)
+                              return (
+                                <div className="flex justify-between gap-x-4 w-full mt-10 pl-[76px]">
+                                  <Image
+                                    src="/profilePicture.jpg"
+                                    width={60}
+                                    height={60}
+                                    className="w-[60px] h-[60px] rounded-full object-cover aspect-square border-2 border-silver"
+                                  />
+                                  <div className="flex flex-col w-full break-words whitespace-normal">
+                                    <p className="text-[20px]">
+                                      @{reply.username}
+                                    </p>
 
-                                  <p className="">{reply.comment}</p>
-                                </div>
+                                    <p className="text-[18px]">
+                                      {reply.comment}
+                                    </p>
+                                    <div className="flex items-center gap-x-2 mt-3">
+                                      <div
+                                        className={
+                                          reply.reaction === true &&
+                                          reply.canReact === false
+                                            ? "flex items-center gap-x-1 text-[28px]  text-amber hover:text-white-smoke duration-100 transition-colors"
+                                            : "flex items-center gap-x-1 text-[28px]  hover:text-amber duration-100 transition-colors"
+                                        }
+                                      >
+                                        <BiLike
+                                          onClick={() => {
+                                            leaveReaction({
+                                              objectId: reply._id,
+                                              value: true,
+                                            });
+                                          }}
+                                          className="cursor-pointer"
+                                        ></BiLike>
+                                        <p className="text-[20px]">
+                                          {reply.likesCount}
+                                        </p>
+                                      </div>
 
-                                <div className="flex items-center gap-x-2">
-                                  <div className="flex flex-col items-center gap-y-1">
-                                    <p className="">{reply.likesCount}</p>
-                                    <AiOutlineLike
-                                      className={
-                                        reply.reaction === true &&
-                                        reply.canReact === false
-                                          ? "text-[28px] cursor-pointer text-green-500"
-                                          : "text-[28px] cursor-pointer hover:text-green-500"
-                                      }
-                                      onClick={() => {
-                                        leaveReaction({
-                                          objectId: reply._id,
-                                          value: true,
-                                        });
-                                      }}
-                                    ></AiOutlineLike>
+                                      <div
+                                        className={
+                                          reply.reaction === false &&
+                                          reply.canReact === false
+                                            ? "flex items-center gap-x-1 text-[28px]  text-amber hover:text-white-smoke duration-100 transition-colors"
+                                            : "flex items-center gap-x-1 text-[28px]  hover:text-amber duration-100 transition-colors"
+                                        }
+                                      >
+                                        <BiDislike
+                                          onClick={() => {
+                                            leaveReaction({
+                                              objectId: reply._id,
+                                              value: false,
+                                            });
+                                          }}
+                                          className="cursor-pointer"
+                                        ></BiDislike>
+                                        <p className="text-[20px]">
+                                          {reply.dislikesCount}
+                                        </p>
+                                      </div>
+                                    </div>
                                   </div>
-
-                                  <div className="flex flex-col items-center gap-y-1">
-                                    <p>{reply.dislikesCount}</p>
-
-                                    <AiOutlineDislike
-                                      className={
-                                        reply.reaction === false &&
-                                        reply.canReact === false
-                                          ? "text-[28px] cursor-pointer text-red-500"
-                                          : "text-[28px] cursor-pointer hover:text-red-500"
-                                      }
-                                      onClick={() => {
-                                        leaveReaction({
-                                          objectId: reply._id,
-                                          value: false,
-                                        });
-                                      }}
-                                    ></AiOutlineDislike>
-                                  </div>
-
-                                  {isLogged &&
-                                    userData.username === reply.username && (
-                                      <MdDelete
-                                        className="text-[24px] mt-3 cursor-pointer hover:text-amber"
+                                  <div className="flex items-start">
+                                    {userData.username === reply.username && (
+                                      <AiOutlineDelete
                                         onClick={() =>
                                           deleteCommentMutation(reply._id)
                                         }
-                                      ></MdDelete>
+                                        className="text-[24px] cursor-pointer hover:text-amber duration-150 transition-all"
+                                      />
                                     )}
+                                    {isLogged && (
+                                      <FaExclamation className="text-[24px] cursor-pointer hover:text-amber duration-150 transition-all" />
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
-                            );
-                        })}
+                              );
+                          })}
 
-                      {comment.replyCount >
-                      allRepliesData.content.filter(
-                        (reply) => reply.replyingTo === comment._id
-                      ).length ? (
-                        <button
-                          onClick={() => {
-                            setCommentIdToFetch({
-                              commentId: comment._id,
-                              action: "showMore",
-                            });
+                        {comment.replyCount >
+                        allRepliesData.content.filter(
+                          (reply) => reply.replyingTo === comment._id
+                        ).length ? (
+                          <button
+                            onClick={() => {
+                              setCommentIdToFetch({
+                                commentId: comment._id,
+                                action: "showMore",
+                              });
 
-                            //refetch + size
-                          }}
-                          className="flex items-center mt-5 px-6 py-1 font-semibold rounded-md"
-                        >
-                          <MdNavigateNext className="text-[24px]"></MdNavigateNext>
-                          Show more replies
-                        </button>
-                      ) : (
-                        ""
-                      )}
+                              //refetch + size
+                            }}
+                            className="flex items-center mt-5 pl-[76px] py-1 rounded-md hover:text-amber duration-150 transition-all"
+                          >
+                            Show replies
+                          </button>
+                        ) : (
+                          ""
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-            })
-          ) : (
-            <p className="mt-5">Comment first</p>
+                  );
+              })
+            ) : (
+              <p className="mt-5">Comment first</p>
+            )}
+          </div>
+          {allCommentsData.page.totalElements >
+            allCommentsData.content.length && (
+            <p
+              className="w-[30%] text-center font-semibold mt-3 px-6 py-2 bg-amber text-night rounded-md cursor-pointer"
+              onClick={() => {
+                console.log("increasing comments");
+                setNumberOfComments(numberOfComments + 5);
+              }}
+            >
+              Show more comments
+            </p>
           )}
         </div>
-        {allCommentsData.page.totalElements >
-          allCommentsData.content.length && (
-          <p
-            className="w-[30%] text-center font-semibold mt-3 px-6 py-2 bg-amber text-night rounded-md cursor-pointer"
-            onClick={() => {
-              console.log("increasing comments");
-              setNumberOfComments(numberOfComments + 5);
-            }}
-          >
-            Show more comments
-          </p>
-        )}
+      </div>
+      <div className="mt-[5%]">
+        <Footer></Footer>
       </div>
     </div>
   );
