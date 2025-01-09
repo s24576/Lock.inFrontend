@@ -18,6 +18,7 @@ import {
 import { BiLike, BiDislike } from "react-icons/bi";
 import { MdDelete, MdReply, MdNavigateNext } from "react-icons/md";
 import { IoMdMore } from "react-icons/io";
+import { FaUser } from "react-icons/fa";
 import { FaExclamation } from "react-icons/fa6";
 import Footer from "../Footer";
 
@@ -47,6 +48,8 @@ const CommentsSection = ({ id: objectId }) => {
 
   const [numberOfComments, setNumberOfComments] = useState(5);
   const [numberOfReplies, setNumberOfReplies] = useState(5);
+
+  const [usernamesToFetch, setUsernamesToFetch] = useState([]);
 
   const axiosInstance = useAxios();
   const router = useRouter();
@@ -105,6 +108,14 @@ const CommentsSection = ({ id: objectId }) => {
             content: newContent,
             page: { ...prev.page, ...data.page }, // Aktualizacja obiektu page
           };
+        });
+
+        const usernames = data.content.map((build) => build.username);
+
+        // Upewnij się, że username są unikalne i nie powtarzają się
+        setUsernamesToFetch((prevUsernames) => {
+          const uniqueUsernames = new Set([...prevUsernames, ...usernames]);
+          return Array.from(uniqueUsernames); // Zamień Set na tablicę, aby zachować unikalność
         });
       },
     }
@@ -165,6 +176,14 @@ const CommentsSection = ({ id: objectId }) => {
             content: newContent,
           };
         });
+
+        const usernames = newData.content.map((build) => build.username);
+
+        // Upewnij się, że username są unikalne i nie powtarzają się
+        setUsernamesToFetch((prevUsernames) => {
+          const uniqueUsernames = new Set([...prevUsernames, ...usernames]);
+          return Array.from(uniqueUsernames); // Zamień Set na tablicę, aby zachować unikalność
+        });
       },
     }
   );
@@ -178,6 +197,7 @@ const CommentsSection = ({ id: objectId }) => {
         refetchComments();
         //data musi zwracac id komentarza a nie reply
         refetchReplies();
+        shortProfilesRefetch();
       },
       onError: (error) => {
         console.error("Error creating comment:", error);
@@ -196,6 +216,20 @@ const CommentsSection = ({ id: objectId }) => {
       onError: (error) => {
         console.error("Error creating reaction:", error);
       },
+    }
+  );
+
+  const {
+    refetch: shortProfilesRefetch,
+    data: shortProfilesData,
+    error: shortProfilesError,
+    isLoading: shortProfilesIsLoading,
+  } = useQuery(
+    "shortProfilesData",
+    () => getShortProfiles(axiosInstance, usernamesToFetch),
+    {
+      refetchOnWindowFocus: false,
+      enabled: usernamesToFetch.length > 0,
     }
   );
 
@@ -236,6 +270,13 @@ const CommentsSection = ({ id: objectId }) => {
     setNewComment("");
     setNewReply("");
     setShowReplyInput("");
+  };
+
+  const getImageSrc = (image) => {
+    if (image && image.data) {
+      return `data:${image.contentType};base64,${image.data}`;
+    }
+    return null;
   };
 
   return (
@@ -283,12 +324,18 @@ const CommentsSection = ({ id: objectId }) => {
                       className="flex flex-col py-6  w-full"
                     >
                       <div className="flex justify-between gap-x-4 w-full">
-                        <Image
-                          src="/profilePicture.jpg"
-                          width={60}
-                          height={60}
-                          className="w-[60px] h-[60px] rounded-full object-cover aspect-square border-2 border-silver"
-                        />
+                        {shortProfilesData?.[comment.username]?.image ? (
+                          <img
+                            src={getImageSrc(
+                              shortProfilesData[comment.username].image
+                            )}
+                            className="w-[60px] h-[60px] object-cover border-2 border-white-smoke rounded-full"
+                          ></img>
+                        ) : (
+                          <div className="h-[76px] w-[76px]   flex items-center justify-center">
+                            <FaUser className="text-white-smoke text-[30px]"></FaUser>
+                          </div>
+                        )}
                         <div className="flex flex-col w-full break-words whitespace-normal">
                           <p className="text-[20px]">@{comment.username}</p>
 
@@ -390,12 +437,19 @@ const CommentsSection = ({ id: objectId }) => {
                             if (reply.replyingTo === comment._id)
                               return (
                                 <div className="flex justify-between gap-x-4 w-full mt-10 pl-[76px]">
-                                  <Image
-                                    src="/profilePicture.jpg"
-                                    width={60}
-                                    height={60}
-                                    className="w-[60px] h-[60px] rounded-full object-cover aspect-square border-2 border-silver"
-                                  />
+                                  {shortProfilesData?.[reply.username]
+                                    ?.image ? (
+                                    <img
+                                      src={getImageSrc(
+                                        shortProfilesData[reply.username].image
+                                      )}
+                                      className="w-[48px] h-[48px] object-cover border-2 border-white-smoke rounded-full"
+                                    ></img>
+                                  ) : (
+                                    <div className="h-[60px] w-[60px]   flex items-center justify-center">
+                                      <FaUser className="text-white-smoke text-[30px]"></FaUser>
+                                    </div>
+                                  )}
                                   <div className="flex flex-col w-full break-words whitespace-normal">
                                     <p className="text-[20px]">
                                       @{reply.username}
@@ -492,7 +546,7 @@ const CommentsSection = ({ id: objectId }) => {
                   );
               })
             ) : (
-              <p className="mt-5">Comment first</p>
+              <p className="mt-5 text-center">Comment first</p>
             )}
           </div>
           {allCommentsData.page.totalElements >
