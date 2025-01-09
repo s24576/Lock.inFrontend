@@ -27,17 +27,18 @@ const Navbar = () => {
   const languages = i18nConfig.locales;
   const isRootOrLocaleOnly =
     pathname === "/" ||
-    languages.some(
-      (locale) =>
+    languages.some((locale) => {
+      // Sprawdzamy, czy ścieżka zaczyna się od "/builds" lub "/locale/builds"
+      const buildsPath = `/builds`;
+      const localeBuildsPath = `/${locale}/builds`;
+
+      return (
         pathname === `/${locale}` ||
         pathname === `/${locale}/` ||
-        pathname === `/builds` ||
-        pathname === `/${locale}/builds` ||
-        pathname === `/builds/me` ||
-        pathname === `/${locale}/builds/me` ||
-        pathname === `/builds/saved` ||
-        pathname === `/${locale}/builds/saved`
-    );
+        pathname.startsWith(buildsPath) ||
+        pathname.startsWith(localeBuildsPath)
+      );
+    });
   const navbarBg = isRootOrLocaleOnly ? "bg-transparent" : "bg-night";
 
   const navbarHidden =
