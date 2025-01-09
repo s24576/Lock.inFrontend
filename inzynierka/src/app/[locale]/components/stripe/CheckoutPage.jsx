@@ -6,6 +6,7 @@ import {
   PaymentElement,
 } from "@stripe/react-stripe-js";
 import useAxios from "../../hooks/useAxios";
+import { IoCartOutline } from "react-icons/io5";
 
 const CheckoutPage = ({ courseId }) => {
   const stripe = useStripe();
@@ -46,16 +47,27 @@ const CheckoutPage = ({ courseId }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-2 rounded-md">
-      {/* <PaymentElement /> */}
+    <form
+      onSubmit={handleSubmit}
+      className="bg-transparent rounded-xl border-[1px] border-white-smoke hover:border-amber transition-all duration-100"
+    >
       <button
         type="submit"
         disabled={!stripe || loading}
-        className="text-black bg-blue-500 p-2 rounded-md"
+        className="text-white-smoke bg-transparent p-2 hover:text-amber hover:border-amber transition-all duration-100"
       >
-        {loading ? "Processing..." : "Pay"}
+        {loading ? (
+          <div className="flex items-center justify-between gap-x-2 px-2">
+            <IoCartOutline className="text-[32px]" />
+            <p className="text-[20px]">Wait...</p>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between gap-x-2 px-2">
+            <IoCartOutline className="text-[32px]" />
+            <p className="text-[20px]">120 PLN</p>
+          </div>
+        )}
       </button>
-      {error && <div className="error-message">{error}</div>}
     </form>
   );
 };
