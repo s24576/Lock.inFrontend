@@ -1,11 +1,21 @@
-const getOwnedCourses = async (axiosInstance) => {
+const getOwnedCourses = async (axiosInstance, page) => {
+  const size = 15;
+
+  if (page === undefined) {
+    page = 0;
+  }
+
+  console.log("page", page);
+
   try {
-    const response = await axiosInstance.get("/api/course/getOwnedCourses");
-    console.log("owned courses", response.data);
+    // Budowanie URL-a dynamicznie
+    let url = `/api/course/getOwnedCourses?size=${size}&page=${page}`;
+
+    const response = await axiosInstance.get(url);
+    console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error(error);
-    throw new Error("Error fetching courses");
+    console.log(error);
   }
 };
 
