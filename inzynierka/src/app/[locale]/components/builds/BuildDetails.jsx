@@ -142,7 +142,12 @@ const BuildDetails = () => {
       <div
         className="absolute inset-0 bg-cover bg-fixed"
         style={{
-          backgroundImage: `url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${buildData.championId}_0.jpg')`,
+          backgroundImage:
+            buildData && buildData.championId
+              ? `url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${buildData.championId}_0.jpg')`
+              : "none",
+          backgroundColor:
+            buildData && buildData.championId ? "transparent" : "#131313",
           opacity: "0.4",
           backgroundSize: "cover", // Nie powiększa obrazu
           backgroundPosition: "center", // Ustawienie środka obrazu
