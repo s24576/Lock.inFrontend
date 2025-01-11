@@ -8,7 +8,7 @@ import {
 import useAxios from "../../hooks/useAxios";
 import { IoCartOutline } from "react-icons/io5";
 
-const CheckoutPage = ({ courseId }) => {
+const CheckoutPage = ({ course }) => {
   const stripe = useStripe();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ const CheckoutPage = ({ courseId }) => {
 
     try {
       const response = await axiosInstance.post(
-        `/api/stripe/createCheckoutSession?&objectId=${courseId}&objectType=course`
+        `/api/stripe/createCheckoutSession?&objectId=${course._id}&objectType=course`
       );
 
       const sessionId = response.data.sessionId;
@@ -64,7 +64,7 @@ const CheckoutPage = ({ courseId }) => {
         ) : (
           <div className="flex items-center justify-between gap-x-2 px-2">
             <IoCartOutline className="text-[32px]" />
-            <p className="text-[20px]">120 PLN</p>
+            <p className="text-[20px]">{course?.price} PLN</p>
           </div>
         )}
       </button>

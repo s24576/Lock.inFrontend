@@ -53,6 +53,14 @@ body {
     opacity: 0;
   }
 
+  .placeholder-white-smoke-left::placeholder {
+    color: #f5f5f5;
+  }
+
+  .placeholder-white-smoke-left:focus::placeholder {
+    opacity: 0;
+  }
+
   .placeholder-white-smoke:hover::placeholder {
     color: #f5b800;
     transition: 0.1s;

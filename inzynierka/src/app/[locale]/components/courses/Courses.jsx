@@ -127,12 +127,12 @@ const Courses = () => {
                   className="flex items-center border-2 border-amber rounded-xl px-3 py-2 w-full hover:bg-[#d9d9d9] hover:bg-opacity-10 transition-all duration-100"
                 >
                   <p href={"/"} className="text-[32px] font-bangers w-[45%]">
-                    {course.title}
+                    {course?.title}
                   </p>
-                  {shortProfilesData?.[course.username]?.image ? (
+                  {shortProfilesData?.[course?.username]?.image ? (
                     <img
                       src={getImageSrc(
-                        shortProfilesData?.[course.username]?.image
+                        shortProfilesData?.[course?.username]?.image
                       )}
                       className=" mt-1 w-[48px] h-[48px] object-cover border-2 border-white-smoke rounded-full align-middle"
                     />
@@ -144,32 +144,32 @@ const Courses = () => {
                   <div className="flex flex-col text-[18px] ml-2 w-[25%]">
                     <p>by</p>
                     <Link
-                      href={"/profile/" + course.username}
+                      href={"/profile/" + course?.username}
                       className="hover:underline duration-150 transition-all"
                     >
-                      {course.username}
+                      {course?.username}
                     </Link>
                   </div>
                   <div className="flex items-center gap-x-4 pr-8">
                     <div
                       className={
-                        course.reaction === true && course.canReact === false
+                        course?.reaction === true && course?.canReact === false
                           ? "flex items-center gap-x-1 text-[28px]  text-amber "
                           : "flex items-center gap-x-1 text-[28px]  "
                       }
                     >
                       <BiLike></BiLike>
-                      <p className="text-[20px]">{course.likesCount}</p>
+                      <p className="text-[20px]">{course?.likesCount}</p>
                     </div>
                     <div
                       className={
-                        course.reaction === false && course.canReact === false
+                        course?.reaction === false && course?.canReact === false
                           ? "flex items-center gap-x-1 text-[28px]  text-amber "
                           : "flex items-center gap-x-1 text-[28px]  "
                       }
                     >
                       <BiDislike></BiDislike>
-                      <p className="text-[20px]">{course.dislikesCount}</p>
+                      <p className="text-[20px]">{course?.dislikesCount}</p>
                     </div>
                   </div>
                 </div>

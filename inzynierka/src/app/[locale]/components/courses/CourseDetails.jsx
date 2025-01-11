@@ -12,7 +12,15 @@ import { FaUser } from "react-icons/fa";
 import { BiLike, BiDislike, BiEditAlt } from "react-icons/bi";
 import { AiOutlineDelete } from "react-icons/ai";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
+import { IoMdAdd } from "react-icons/io";
 import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/componentsShad/ui/dialog";
 import CommentsSection from "../comments/CommentsSection";
 
 const CourseDetails = () => {
@@ -21,13 +29,10 @@ const CourseDetails = () => {
   const params = useParams();
 
   const [videoToShow, setVideoToShow] = useState(null);
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFilmData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  const [newVideo, setNewVideo] = useState({
+    title: "",
+    link: "",
+  });
 
   const {
     refetch: refetchCourse,
@@ -68,6 +73,47 @@ const CourseDetails = () => {
       },
     }
   );
+
+  const { mutateAsync: handleAddFilm } = useMutation(
+    () => addFilm(axiosInstance, newVideo, course?._id),
+    {
+      onSuccess: () => {
+        console.log("film created successfully:");
+        refetchCourse();
+      },
+      onError: (error) => {
+        console.error("Error creating film:", error);
+      },
+    }
+  );
+
+  const addVideo = async (e) => {
+    e.preventDefault();
+
+    // Sprawdzenie, czy link jest linkiem YouTube i wyciągnięcie ID
+    const videoIdMatch = newVideo.link.match(
+      /(?:youtube\.com\/.*v=|youtu\.be\/)([^&?/]+)/ // Wyrażenie regularne dla ID filmu YouTube
+    );
+    const videoId = videoIdMatch ? videoIdMatch[1] : newVideo.link; // Jeśli jest dopasowanie, użyj ID, w przeciwnym razie pozostaw oryginalny link
+
+    // Ustawienie linku w obiekcie newVideo
+    setNewVideo((prev) => ({
+      ...prev,
+      link: videoId, // Zaktualizowanie linku zgodnie z wyrażeniem regularnym
+    }));
+
+    // Symulacja kolejki microtasków (wstrzymanie wykonania na 0 ms)
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    // Opcjonalnie wywołanie innej funkcji po dodaniu filmu
+    await handleAddFilm();
+
+    // Ponownie symulacja kolejki microtasków
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    // Resetowanie stanu newVideo po dodaniu filmu
+    setNewVideo({ title: "", link: "" }); // Czyszczenie pól w newVideo
+  };
 
   const getImageSrc = (image) => {
     if (image && image.data) {
@@ -121,12 +167,6 @@ const CourseDetails = () => {
                 {course.title}
               </p>
               <div className="flex flex-col justify-center gap-y-2">
-                {userData?.username === course.username && (
-                  <div className="flex items-center gap-x-2">
-                    <BiEditAlt className="text-[28px]"></BiEditAlt>
-                    <AiOutlineDelete className="text-[28px]"></AiOutlineDelete>
-                  </div>
-                )}
                 <div className="flex items-center gap-x-2">
                   <div className="flex items-center gap-x-3 font-chewy">
                     <div
@@ -176,17 +216,21 @@ const CourseDetails = () => {
                   : course.description}
               </p>
             </div>
-            <div className="mt-[5%] flex flex-col gap-y-4">
+            <p className="mt-[4%] text-[32px] ml-1 font-chewy">Videos</p>
+
+            <div className="mt-[3%] flex flex-col gap-y-4">
               {course.films?.map((film, key) => {
                 return (
                   <div
                     key={key}
-                    onClick={() => setVideoToShow(key)}
+                    onClick={() =>
+                      setVideoToShow(videoToShow === key ? null : key)
+                    }
                     className={
-                      "w-full border-[1px] rounded-xl px-6 py-2 font-chewy  " +
+                      "w-full border-[1px] rounded-xl px-6 py-2 font-chewy cursor-pointer " +
                       (videoToShow === key
                         ? "border-amber"
-                        : "border-white-smoke hover:bg-[#d9d9d9] hover:bg-opacity-15 transition-all duration-150 cursor-pointer ")
+                        : "border-white-smoke hover:border-amber hover:text-amber transition-all duration-150")
                     }
                   >
                     {videoToShow === key ? (
@@ -195,7 +239,7 @@ const CourseDetails = () => {
                           <p className="py-3 text-[20px] text-amber ">
                             {film.title}
                           </p>
-                          <IoChevronUp className="text-[28px] text-amber"></IoChevronUp>
+                          <IoChevronUp className="text-[28px] text-amber hover:text-white-smoke transition-all duration-150"></IoChevronUp>
                         </div>
                         <iframe
                           width="100%"
@@ -209,12 +253,73 @@ const CourseDetails = () => {
                     ) : (
                       <div className="w-full flex justify-between items-center">
                         <p className="py-3 text-[20px]">{film.title}</p>
-                        <IoChevronDown className="text-[28px]"></IoChevronDown>
+                        <IoChevronDown className="text-[28px] "></IoChevronDown>
                       </div>
                     )}
                   </div>
                 );
               })}
+
+              {userData?.username === course.username && (
+                <Dialog>
+                  <DialogTrigger>
+                    <div
+                      className={`flex items-center gap-x-2 ${
+                        course?.videos?.length > 0 ? "mt-3" : "mt-0"
+                      } hover:text-amber duration-150 transition-all font-chewy`}
+                    >
+                      <IoMdAdd className="text-[24px]"></IoMdAdd>
+                      <p className="text-[20px]">Add video</p>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="bg-night border-amber border-2 text-chewy flex items-center pl-0">
+                    <DialogHeader>
+                      <DialogTitle>
+                        <p className="hidden">Add film</p>
+                      </DialogTitle>
+                    </DialogHeader>
+                    <form
+                      onSubmit={addVideo}
+                      className="flex flex-col w-full items-center gap-y-3"
+                    >
+                      <input
+                        type="text"
+                        value={newVideo.title}
+                        onChange={(e) =>
+                          setNewVideo((prev) => {
+                            return {
+                              ...prev,
+                              title: e.target.value,
+                            };
+                          })
+                        }
+                        className="w-[80%] border-amber border-[1px] rounded-xl bg-transparent px-3 py-2 text-[18px] text-white-smoke z-20 font-chewy focus:outline-none "
+                        placeholder="Video title"
+                      />
+
+                      <input
+                        type="text"
+                        value={newVideo.link}
+                        onChange={(e) =>
+                          setNewVideo((prev) => ({
+                            ...prev,
+                            link: e.target.value, // Ustawia pełny link, tak jak wpisuje użytkownik
+                          }))
+                        }
+                        className="w-[80%] border-amber border-[1px] rounded-xl bg-transparent px-3 py-2 text-[18px] text-white-smoke z-20 font-chewy focus:outline-none"
+                        placeholder="Video link"
+                      />
+
+                      <button
+                        type="submit"
+                        className="w-[30%] mt-6 border-amber border-[1px] rounded-3xl bg-transparent px-4 py-2 text-[18px] text-white-smoke z-20 font-chewy hover:bg-silver-hover transition-all duration-150 "
+                      >
+                        Add video
+                      </button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
           </div>
         )}

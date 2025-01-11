@@ -10,6 +10,7 @@ import react from "../../api/comments/react";
 import { useRouter } from "next/navigation";
 import useAxios from "../../hooks/useAxios";
 import Image from "next/image";
+import Link from "next/link";
 import {
   AiOutlineLike,
   AiOutlineDislike,
@@ -337,7 +338,12 @@ const CommentsSection = ({ id: objectId }) => {
                           </div>
                         )}
                         <div className="flex flex-col w-full break-words whitespace-normal">
-                          <p className="text-[20px]">@{comment.username}</p>
+                          <Link
+                            href={"/profile/" + comment?.username}
+                            className="text-[20px]"
+                          >
+                            @{comment.username}
+                          </Link>
 
                           <p className="text-[18px]">{comment.comment}</p>
                           <div className="flex items-center gap-x-2 mt-3">

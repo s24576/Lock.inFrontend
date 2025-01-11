@@ -60,7 +60,7 @@ const CourseCarousel = ({ previews, shortProfiles: shortProfilesData }) => {
                 backgroundPosition: "center",
               }}
             >
-              <div className="flex flex-col justify-center  h-full px-[20%]">
+              <div className="flex flex-col justify-center  h-full px-[20%] bg-night bg-opacity-60 z-30">
                 <p className="text-[64px] font-bangers text-white">
                   {preview?.data?.title}
                 </p>
@@ -87,7 +87,7 @@ const CourseCarousel = ({ previews, shortProfiles: shortProfilesData }) => {
                     ? preview?.data?.description?.slice(0, 150) + "..."
                     : preview?.data?.description}
                 </p>
-                <div className="flex flex-col gap-y-1 mt-4 p-4 bg-night bg-opacity-60 z-30 font-chewy rounded-xl">
+                <div className="flex flex-col gap-y-1 mt-4 p-4  font-chewy rounded-xl">
                   <p className="text-[18px]">Course content</p>
                   {preview?.data?.films.slice(0, 5).map((film, key) => {
                     return (
@@ -134,9 +134,7 @@ const CourseCarousel = ({ previews, shortProfiles: shortProfilesData }) => {
                   {isLogged ? (
                     preview?.data?.owned === false ? (
                       <Elements stripe={stripePromise}>
-                        <CheckoutPage
-                          courseId={preview?.data?._id}
-                        ></CheckoutPage>
+                        <CheckoutPage course={preview?.data}></CheckoutPage>
                       </Elements>
                     ) : (
                       <Link

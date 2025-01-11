@@ -2,7 +2,7 @@ import axios from "axios";
 
 const getDuos = async (language) => {
   try {
-    const response = await axios.get(
+    const response = await axios.post(
       "http://localhost:8080/api/duo/getDuos?size=10",
       {
         headers: {
