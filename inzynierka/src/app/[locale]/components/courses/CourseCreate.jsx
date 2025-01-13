@@ -1,48 +1,19 @@
 import React, { useState } from "react";
 import { MdAddPhotoAlternate } from "react-icons/md";
-import { IoMdAdd } from "react-icons/io";
-import { IoChevronDown, IoChevronUp } from "react-icons/io5";
-import { AiOutlineDelete } from "react-icons/ai";
 import { useMutation } from "react-query";
 import createCourse from "../../api/courses/createCourse";
 import useAxios from "../../hooks/useAxios";
 import { useRouter } from "next/navigation";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/componentsShad/ui/dialog";
-
 const CourseCreate = () => {
-  const [videoToShow, setVideoToShow] = useState(null);
   const [formValues, setFormValues] = useState({
     title: "",
     description: "",
     price: 0,
     picture: "",
   });
-  const [newVideo, setNewVideo] = useState({
-    title: "",
-    link: "",
-  });
   const axiosInstance = useAxios();
   const router = useRouter();
-
-  const addVideo = (e) => {
-    e.preventDefault();
-    const videoIdMatch = newVideo.link.match(
-      /(?:youtube\.com\/.*v=|youtu\.be\/)([^&?/]+)/
-    );
-    const videoId = videoIdMatch ? videoIdMatch[1] : newVideo.link;
-    setFormValues((prev) => ({
-      ...prev,
-      videos: [...prev.videos, { ...newVideo, link: videoId }],
-    }));
-    setNewVideo({ title: "", link: "" }); // Reset pola po dodaniu
-  };
 
   const { mutateAsync: handleCreateCourse } = useMutation(
     () => createCourse(axiosInstance, formValues),
