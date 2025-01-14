@@ -60,6 +60,9 @@ const Sidebar = () => {
             <Link href="/courses/owned">Owned Courses</Link>
           </SheetClose>
           <SheetClose asChild className="hover:text-[#f5b800] ">
+            <Link href="/courses/my">My Courses</Link>
+          </SheetClose>
+          <SheetClose asChild className="hover:text-[#f5b800] ">
             <Link href="/courses/create">Create course</Link>
           </SheetClose>
           <SheetClose asChild className="hover:text-[#f5b800] ">
