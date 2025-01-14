@@ -162,7 +162,10 @@ const DuoCreation = () => {
   return (
     <Dialog>
       <DialogTrigger>
-        <FaEdit className="text-[42px]" />
+        <div className="flex items-center gap-x-2 cursor-pointer hover:text-amber duration-150 transition-all">
+          <FaEdit className="text-[28px]" />
+          <p className="text-[20px]">Create duo</p>
+        </div>
       </DialogTrigger>
       <DialogContent className="bg-oxford-blue">
         <DialogHeader>

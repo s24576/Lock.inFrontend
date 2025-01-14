@@ -78,9 +78,10 @@ const DuoSettings = ({ riotProfiles }) => {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <IoSettingsOutline className="text-[42px]" />
-      </DialogTrigger>
+      <div className="flex items-center gap-x-2 cursor-pointer hover:text-amber duration-150 transition-all">
+        <IoSettingsOutline className="text-[28px]" />
+        <p className="text-[20px]">Choose account</p>
+      </div>
       <DialogContent className="bg-oxford-blue">
         <DialogHeader>
           <DialogTitle>Your duo settings</DialogTitle>

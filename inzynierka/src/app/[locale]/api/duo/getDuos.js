@@ -1,15 +1,14 @@
-import axios from "axios";
+const getDuos = async (axiosInstance, filterBody, page) => {
+  const size = 15;
+  console.log(filterBody);
 
-const getDuos = async (language) => {
+  if (page === undefined) {
+    page = 0;
+  }
   try {
-    const response = await axios.post(
-      "http://localhost:8080/api/duo/getDuos?size=10",
-      {
-        headers: {
-          // Ustawienie pustego nagłówka Authorization, aby upewnić się, że nie jest dodawany
-          "Accept-Language": language,
-        },
-      }
+    const response = await axiosInstance.post(
+      `/api/duo/getDuos?size=${size}&page=${page}`,
+      filterBody
     );
     console.log("duos", response.data);
     return response.data;

@@ -166,17 +166,17 @@ const BuildDetails = () => {
                   "https://ddragon.leagueoflegends.com/cdn/" +
                   "14.11.1" +
                   "/img/champion/" +
-                  buildData.championId +
+                  buildData?.championId +
                   ".png"
                 }
                 width={100} // 1/4 wielkości oryginalnego obrazka
                 height={100} // 1/4 wielkości oryginalnego obrazka
-                alt={buildData.championName}
+                alt={buildData?.championName}
                 className="rounded-full border-[1px] border-white-smoke mx-3"
               />
               <div className="flex flex-col items-start gap-y-2">
                 <div className="flex items-center">
-                  {buildData.position ? (
+                  {buildData?.position ? (
                     <LeaguePosition position={buildData.position} height={48} />
                   ) : (
                     <Image
@@ -184,17 +184,17 @@ const BuildDetails = () => {
                         "https://ddragon.leagueoflegends.com/cdn/" +
                         "14.11.1" +
                         "/img/champion/" +
-                        buildData.championId +
+                        buildData?.championId +
                         ".png"
                       }
                       width={48} // 1/4 wielkości oryginalnego obrazka
                       height={48} // 1/4 wielkości oryginalnego obrazka
-                      alt={buildData.championName}
+                      alt={buildData?.championName}
                       className=" mx-2"
                     />
                   )}
 
-                  <p className="text-[28px]">{buildData.title}</p>
+                  <p className="text-[28px]">{buildData?.title}</p>
                   {isLogged && (
                     <div
                       className="z-40 ml-3 text-[28px] cursor-pointer hover:text-amber duration-100 transition-colors"
@@ -204,20 +204,20 @@ const BuildDetails = () => {
                     >
                       {isHovered ? (
                         // Odwrotna ikona na hover
-                        buildData.saved ? (
+                        buildData?.saved ? (
                           <BiSolidLockOpen />
                         ) : (
                           <BiSolidLock className="text-amber" />
                         )
                       ) : // Normalna ikona bez hover
-                      buildData.saved ? (
+                      buildData?.saved ? (
                         <BiSolidLock className="text-amber" />
                       ) : (
                         <BiSolidLockOpen />
                       )}
                     </div>
                   )}
-                  {isLogged && userData.username === buildData.username && (
+                  {isLogged && userData?.username === buildData?.username && (
                     <AiOutlineDelete
                       onClick={() => handleDeleteBuild()}
                       className="z-40 ml-1 text-[28px] cursor-pointer hover:text-amber duration-100 transition-colors"
@@ -247,7 +247,7 @@ const BuildDetails = () => {
             <div className="flex items-center gap-x-4 pr-8">
               <div
                 className={
-                  buildData.reaction === true && buildData.canReact === false
+                  buildData?.reaction === true && buildData?.canReact === false
                     ? "flex items-center gap-x-1 text-[28px]  text-amber hover:text-white-smoke duration-100 transition-colors"
                     : "flex items-center gap-x-1 text-[28px]  hover:text-amber duration-100 transition-colors"
                 }
@@ -255,17 +255,17 @@ const BuildDetails = () => {
                 <BiLike
                   onClick={() => {
                     leaveReaction({
-                      objectId: buildData._id,
+                      objectId: buildData?._id,
                       value: true,
                     });
                   }}
                   className="cursor-pointer"
                 ></BiLike>
-                <p className="text-[20px]">{buildData.likesCount}</p>
+                <p className="text-[20px]">{buildData?.likesCount}</p>
               </div>
               <div
                 className={
-                  buildData.reaction === false && buildData.canReact === false
+                  buildData?.reaction === false && buildData?.canReact === false
                     ? "flex items-center gap-x-1 text-[28px]  text-amber hover:text-white-smoke duration-100 transition-colors"
                     : "flex items-center gap-x-1 text-[28px]  hover:text-amber duration-100 transition-colors"
                 }
@@ -273,13 +273,13 @@ const BuildDetails = () => {
                 <BiDislike
                   onClick={() => {
                     leaveReaction({
-                      objectId: buildData._id,
+                      objectId: buildData?._id,
                       value: false,
                     });
                   }}
                   className="cursor-pointer"
                 ></BiDislike>
-                <p className="text-[20px]">{buildData.dislikesCount}</p>
+                <p className="text-[20px]">{buildData?.dislikesCount}</p>
               </div>
             </div>
           </div>
@@ -289,12 +289,12 @@ const BuildDetails = () => {
                 "https://ddragon.leagueoflegends.com/cdn/" +
                 "14.11.1" +
                 "/img/item/" +
-                buildData.item1 +
+                buildData?.item1 +
                 ".png"
               }
               width={64}
               height={64}
-              alt={buildData.item1}
+              alt={buildData?.item1}
               className="border-[1px] border-white-smoke hover:opacity-80 duration-100 transition-opacity"
             />
             <Image
@@ -302,12 +302,12 @@ const BuildDetails = () => {
                 "https://ddragon.leagueoflegends.com/cdn/" +
                 "14.11.1" +
                 "/img/item/" +
-                buildData.item2 +
+                buildData?.item2 +
                 ".png"
               }
               width={64}
               height={64}
-              alt={buildData.item2}
+              alt={buildData?.item2}
               className="border-[1px] border-white-smoke hover:opacity-80 duration-100 transition-opacity"
             />
             <Image
@@ -315,12 +315,12 @@ const BuildDetails = () => {
                 "https://ddragon.leagueoflegends.com/cdn/" +
                 "14.11.1" +
                 "/img/item/" +
-                buildData.item3 +
+                buildData?.item3 +
                 ".png"
               }
               width={64}
               height={64}
-              alt={buildData.item3}
+              alt={buildData?.item3}
               className="border-[1px] border-white-smoke hover:opacity-80 duration-100 transition-opacity"
             />
             <Image
@@ -328,12 +328,12 @@ const BuildDetails = () => {
                 "https://ddragon.leagueoflegends.com/cdn/" +
                 "14.11.1" +
                 "/img/item/" +
-                buildData.item4 +
+                buildData?.item4 +
                 ".png"
               }
               width={64}
               height={64}
-              alt={buildData.item4}
+              alt={buildData?.item4}
               className="border-[1px] border-white-smoke hover:opacity-80 duration-100 transition-opacity"
             />
             <Image
@@ -341,12 +341,12 @@ const BuildDetails = () => {
                 "https://ddragon.leagueoflegends.com/cdn/" +
                 "14.11.1" +
                 "/img/item/" +
-                buildData.item5 +
+                buildData?.item5 +
                 ".png"
               }
               width={64}
               height={64}
-              alt={buildData.item5}
+              alt={buildData?.item5}
               className="border-[1px] border-white-smoke hover:opacity-80 duration-100 transition-opacity"
             />
             <Image
@@ -354,12 +354,12 @@ const BuildDetails = () => {
                 "https://ddragon.leagueoflegends.com/cdn/" +
                 "14.11.1" +
                 "/img/item/" +
-                buildData.item6 +
+                buildData?.item6 +
                 ".png"
               }
               width={64}
               height={64}
-              alt={buildData.item6}
+              alt={buildData?.item6}
               className="border-[1px] border-white-smoke hover:opacity-80 duration-100 transition-opacity"
             />
           </div>
@@ -372,7 +372,7 @@ const BuildDetails = () => {
                       return runeTree.slots.map((slot, slotKey) => {
                         return slot.runes.map((rune, runeKey) => {
                           if (
-                            buildData.runes.runes1.includes(rune.id.toString())
+                            buildData?.runes.runes1.includes(rune.id.toString())
                           ) {
                             return (
                               <Tooltip key={runeKey}>
@@ -405,7 +405,7 @@ const BuildDetails = () => {
                       return runeTree.slots.map((slot, slotKey) => {
                         return slot.runes.map((rune, runeKey) => {
                           if (
-                            buildData.runes.runes2.includes(rune.id.toString())
+                            buildData?.runes.runes2.includes(rune.id.toString())
                           ) {
                             return (
                               <Tooltip key={runeKey}>

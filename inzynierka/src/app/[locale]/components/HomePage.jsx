@@ -242,11 +242,14 @@ const HomePage = () => {
         </div>
         <p className="text-[32px] mt-8 pl-[5%]">Last matches</p>
         <div className="mt-4 pl-[5%] flex flex-col gap-y-4">
+          {/* <ShortMatch></ShortMatch>
           <ShortMatch></ShortMatch>
           <ShortMatch></ShortMatch>
           <ShortMatch></ShortMatch>
-          <ShortMatch></ShortMatch>
-          <ShortMatch></ShortMatch>
+          <ShortMatch></ShortMatch> */}
+          <p className="text-[20px]">
+            Claim League of Legends account to see your last matches
+          </p>
         </div>
       </div>
       <div className="flex flex-col gap-y-4 w-[35%]">

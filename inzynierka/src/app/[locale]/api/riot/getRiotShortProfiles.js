@@ -1,21 +1,11 @@
-import axios from "axios";
-
-const getRiotShortProfiles = async (duos, language) => {
+const getRiotShortProfiles = async (axiosInstance, duos) => {
   const data = duos.content.map((duo) => duo.puuid);
 
   try {
     console.log("data samych puuid", data);
-    const response = await axios.post(
-      "http://localhost:8080/riot/getRiotProfiles",
-      {
-        riotProfiles: data, // Przekaż tablicę puuids jako element body
-      },
-      {
-        headers: {
-          "Accept-Language": language,
-        },
-      }
-    );
+    const response = await axiosInstance.post("/riot/getRiotProfiles", {
+      riotProfiles: data, // Przekaż tablicę puuids jako element body
+    });
     console.log("short profiles", response.data);
     return response.data;
   } catch (error) {

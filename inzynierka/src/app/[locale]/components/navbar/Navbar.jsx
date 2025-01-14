@@ -31,12 +31,16 @@ const Navbar = () => {
       // Sprawdzamy, czy ścieżka zaczyna się od "/builds" lub "/locale/builds"
       const buildsPath = `/builds`;
       const localeBuildsPath = `/${locale}/builds`;
+      const duoPath = `/duo`;
+      const localeDuoPath = `/${locale}/duo`;
 
       return (
         pathname === `/${locale}` ||
         pathname === `/${locale}/` ||
         pathname.startsWith(buildsPath) ||
-        pathname.startsWith(localeBuildsPath)
+        pathname.startsWith(localeBuildsPath) ||
+        pathname.startsWith(duoPath) ||
+        pathname.startsWith(localeDuoPath)
       );
     });
   const navbarBg = isRootOrLocaleOnly ? "bg-transparent" : "bg-night";

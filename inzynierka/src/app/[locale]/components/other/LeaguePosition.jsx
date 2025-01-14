@@ -1,6 +1,6 @@
 import React from "react";
 
-const LeaguePosition = ({ height, position, fillColor }) => {
+const LeaguePosition = ({ height, position, fillColor, hoverGold }) => {
   const renderPositionIcon = () => {
     switch (position) {
       case "Top":
@@ -64,6 +64,21 @@ const LeaguePosition = ({ height, position, fillColor }) => {
             </g>
           </svg>
         );
+      case "Bot":
+        return (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={height}
+            height={height}
+            viewBox="0 0 24 24"
+          >
+            <g fill={fillColor ? fillColor : "#f5f5f5"}>
+              <path d="m19 3-4 4H7v8l-4 4V3z" opacity="0.2"></path>
+              <path d="m5 21 4-4h8V9l4-4v16z"></path>
+              <path d="M10 10h4v4h-4z" opacity="0.2"></path>
+            </g>
+          </svg>
+        );
       case "Support":
         return (
           <svg
@@ -75,6 +90,21 @@ const LeaguePosition = ({ height, position, fillColor }) => {
             <path
               fill={fillColor ? fillColor : "#f5f5f5"}
               d="M12.833 10.833 14.5 17.53v.804L12.833 20h-1.666L9.5 18.333v-.804l1.667-6.696zM7 7.5 9.5 10l-1.667 4.167-2.5-2.5L6.167 10h-2.5L2 7.5zm15 0L20.333 10h-2.5l.834 1.667-2.5 2.5L14.5 10 17 7.5zM13.743 5l.757.833v.834l-1.667 2.5h-1.666L9.5 6.667v-.834L10.257 5z"
+            ></path>
+          </svg>
+        );
+      case "Fill":
+        return (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={height}
+            height={height}
+            className="text-white"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="#f5f5f5"
+              d="M16.293 17.03a1.314 1.314 0 0 1-2.274 1.314l-2.144-3.717-2.144 3.717a1.312 1.312 0 1 1-2.273-1.313l2.144-3.718h-4.29a1.312 1.312 0 1 1 .001-2.626h4.289L7.457 6.969a1.312 1.312 0 0 1 2.274-1.313l2.144 3.717 2.144-3.717a1.312 1.312 0 1 1 2.273 1.313l-2.144 3.718h4.29a1.312 1.312 0 1 1 0 2.626h-4.29z"
             ></path>
           </svg>
         );
