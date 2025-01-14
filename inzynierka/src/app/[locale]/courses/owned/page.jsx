@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import MyCourses from "../../components/courses/MyCourses";
+import OwnedCourses from "../../components/courses/OwnedCourses";
 import Footer from "../../components/Footer";
 
 const page = () => {
   return (
     <div>
-      <MyCourses />
+      <OwnedCourses />
       <Footer />
     </div>
   );

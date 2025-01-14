@@ -1,5 +1,5 @@
 const getOwnedCourses = async (axiosInstance, page) => {
-  const size = 15;
+  const size = 3;
 
   if (page === undefined) {
     page = 0;

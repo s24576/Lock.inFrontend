@@ -9,7 +9,7 @@ import { BiLike, BiDislike } from "react-icons/bi";
 import Link from "next/link";
 import Image from "next/image";
 
-const MyCourses = () => {
+const OwnedCourses = () => {
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
   const [filterParams, setFilterParams] = useState({
     page: 0,
@@ -29,7 +29,9 @@ const MyCourses = () => {
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
         // Wyekstrahuj username z każdego obiektu i przypisz do zmiennej
-        const usernames = data?.content?.map((build) => build.username);
+        const usernames = data?.content?.map((build) => {
+          if (build?.username) return build.username;
+        });
         // Przypisz do odpowiedniej zmiennej lub użyj setUsernamesToFollow
         setUsernamesToFetch(usernames);
       },
@@ -77,8 +79,10 @@ const MyCourses = () => {
   //zdjac slice jak bedzie naprawiona funkcja i zmienic size w getOwnedCourses na 3
   return (
     <div className="h-screen w-full flex flex-col items-center  bg-night px-[5%] ">
-      <p className="text-[64px] mt-[8%] font-bangers text-amber">My courses</p>
-      <div className="flex items-center justify-between w-full gap-x-[5%] mt-[3%]">
+      <p className="text-[64px] mt-[8%] font-bangers text-amber">
+        Owned courses
+      </p>
+      <div className="flex items-center w-full gap-x-[5%] mt-[3%]">
         {coursesData?.content &&
           coursesData.content.slice(0, 3).map((course, key) => {
             if (!course) return null;
@@ -87,7 +91,7 @@ const MyCourses = () => {
               <Link
                 key={key}
                 href={"/courses/" + course._id}
-                className="w-full h-[58vh] flex flex-col border-[1px] border-white-smoke rounded-xl z-20  overflow-hidden transform transition-all duration-250 hover:translate-y-[-10px]"
+                className="w-[33%] h-[58vh] flex flex-col border-[1px] border-white-smoke rounded-xl z-20  overflow-hidden transform transition-all duration-250 hover:translate-y-[-10px]"
               >
                 <div
                   className="w-full h-[50%]"
@@ -165,7 +169,7 @@ const MyCourses = () => {
           })}
       </div>
       {coursesData && (
-        <div className="flex justify-center items-center gap-x-4 mt-6 py-6 text-[20px]">
+        <div className="flex justify-center items-center gap-x-4 mt-6 py-6 text-[20px] font-chewy">
           {/* Jeśli strona jest większa niż 1, wyświetl przycisk "Back" */}
           {filterParams.page > 0 && (
             <p
@@ -210,4 +214,4 @@ const MyCourses = () => {
   );
 };
 
-export default MyCourses;
+export default OwnedCourses;
