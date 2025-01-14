@@ -18,6 +18,7 @@ import deleteBuild from "../../api/builds/deleteBuild";
 import getShortProfile from "../../api/profile/getShortProfile";
 import react from "../../api/comments/react";
 import CommentsSection from "../comments/CommentsSection";
+import LeaguePosition from "../other/LeaguePosition";
 import {
   BiLike,
   BiDislike,
@@ -175,19 +176,24 @@ const BuildDetails = () => {
               />
               <div className="flex flex-col items-start gap-y-2">
                 <div className="flex items-center">
-                  <Image
-                    src={
-                      "https://ddragon.leagueoflegends.com/cdn/" +
-                      "14.11.1" +
-                      "/img/champion/" +
-                      buildData.championId +
-                      ".png"
-                    }
-                    width={48} // 1/4 wielkości oryginalnego obrazka
-                    height={48} // 1/4 wielkości oryginalnego obrazka
-                    alt={buildData.championName}
-                    className=" mx-2"
-                  />
+                  {buildData.position ? (
+                    <LeaguePosition position={buildData.position} height={48} />
+                  ) : (
+                    <Image
+                      src={
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        "14.11.1" +
+                        "/img/champion/" +
+                        buildData.championId +
+                        ".png"
+                      }
+                      width={48} // 1/4 wielkości oryginalnego obrazka
+                      height={48} // 1/4 wielkości oryginalnego obrazka
+                      alt={buildData.championName}
+                      className=" mx-2"
+                    />
+                  )}
+
                   <p className="text-[28px]">{buildData.title}</p>
                   {isLogged && (
                     <div
@@ -443,30 +449,35 @@ const BuildDetails = () => {
               <FaPlus className="text-[36px]"></FaPlus>
             </div>
             <div className="w-[30%] bg-night bg-opacity-70  rounded-xl py-4 px-6 flex items-center justify-center gap-x-3">
-              <Image
-                src={
-                  "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
-                  // participant.summoner2Name +
-                  "SummonerFlash" +
-                  ".png"
-                }
-                width={64}
-                height={64}
-                alt="summoner_spell2"
-                className=""
-              />
-              <Image
-                src={
-                  "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
-                  // participant.summoner2Name +
-                  "SummonerBarrier" +
-                  ".png"
-                }
-                width={64}
-                height={64}
-                alt="summoner_spell2"
-                className=""
-              />
+              {buildData?.summoner1Name && (
+                <Image
+                  src={
+                    "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+                    "Summoner" +
+                    buildData.summoner1Name +
+                    ".png"
+                  }
+                  width={64}
+                  height={64}
+                  alt={buildData.summoner1Name}
+                  className=""
+                />
+              )}
+              {buildData?.summoner2Name && (
+                <Image
+                  src={
+                    "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+                    // participant.summoner2Name +
+                    "Summoner" +
+                    buildData.summoner2Name +
+                    ".png"
+                  }
+                  width={64}
+                  height={64}
+                  alt="summoner_spell2"
+                  className=""
+                />
+              )}
             </div>
           </div>
         </div>

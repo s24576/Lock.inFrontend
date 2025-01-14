@@ -7,6 +7,7 @@ import useAxios from "../../hooks/useAxios";
 import getRunes from "../../api/ddragon/getRunes";
 import deleteBuild from "../../api/builds/deleteBuild";
 import saveBuild from "../../api/builds/saveBuild";
+import LeaguePosition from "../other/LeaguePosition";
 import {
   BiLike,
   BiDislike,
@@ -93,24 +94,18 @@ const ShortBuild = ({
           className="rounded-full border-[1px] border-white-smoke"
         />
         {build.position !== null && (
-          <Image
-            src={
-              "https://ddragon.leagueoflegends.com/cdn/" +
-              "14.11.1" +
-              "/img/champion/" +
-              build.championId +
-              ".png"
-            }
-            width={20} // 1/4 wielkości oryginalnego obrazka
-            height={20} // 1/4 wielkości oryginalnego obrazka
-            alt={build.championName}
-            className="absolute bottom-0 left-[30px] rounded-full border-[1px] border-white-smoke"
-          />
+          <div className="absolute bottom-0 left-[32px] rounded-full border-[1px] border-white-smoke">
+            <LeaguePosition
+              position={build.position}
+              height={20}
+              fillColor={"#f5b800"}
+            />
+          </div>
         )}
       </div>
       <Link
         href={"/builds/" + build._id}
-        className="w-[18%] truncate text-[24px] text-amber px-1"
+        className="w-[18%] truncate text-[24px] text-amber px-1 ml-2"
       >
         {build.title}
       </Link>
@@ -138,7 +133,7 @@ const ShortBuild = ({
           })}
         {runesData &&
           runesData.map((rune, key) => {
-            if (rune.id.toString() === build.runes.keyStone1Id.toString())
+            if (rune.id.toString() === build.runes.keyStone2Id.toString())
               return (
                 <Image
                   src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
@@ -151,32 +146,62 @@ const ShortBuild = ({
               );
           })}
       </div>
-      <div className="flex items-center gap-x-1 pl-10 pr-4">
-        <Image
-          src={
-            "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
-            // participant.summoner2Name +
-            "SummonerFlash" +
-            ".png"
-          }
-          width={32}
-          height={32}
-          alt="summoner_spell2"
-          className="border-[1px] border-white-smoke"
-        />
-        <Image
-          src={
-            "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
-            // participant.summoner2Name +
-            "SummonerBarrier" +
-            ".png"
-          }
-          width={32}
-          height={32}
-          alt="summoner_spell2"
-          className="border-[1px] border-white-smoke"
-        />
-      </div>
+      {build.summoner1Name && build.summoner2Name ? (
+        <div className="flex items-center gap-x-1 pl-10 pr-4">
+          <Image
+            src={
+              "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+              "Summoner" +
+              build.summoner1Name +
+              ".png"
+            }
+            width={32}
+            height={32}
+            alt="summoner_spell2"
+            className="border-[1px] border-white-smoke"
+          />
+          <Image
+            src={
+              "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+              "Summoner" +
+              build.summoner2Name +
+              ".png"
+            }
+            width={32}
+            height={32}
+            alt="summoner_spell2"
+            className="border-[1px] border-white-smoke"
+          />
+        </div>
+      ) : (
+        <div className="flex items-center gap-x-1 pl-10 pr-4">
+          <Image
+            src={
+              "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+              // participant.summoner2Name +
+              "SummonerFlash" +
+              ".png"
+            }
+            width={32}
+            height={32}
+            alt="summoner_spell2"
+            className="border-[1px] border-white-smoke"
+          />
+          <Image
+            src={
+              "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+              // participant.summoner2Name +
+              "SummonerBarrier" +
+              ".png"
+            }
+            width={32}
+            height={32}
+            alt="summoner_spell2"
+            className="border-[1px] border-white-smoke"
+          />
+        </div>
+      )}
+
       <div className="flex items-center gap-x-1">
         <Image
           src={

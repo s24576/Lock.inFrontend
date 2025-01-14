@@ -3,13 +3,16 @@ import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import axios from "axios";
 import useAxios from "../../hooks/useAxios";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import getChampionNames from "../../api/ddragon/getChampionNames";
 import LeaguePosition from "../other/LeaguePosition";
 import { usePathname } from "next/navigation";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import getRunes from "../../api/ddragon/getRunes";
 import { IoChevronForward } from "react-icons/io5";
+import getFinalItems from "../../api/ddragon/getFinalItems";
+import createBuild from "../../api/builds/createBuild";
 
 const statShardsArray = {
   firstRow: ["Adaptive", "Attack Speed", "Ability Haste"],
@@ -22,7 +25,7 @@ const summoners = [
   "Cleanse",
   "Exhaust",
   "Flash",
-  "Ghost",
+  "Haste",
   "Heal",
   "Ignite",
   "Smite",
@@ -41,13 +44,65 @@ const runeShards = [
   "HPScaling",
 ];
 
+const itemTags = [
+  {
+    tag: "Health",
+    name: "Health",
+  },
+  {
+    tag: "Damage",
+    name: "Damage",
+  },
+  {
+    tag: "CooldownReduction",
+    name: "Cooldown Reduction",
+  },
+  {
+    tag: "ArmorPenetration",
+    name: "Armor Penetration",
+  },
+  {
+    tag: "LifeSteal",
+    name: "Lifesteal",
+  },
+  {
+    tag: "OnHit",
+    name: "On-hit",
+  },
+  {
+    tag: "Armor",
+    name: "Armor",
+  },
+  {
+    tag: "AttackSpeed",
+    name: "Attack Speed",
+  },
+  {
+    tag: "NonbootsMovement",
+    name: "Movement Speed",
+  },
+  {
+    tag: "MagicResist",
+    name: "Magic Resist",
+  },
+  {
+    tag: "Boots",
+    name: "Boots",
+  },
+  {
+    tag: "Mana",
+    name: "Mana",
+  },
+];
+
 const CreateBuild = () => {
   const { userData, isLogged } = useContext(UserContext);
-  const [championNames, setChampionNames] = useState({});
+  const [titlePlaceholder, setTitlePlaceholder] = useState("");
+  const [descriptionPlaceholder, setDescriptionPlaceholder] = useState("");
   const [championOptions, setChampionOptions] = useState([]);
   const [allItems, setAllItems] = useState([]);
-  const [chosenItems, setChosenItems] = useState([]);
-  const [allTags, setAllTags] = useState([]);
+  const [chosenItems, setChosenItems] = useState(["", "", "", "", "", ""]);
+  const [itemSearch, setItemSearch] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -84,31 +139,7 @@ const CreateBuild = () => {
   });
 
   const axiosInstance = useAxios();
-  const pathname = usePathname();
-
-  useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/ddragon/getFinalItems"
-        );
-        console.log(response.data);
-        setAllItems(response.data);
-
-        const uniqueTags = new Set();
-        response.data.forEach((item) => {
-          item.tags.forEach((tag) => {
-            uniqueTags.add(tag);
-          });
-        });
-
-        setAllTags([...uniqueTags]);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchItems();
-  }, []);
+  const router = useRouter();
 
   const {
     data: championNamesData,
@@ -136,36 +167,6 @@ const CreateBuild = () => {
       setChampionOptions(options);
     },
   });
-
-  const addItem = (id) => {
-    const isAlreadyChosen = chosenItems.some((item) => item.id === id);
-    if (isAlreadyChosen) {
-      setChosenItems((prevChosenItems) =>
-        prevChosenItems.filter((item) => item.id !== id)
-      );
-    } else if (chosenItems.length < 6) {
-      const selectedItem = allItems.find((item) => item.id === id);
-      if (selectedItem) {
-        setChosenItems((prevChosenItems) => [...prevChosenItems, selectedItem]);
-      }
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues((prevFormValues) => ({
-      ...prevFormValues,
-      [name]: value,
-    }));
-  };
-
-  const handleTagClick = (tag) => {
-    setSelectedTags((prevSelectedTags) =>
-      prevSelectedTags.includes(tag)
-        ? prevSelectedTags.filter((t) => t !== tag)
-        : [...prevSelectedTags, tag]
-    );
-  };
 
   const [searchChampion, setSearchChampion] = useState("");
 
@@ -288,16 +289,117 @@ const CreateBuild = () => {
     refetchOnWindowFocus: false,
   });
 
-  const filteredItems = allItems.filter((item) => {
-    const matchesTags =
-      selectedTags.length > 0
-        ? selectedTags.every((tag) => item.tags.includes(tag))
-        : true;
-    const matchesSearch = item.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesTags && matchesSearch;
+  const {
+    data: itemsData,
+    error: itemsError,
+    isLoading: itemsIsLoading,
+  } = useQuery("itemsData", () => getFinalItems(axiosInstance), {
+    refetchOnWindowFocus: false,
   });
+
+  const handleSetSelectedTags = (tag) => {
+    setSelectedTags((prevTags) => {
+      if (prevTags.includes(tag)) {
+        return prevTags.filter((t) => t !== tag);
+      } else {
+        return [...prevTags, tag];
+      }
+    });
+  };
+
+  const handleAddItem = (itemId) => {
+    setChosenItems((prevItems) => {
+      // Jeśli itemId już istnieje w tablicy, nie dodawaj go ponownie
+      if (prevItems.includes(itemId)) {
+        return prevItems;
+      }
+
+      const index = prevItems.findIndex((id) => id === ""); // Znajdujemy pierwsze wolne miejsce
+      if (index !== -1) {
+        const newItems = [...prevItems];
+        newItems[index] = itemId;
+        return newItems;
+      }
+
+      return prevItems; // Jeśli brak miejsca, zwracamy poprzednią tablicę
+    });
+  };
+
+  const handleDeleteItem = (index) => {
+    setChosenItems((prevItems) => {
+      const newItems = [...prevItems];
+      newItems.splice(index, 1); // Usuwamy element na wskazanym indeksie
+      newItems.push(""); // Dodajemy puste miejsce na koniec
+      return newItems;
+    });
+  };
+
+  const { mutateAsync: handleCreateBuild } = useMutation(
+    (requestBody) => createBuild(axiosInstance, requestBody),
+    {
+      onSuccess: (data) => {
+        console.log("build created successfully:", data);
+        router.push("/builds/" + data);
+      },
+      onError: (error) => {
+        console.error("Error creating course:", error);
+      },
+    }
+  );
+
+  const handleSubmit = async () => {
+    // Wyciągamy wartości z formValues
+    const { title, description, position, summoner1Name, summoner2Name } =
+      formValues;
+
+    // Rozpakowujemy items z chosenItems
+    const [item1, item2, item3, item4, item5, item6] = chosenItems;
+
+    // Ekstrakcja ID run z primaryRunes i secondaryRunes
+    const runes1 = primaryRunes.map((rune) => rune.id);
+    const runes2 = secondaryRunes.map((rune) => rune.id);
+
+    // Ekstrakcja selectedShards
+    const statShards = selectedShards;
+
+    const keystoneIds = [
+      { id: 8100 },
+      { id: 8300 },
+      { id: 8000 },
+      { id: 8400 },
+      { id: 8200 },
+    ];
+
+    const keyStone1Id = keystoneIds[runeTree].id;
+    const keyStone2Id = keystoneIds[runeTreeSecondary].id;
+
+    // Tworzymy obiekt
+    const requestBody = {
+      championId: formValues.championKey, // używamy championKey z formValues
+      item1,
+      item2,
+      item3,
+      item4,
+      item5,
+      item6,
+      position,
+      runes: {
+        keyStone1Id,
+        runes1,
+        keyStone2Id,
+        runes2,
+        statShards,
+      },
+      summoner1Name,
+      summoner2Name,
+      title,
+      description,
+    };
+
+    // Wysyłamy request do API
+    console.log(requestBody);
+    await handleCreateBuild(requestBody);
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center relative px-[5%] font-chewy">
@@ -358,7 +460,7 @@ const CreateBuild = () => {
           Info
         </p>
       </div>
-      <div className="mt-[1%] w-full flex items-center gap-x-8 z-20 bg-night bg-opacity-70 py-4 px-[2%] rounded-xl h-[10vh]">
+      <div className="mt-[1%] w-full flex items-center gap-x-8 z-20 bg-night bg-opacity-70 py-4 px-[5%] rounded-xl h-[10vh]">
         <div className="flex flex-col items-center w-[20%] text-amber">
           <p className="text-[24px]">{formValues?.title}</p>
           <p>
@@ -367,28 +469,27 @@ const CreateBuild = () => {
               : formValues?.description}
           </p>
         </div>
-        <div className="flex items-center gap-x-4">
-
-        {formValues.championKey && (
-          <Image
-            src={`https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${formValues.championKey}.png`}
-            alt={formValues.championKey}
-            width={56} // Adjust the width as needed
-            height={56} // Adjust the height as needed
-            key={formValues.championKey}
-            className="border-[1px] border-white-smoke rounded-full hover:opacity-70 cursor-pointer transition-all duration-150"
-            onClick={() =>
-              setFormValues({
-                ...formValues,
-                champion: "",
-                championKey: "",
-              })
-            }
-          />
-        )}
-        {formValues.position && (
-          <LeaguePosition height={48} position={formValues.position} />
-        )}
+        <div className="flex items-center gap-x-4 ml-8">
+          {formValues.championKey && (
+            <Image
+              src={`https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${formValues.championKey}.png`}
+              alt={formValues.championKey}
+              width={56} // Adjust the width as needed
+              height={56} // Adjust the height as needed
+              key={formValues.championKey}
+              className="border-[1px] border-white-smoke rounded-full hover:opacity-70 cursor-pointer transition-all duration-150"
+              onClick={() =>
+                setFormValues({
+                  ...formValues,
+                  champion: "",
+                  championKey: "",
+                })
+              }
+            />
+          )}
+          {formValues.position && (
+            <LeaguePosition height={48} position={formValues.position} />
+          )}
         </div>
         {/* runy */}
 
@@ -479,6 +580,33 @@ const CreateBuild = () => {
               />
             </div>
           )}
+        </div>
+
+        {/* itemy */}
+        <div className="flex items-center gap-x-2">
+          {chosenItems?.length > 0 &&
+            chosenItems.map((item, key) => {
+              // Sprawdzenie, czy item nie jest pustym stringiem
+              if (item.trim() === "") return null;
+
+              return (
+                <Image
+                  key={key}
+                  src={
+                    "https://ddragon.leagueoflegends.com/cdn/" +
+                    "14.11.1" +
+                    "/img/item/" +
+                    item +
+                    ".png"
+                  }
+                  onClick={() => handleDeleteItem(key)}
+                  alt={item}
+                  width={40}
+                  height={40}
+                  className="object-cover w-full h-full cursor-pointer hover:opacity-70 transition-opacity duration-150 border-[1px] border-white-smoke"
+                />
+              );
+            })}
         </div>
       </div>
       {navigation === 0 && (
@@ -814,9 +942,131 @@ const CreateBuild = () => {
           </div>
         </div>
       )}
-      {/* {navigation === 2 && (
+      {navigation === 2 && (
+        <div className="w-full flex justify-between mt-[3%] z-20">
+          <div className="w-[30%] flex flex-col justify-between">
+            <input
+              type="text"
+              placeholder="Search item..."
+              value={itemSearch}
+              onChange={(e) => setItemSearch(e.target.value)}
+              className="w-full bg-night bg-opacity-70 rounded-xl p-4 text-[16px] focus:outline-none"
+            />
+            <p className="text-[28px] mt-[7%]">Filter by tags:</p>
+            <div className="flex flex-wrap gap-4 mt-[3%]">
+              {itemTags.map((item, key) => {
+                return (
+                  <div
+                    key={key}
+                    onClick={() => handleSetSelectedTags(item.tag)}
+                    className={`bg-night bg-opacity-70 text-[18px] text-opacity-80 px-7 py-2 rounded-xl hover:bg-silver hover:bg-opacity-30 transition-all duration-150 cursor-pointer
+                    ${
+                      selectedTags.includes(item.tag)
+                        ? "outline outline-1 outline-white-smoke"
+                        : ""
+                    }`}
+                  >
+                    <p>{item.name}</p>
+                  </div>
+                );
+              })}
+            </div>
+            <div
+              className="flex items-center hover:text-amber duration-150 transition-all cursor-pointer mt-[8%]"
+              onClick={() => setNavigation(3)}
+            >
+              <p className="text-[28px]">Next page</p>
+              <IoChevronForward className="text-[28px]" />
+            </div>
+          </div>
 
-      )} */}
+          <div className="w-[65%] flex flex-wrap items-start gap-2 max-h-[20vh]">
+            {itemsData &&
+              itemsData
+                .filter((item) => {
+                  const matchesSearch =
+                    itemSearch === "" ||
+                    item.name.toLowerCase().includes(itemSearch.toLowerCase());
+                  const matchesTags =
+                    selectedTags.length === 0 ||
+                    item.tags.some((tag) => selectedTags.includes(tag));
+                  return matchesSearch && matchesTags; // Przedmiot musi spełniać oba warunki
+                })
+                .map((item, key) => {
+                  // Sprawdzamy, czy wszystkie elementy w chosenItems są pełne (nie są pustymi ciągami)
+                  const isFull =
+                    chosenItems.filter((id) => id !== "").length === 6;
+                  const isItemChosen = chosenItems.includes(item.id);
+
+                  // Określamy opacity na podstawie warunków
+                  let itemOpacity = "opacity-80 "; // Domyślna opacity 80% dla nieklikniętych i niewybranych przedmiotów
+
+                  if (isItemChosen) {
+                    itemOpacity = "opacity-100 border-amber border-[1.5px]"; // Zawsze opacity 100% dla klikniętego przedmiotu
+                  } else if (isFull) {
+                    itemOpacity = "opacity-30 "; // Opacity 50% dla nieklikniętych, gdy wszystkie przedmioty zostały wybrane
+                  }
+
+                  return (
+                    <div
+                      key={key}
+                      className={`w-[50px] h-[50px] flex-shrink-0  cursor-pointer transition-all duration-150 flex items-center justify-center ${itemOpacity}`}
+                      onClick={() => handleAddItem(item.id)}
+                    >
+                      <Image
+                        src={
+                          "https://ddragon.leagueoflegends.com/cdn/" +
+                          "14.11.1" +
+                          "/img/item/" +
+                          item.id +
+                          ".png"
+                        }
+                        alt={item.name}
+                        width={50}
+                        height={50}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  );
+                })}
+          </div>
+        </div>
+      )}
+      {navigation === 3 && (
+        <div className="w-full flex flex-col items-center gap-y-4 z-20">
+          <input
+            type="text"
+            value={titlePlaceholder}
+            onChange={(e) => {
+              const value = e.target.value;
+              setTitlePlaceholder(value);
+              setFormValues((prevValues) => ({ ...prevValues, title: value }));
+            }}
+            placeholder="Title"
+            className="w-[30%] bg-night bg-opacity-70 rounded-xl text-[24px] px-6 py-3 mt-[4%] focus:outline-none"
+          />
+          <textarea
+            rows={6}
+            value={descriptionPlaceholder}
+            onChange={(e) => {
+              const value = e.target.value;
+              setDescriptionPlaceholder(value);
+              setFormValues((prevValues) => ({
+                ...prevValues,
+                description: value,
+              }));
+            }}
+            className="w-[30%] bg-night bg-opacity-70 rounded-xl text-[24px] px-6 py-3 mt-[1%] focus:outline-none"
+            placeholder="Description"
+          ></textarea>
+          <button
+            onClick={() => handleSubmit()}
+            className="w-[15%] text-[20px] bg-night bg-opacity-70 py-2 border-[1px] border-white-smoke rounded-3xl hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
+          >
+            Create build
+          </button>
+        </div>
+      )}
     </div>
   );
 };
