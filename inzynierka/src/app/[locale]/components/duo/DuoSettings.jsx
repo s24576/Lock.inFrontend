@@ -20,7 +20,7 @@ const DuoSettings = ({ riotProfiles }) => {
             <div className="flex items-center  gap-x-5">
               {profile.profileIconId ? (
                 <Image
-                  src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${data.profile.profileIconId}.png`}
+                  src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${profile.profileIconId}.png`}
                   width={30}
                   height={30}
                   alt="summonerIcon"
@@ -35,10 +35,15 @@ const DuoSettings = ({ riotProfiles }) => {
               <span>{profile.gameName ? profile.gameName : "Summoner"}</span>
             </div>
 
-            {profile.rank === "" || profile.rank === null ? (
+            {profile.tier === "" || profile.tier === null ? (
               <p className="text-[14px]">Unranked</p>
             ) : (
-              <p className="text-[14px]">Rank</p>
+              <Image
+                src={"/rank_emblems/" + profile.tier + ".png"}
+                height={30}
+                width={30}
+                alt="XD"
+              />
             )}
           </div>
         ),
@@ -48,6 +53,7 @@ const DuoSettings = ({ riotProfiles }) => {
 
   const CustomSingleValue = (props) => {
     const { data } = props;
+    console.log("dziwna data", data);
     return (
       <components.SingleValue {...props}>
         <div className="flex items-center justify-between gap-x-4">
@@ -73,10 +79,15 @@ const DuoSettings = ({ riotProfiles }) => {
             </span>
           </div>
 
-          {data.rank === "" || data.rank === null ? (
+          {data.profileData.tier === "" || data.profileData.tier === null ? (
             <p className="text-[14px]">Unranked</p>
           ) : (
-            <p className="text-[14px]">Rank</p>
+            <Image
+              src={"/rank_emblems/" + data.profileData.tier + ".png"}
+              height={30}
+              width={30}
+              alt={data.profileData.tier}
+            />
           )}
         </div>
       </components.SingleValue>

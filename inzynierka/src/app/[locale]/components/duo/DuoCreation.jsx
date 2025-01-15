@@ -156,6 +156,14 @@ const DuoCreation = () => {
     {
       onSuccess: (data) => {
         console.log("Duo created successfully:", data);
+        setDuoBody({
+          positions: [],
+          lookedPositions: [],
+          minRank: "",
+          maxRank: "",
+          languages: [],
+          championIds: [],
+        });
       },
       onError: (error) => {
         console.error("Error creating duo:", error);
@@ -206,7 +214,7 @@ const DuoCreation = () => {
                     "https://ddragon.leagueoflegends.com/cdn/" +
                     "14.24.1" +
                     "/img/profileicon/" +
-                    duoAccount.profileIconId +
+                    duoSettings?.duoAccount?.profileIconId +
                     ".png"
                   }
                   height={30}
@@ -221,19 +229,24 @@ const DuoCreation = () => {
               )}
               {duoSettings?.duoAccount?.gameName ? (
                 <p>
-                  {duoAccount.gameName.length > 24
-                    ? `${duoAccount.gameName.slice(0, 24)}...`
-                    : duoAccount.gameName}
+                  {duoSettings?.duoAccount.gameName.length > 24
+                    ? `${duoSettings?.duoAccount.gameName.slice(0, 24)}...`
+                    : duoSettings?.duoAccount.gameName}
                 </p>
               ) : (
                 <p>Summoner</p>
               )}
             </div>
-            {duoSettings?.duoAccount?.rank === "" ||
-            duoSettings?.duoAccount?.rank === null ? (
+            {duoSettings?.duoAccount?.tier === "" ||
+            duoSettings?.duoAccount?.tier === null ? (
               <p className="text-[14px]">Unranked</p>
             ) : (
-              <p>Rank</p>
+              <Image
+                src={"/rank_emblems/" + duoSettings?.duoAccount?.tier + ".png"}
+                height={30}
+                width={30}
+                alt={duoSettings?.duoAccount?.tier}
+              />
             )}
           </div>
         ) : (
@@ -368,12 +381,14 @@ const DuoCreation = () => {
             className="w-[100%]"
           />
 
-          <button
-            type="submit"
-            className="w-[40%] px-4 py-2 border-2 border-white-smoke text-[20px] rounded-3xl mt-[6%] hover:bg-silver hover:bg-opacity-15 duration-150 transition-all mx-auto block"
-          >
-            Submit
-          </button>
+          <DialogClose>
+            <button
+              type="submit"
+              className="w-[40%] px-4 py-2 border-2 border-white-smoke text-[20px] rounded-3xl mt-[6%] hover:bg-silver hover:bg-opacity-15 duration-150 transition-all mx-auto block"
+            >
+              Submit
+            </button>
+          </DialogClose>
         </form>
       </DialogContent>
     </Dialog>

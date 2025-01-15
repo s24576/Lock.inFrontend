@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import { useRouter } from "next/navigation";
 import { SearchContext } from "../../context/SearchContext";
@@ -7,15 +7,22 @@ import useAxios from "../../hooks/useAxios";
 import getAnswersDuo from "../../api/duo/getAnswersDuo";
 import respondAnswerDuo from "../../api/duo/respondAnswerDuo";
 import Image from "next/image";
-import { FaCheck, FaHandMiddleFinger } from "react-icons/fa6";
+import Link from "next/link";
+import { FaCheck, FaHandMiddleFinger, FaUser } from "react-icons/fa6";
+import { BiSolidLock } from "react-icons/bi";
+import { AiOutlineDelete } from "react-icons/ai";
 
 const DuoInvites = () => {
   const axiosInstance = useAxios();
   const router = useRouter();
   const { version } = useContext(SearchContext);
   const { userData } = useContext(UserContext);
+  const [filterParams, setFilterParams] = useState({
+    page: 0,
+  });
 
   const {
+    refetch: duoInvitesRefetch,
     data: duoInvites,
     error: duoInvitesError,
     isLoading: duoInvitesIsLoading,
@@ -27,6 +34,7 @@ const DuoInvites = () => {
     ({ answerId, action }) => respondAnswerDuo(axiosInstance, answerId, action),
     {
       onSuccess: () => {
+        duoInvitesRefetch();
         console.log("Duo invite answered successfully");
       },
       onError: () => {
@@ -35,72 +43,190 @@ const DuoInvites = () => {
     }
   );
 
-  const redirectToProfile = async (puuid, server) => {
-    try {
-      const response = await axiosInstance.get(
-        `/riot/findPlayer?puuid=${puuid}&server=${server}`
-      );
-      console.log(response.data);
-      if (response.status === 200) {
-        router.push(
-          `/summoner/${response.data.server}/${response.data.tagLine}/${response.data.gameName}`
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  //page
+  const handlePageChange = async (newPage) => {
+    // Zaktualizuj tylko numer strony
+    setFilterParams((prev) => ({
+      ...prev,
+      page: newPage,
+    }));
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    // Ponowne pobranie danych po zmianie strony
+    await duoInvitesRefetch();
   };
 
   return (
-    <div className="pt-[100px] h-screen w-full flex flex-col items-center text-white">
-      <p>Hello, {userData.username}</p>
-      <p>Duo invites</p>
+    <div className="min-h-screen flex flex-col items-center relative">
+      <div
+        className="absolute inset-0 bg-cover bg-fixed"
+        style={{
+          backgroundImage: `url('/background-images/mybuilds.webp')`,
+          opacity: "0.4",
+          backgroundSize: "cover", // Nie powiększa obrazu
+          backgroundPosition: "center", // Ustawienie środka obrazu
+          backgroundRepeat: "no-repeat", // Zapobiega powtarzaniu
+          width: "100%",
+          height: "100vh", // Obraz będzie rozciągał się na wysokość widoku
+        }}
+      ></div>
+      <div
+        className="absolute top-[100vh] inset-0"
+        style={{
+          background: "linear-gradient(to bottom, #16182F, #131313)",
+        }}
+      ></div>
 
-      {duoInvites && (
-        <div>
-          {duoInvites.content.map((invite, index) => (
-            <div
-              key={index}
-              className="flex gap-x-4 items-center hover:bg-[#1a1a1a] cursor-pointer rounded-2xl"
-            >
-              <div
-                onClick={() =>
-                  redirectToProfile(invite.profile.puuid, invite.profile.server)
-                }
-                className="flex gap-x-4 items-center"
-              >
-                <Image
-                  src={
-                    "https://ddragon.leagueoflegends.com/cdn/" +
-                    version +
-                    "/img/profileicon/" +
-                    invite.profile.profileIconId +
-                    ".png"
-                  }
-                  width={50}
-                  height={50}
-                  alt="summonerIcon"
-                  className="rounded-full border-2 border-white"
-                />
-                <p>{invite.profile.gameName}</p>
-                <p>{invite.profile.server}</p>
-                <p>{invite.profile.summonerLevel} lvl</p>
-              </div>
+      <p className="mt-[10%] font-bangers text-[96px] text-amber z-20">
+        My Duo invites
+      </p>
 
-              <FaCheck
-                className="text-[40px] p-2 border-2 border-white bg-green-500 hover:bg-green-600 z-50"
-                onClick={() =>
-                  answerDuoInvite({ answerId: invite._id, action: true })
+      {duoInvites?.content && duoInvites.content.length > 0 ? (
+        <div className="z-20 bg-night flex flex-col items-center bg-opacity-50 w-full px-[14%] mt-[7%] py-[2%] font-chewy">
+          <div className="w-[80%] flex flex-wrap items-center gap-x-4">
+            {duoInvites?.content &&
+              duoInvites.content.length > 0 &&
+              duoInvites.content.map((duo, key) => {
+                return (
+                  <div
+                    className="mt-[2%] flex gap-x-2 justify-between items-center bg-silver bg-opacity-15 rounded-xl px-4 py-3 text-[20px] w-[30%] h-[15vh]"
+                    key={key}
+                  >
+                    <div className="flex gap-x-5 items-center">
+                      {duo.profile.profileIconId ? (
+                        <Image
+                          src={
+                            "https://ddragon.leagueoflegends.com/cdn/" +
+                            "14.24.1" +
+                            "/img/profileicon/" +
+                            duo.profile.profileIconId +
+                            ".png"
+                          }
+                          height={64}
+                          width={64}
+                          alt="summoner icon"
+                          className="rounded-full"
+                        />
+                      ) : (
+                        <div className="w-[64px] h-[64px] flex items-center justify-center border-[1px] border-white-smoke rounded-full">
+                          <FaUser className="text-[32px]"></FaUser>
+                        </div>
+                      )}
+                      <div className="flex flex-col justify-between gap-y-1">
+                        <div className="flex items-center gap-x-5">
+                          {duo.profile.gameName ? (
+                            <Link
+                              href={
+                                "/summoner/" +
+                                duo.profile.server +
+                                "/" +
+                                duo.profile.tagLine +
+                                "/" +
+                                duo.profile.gameName
+                              }
+                              className="text-[20px] hover:text-amber duration-150 transition-all"
+                            >
+                              {duo.profile.gameName.length > 12
+                                ? `${duo.profile.gameName.slice(0, 12)}...`
+                                : duo.profile.gameName}
+                            </Link>
+                          ) : (
+                            <p className="text-[24px]">Summoner</p>
+                          )}
+                          {duo.profile.tier === "" ||
+                          duo.profile.tier === null ? (
+                            <p className="text-[14px]">Unranked</p>
+                          ) : (
+                            <Image
+                              src={
+                                "/rank_emblems/" +
+                                duo.profile.tier.charAt(0).toUpperCase() +
+                                duo.profile.tier.slice(1).toLowerCase() +
+                                ".png"
+                              }
+                              height={64}
+                              width={64}
+                              alt="rank_emblem"
+                            />
+                          )}
+                        </div>
+                        <div className="flex items-center gap-x-2">
+                          <BiSolidLock
+                            className="text-[40px] hover:text-amber duration-150 transition-all cursor-pointer"
+                            onClick={() =>
+                              answerDuoInvite({
+                                answerId: duo._id,
+                                action: true,
+                              })
+                            }
+                          ></BiSolidLock>
+                          <AiOutlineDelete
+                            className="text-[40px] hover:text-amber duration-150 transition-all cursor-pointer"
+                            onClick={() =>
+                              answerDuoInvite({
+                                answerId: duo._id,
+                                action: false,
+                              })
+                            }
+                          ></AiOutlineDelete>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+          {duoInvites && (
+            <div className="flex justify-center items-center gap-x-4 mt-12 py-6 text-[20px]">
+              {/* Jeśli strona jest większa niż 1, wyświetl przycisk "Back" */}
+              {filterParams.page > 0 && (
+                <p
+                  className="cursor-pointer hover:text-amber duration-100 transition-colors"
+                  onClick={() => handlePageChange(filterParams.page - 1)}
+                >
+                  Back
+                </p>
+              )}
+
+              {/* Wyświetl numery stron w zakresie 5 stron */}
+              {Array.from({ length: 5 }, (_, i) => {
+                const pageNumber = filterParams.page + i - 2; // Tworzymy tablicę z 5 stron
+                if (
+                  pageNumber >= 0 &&
+                  pageNumber < duoInvites.page.totalPages
+                ) {
+                  return (
+                    <p
+                      key={pageNumber}
+                      onClick={() => handlePageChange(pageNumber)}
+                      className={`cursor-pointer hover:text-amber duration-100 transition-colors px-3 py-1 ${
+                        filterParams.page === pageNumber ? " text-amber" : ""
+                      }`}
+                    >
+                      {pageNumber + 1}
+                    </p>
+                  );
                 }
-              ></FaCheck>
-              <FaHandMiddleFinger
-                className="text-[40px] p-2 border-2 border-white bg-red-500 hover:bg-red-600"
-                onClick={() =>
-                  answerDuoInvite({ answerId: invite._id, action: false })
-                }
-              ></FaHandMiddleFinger>
+                return null;
+              })}
+
+              {/* Jeśli strona jest mniejsza niż ostatnia, wyświetl przycisk "Next" */}
+              {filterParams.page < duoInvites.page.totalPages - 1 && (
+                <p
+                  className="cursor-pointer hover:text-amber duration-100 transition-colors"
+                  onClick={() => handlePageChange(filterParams.page + 1)}
+                >
+                  Next
+                </p>
+              )}
             </div>
-          ))}
+          )}
+        </div>
+      ) : (
+        <div>
+          <p className="z-20 text-[32px] font-chewy text-white-smoke mt-[7%]">
+            No duo invites yet
+          </p>
         </div>
       )}
     </div>

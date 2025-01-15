@@ -17,6 +17,7 @@ import DuoCreation from "./DuoCreation";
 import LeaguePosition from "../other/LeaguePosition";
 import languageTruncator from "@/lib/languageTruncator";
 import getChampionNames from "../../api/ddragon/getChampionNames";
+import { toast } from "sonner";
 
 const leaguePositions = ["Top", "Jungle", "Mid", "Bot", "Support", "Fill"];
 
@@ -65,7 +66,7 @@ const rankOptions = rankList.map((rank) => ({
 
 const Duo = () => {
   const axiosInstance = useAxios();
-  const { duoSettings } = useContext(UserContext);
+  const { duoSettings, setDuoSettings, userData } = useContext(UserContext);
 
   const [searchedPositions, setSearchedPositions] = useState([]);
   const [minRank, setMinRank] = useState("");
@@ -96,6 +97,15 @@ const Duo = () => {
     isLoading,
   } = useQuery("myRiotProfiles", () => getMyRiotProfiles(axiosInstance), {
     refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      console.log(data);
+      if (data && data.length === 1) {
+        setDuoSettings((prevSettings) => ({
+          ...prevSettings,
+          duoAccount: data[0],
+        }));
+      }
+    },
   });
 
   const {
@@ -185,10 +195,11 @@ const Duo = () => {
   };
 
   const { mutateAsync: answerDuoMutation } = useMutation(
-    ({ puuid, duoId }) => answerDuo(api, puuid, duoId),
+    ({ puuid, duoId }) => answerDuo(axiosInstance, puuid, duoId),
     {
       onSuccess: () => {
         console.log("Duo answered successfully");
+        toast.success("Duo answered successfully");
       },
       onError: () => {
         console.error("Error answering duo");
@@ -277,10 +288,15 @@ const Duo = () => {
                 <p>Summoner</p>
               )}
             </div>
-            {riotProfiles[0].rank === "" || riotProfiles[0].rank === null ? (
+            {riotProfiles[0].tier === "" || riotProfiles[0].tier === null ? (
               <p className="text-[14px]">Unranked</p>
             ) : (
-              <p>Rank</p>
+              <Image
+                src={"/rank_emblems/" + riotProfiles[0].tier + ".png"}
+                height={48}
+                width={48}
+                alt="rank_emlblem"
+              />
             )}
           </div>
         ) : (
@@ -378,7 +394,7 @@ const Duo = () => {
               return (
                 <div
                   key={key}
-                  className="w-full bg-night bg-opacity-70 rounded-xl flex items-center border-[1px] border-white-smoke px-4 py-3 text-[24px] h-[60px]"
+                  className="w-full bg-night bg-opacity-70 rounded-xl flex items-center border-[1px] border-white-smoke hover:bg-silver hover:bg-opacity-5 transition-all duration-150 px-4 py-3 text-[24px] h-[60px]"
                 >
                   <div className="w-[15%] flex items-center gap-x-3">
                     {shortProfile?.profileIconId ? (
@@ -433,11 +449,16 @@ const Duo = () => {
                     })}
                   </div>
                   <div className="w-[5%] flex items-center justify-center gap-x-2">
-                    {shortProfile?.rank === "" ||
-                    shortProfile?.rank === null ? (
+                    {shortProfile?.tier === "" ||
+                    shortProfile?.tier === null ? (
                       <p className="text-[14px]">Unranked</p>
                     ) : (
-                      <p>Rank</p>
+                      <Image
+                        src={"/rank_emblems/" + shortProfile?.tier + ".png"}
+                        height={48}
+                        width={48}
+                        alt="rank_emlblem"
+                      />
                     )}
                   </div>
                   <div className="w-[20%] flex items-center justify-center gap-x-2">
@@ -502,7 +523,18 @@ const Duo = () => {
                     })}
                   </div>
                   <div className="w-[3%] flex items-center justify-center">
-                    <BiSolidLock className="text-[32px] hover:text-amber duration-150 transition-all cursor-pointer" />
+                    {duo.author !== userData?.username && (
+                      <BiSolidLock
+                        onClick={() => {
+                          console.log("dodawanie duo");
+                          answerDuoMutation({
+                            puuid: riotProfiles[0].puuid,
+                            duoId: duo._id,
+                          });
+                        }}
+                        className="text-[32px] hover:text-amber duration-150 transition-all cursor-pointer"
+                      />
+                    )}
                   </div>
                 </div>
               );
