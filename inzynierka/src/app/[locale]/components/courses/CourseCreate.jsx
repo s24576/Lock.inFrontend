@@ -120,7 +120,7 @@ const CourseCreate = () => {
 
           <button
             type="submit"
-            className="w-[20%] border-amber border-[1px] rounded-xl text-white-smoke mt-[5%] px-6 py-2 text-[20px] mx-auto bg-transparent hover:bg-silver-hover transition-all duration-150"
+            className="w-[20%] border-white-smoke border-[1px] rounded-xl text-white-smoke mt-[5%] px-6 py-2 text-[20px] mx-auto bg-transparent hover:bg-silver-hover transition-all duration-150"
           >
             Publish course
           </button>
