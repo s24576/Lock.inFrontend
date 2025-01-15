@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 import getMyRiotProfiles from "../../api/riot/getMyRiotProfiles";
 import getDuos from "../../api/duo/getDuos";
 import getRiotShortProfiles from "../../api/riot/getRiotShortProfiles";
@@ -65,6 +65,7 @@ const rankOptions = rankList.map((rank) => ({
 
 const Duo = () => {
   const axiosInstance = useAxios();
+  const { duoSettings } = useContext(UserContext);
 
   const [searchedPositions, setSearchedPositions] = useState([]);
   const [minRank, setMinRank] = useState("");
@@ -229,7 +230,7 @@ const Duo = () => {
     );
 
   return (
-    <div className="relative min-h-screen w-full flex justify-between px-[5%]">
+    <div className="relative min-h-screen w-full flex justify-between px-[5%] bg-night">
       <div
         className="absolute inset-0 bg-cover bg-fixed"
         style={{
@@ -244,13 +245,54 @@ const Duo = () => {
       ></div>
       <div className="mt-[10%] w-[25%] flex flex-col gap-y-2 z-20 font-chewy">
         <DuoCreation></DuoCreation>
-        <DuoSettings></DuoSettings>
+        {riotProfiles?.length === 1 ? (
+          <div className="mt-[2%] flex gap-x-2 justify-between items-center bg-silver bg-opacity-15 rounded-xl px-4 py-2 text-[20px] w-[80%]">
+            <div className="flex gap-x-3 items-center">
+              {riotProfiles[0].profileIconId ? (
+                <Image
+                  src={
+                    "https://ddragon.leagueoflegends.com/cdn/" +
+                    "14.24.1" +
+                    "/img/profileicon/" +
+                    riotProfiles[0].profileIconId +
+                    ".png"
+                  }
+                  height={40}
+                  width={40}
+                  alt="summoner icon"
+                  className="rounded-full"
+                />
+              ) : (
+                <div className="w-[40px] h-[40px] flex items-center justify-center border-[1px] border-white-smoke rounded-full">
+                  <FaUser className="text-[20px]"></FaUser>
+                </div>
+              )}
+              {riotProfiles[0].gameName ? (
+                <p>
+                  {riotProfiles[0].gameName.length > 24
+                    ? `${riotProfiles[0].gameName.slice(0, 24)}...`
+                    : riotProfiles[0].gameName}
+                </p>
+              ) : (
+                <p>Summoner</p>
+              )}
+            </div>
+            {riotProfiles[0].rank === "" || riotProfiles[0].rank === null ? (
+              <p className="text-[14px]">Unranked</p>
+            ) : (
+              <p>Rank</p>
+            )}
+          </div>
+        ) : (
+          <DuoSettings riotProfiles={riotProfiles}></DuoSettings>
+        )}
+
         <p className="text-[20px] mt-[4%]">I'm looking for:</p>
         <div className="flex flex-wrap items-center gap-2">
           {leaguePositions.map((position, key) => {
             return (
               <div
-                className={`flex items-center gap-x-2 rounded-xl bg-night bg-opacity-70 px-5 py-2 text-[18px] cursor-pointer transition-all duration-150 hover:bg-silver hover:bg-opacity-15 ${
+                className={`flex items-center gap-x-2 rounded-xl bg-silver bg-opacity-15 px-5 py-2 text-[18px] cursor-pointer transition-all duration-150 hover:bg-night hover:bg-opacity-25 ${
                   filterBody.positions.includes(position)
                     ? "outline outline-[1px] outline-white-smoke"
                     : ""
@@ -319,12 +361,13 @@ const Duo = () => {
         <div className="flex items-center w-full">
           <p className="text-silver w-[15%] text-center">Summoner</p>
           <p className="text-silver w-[20%] text-center">Played positions</p>
-          <p className="text-silver w-[10%] text-center">Rank</p>
+          <p className="text-silver w-[5%] text-center">Rank</p>
           <p className="text-silver w-[20%] text-center">Searched positions</p>
+          <p className="text-silver w-[10%] text-center">Searched ranks</p>
           <p className="text-silver w-[15%] text-center">Played Champions</p>
-          <p className="text-silver w-[15%] text-center">Languages</p>
+          <p className="text-silver w-[10%] text-center">Languages</p>
         </div>
-        <div className="flex flex-col gap-y-4 w-full">
+        <div className="flex flex-col gap-y-4 w-full text-opacity-90">
           {duos &&
             duos.content?.map((duo, key) => {
               const shortProfile = riotShortProfiles?.find(
@@ -389,12 +432,12 @@ const Duo = () => {
                       );
                     })}
                   </div>
-                  <div className="w-[10%] flex items-center justify-center gap-x-2">
+                  <div className="w-[5%] flex items-center justify-center gap-x-2">
                     {shortProfile?.rank === "" ||
                     shortProfile?.rank === null ? (
                       <p className="text-[14px]">Unranked</p>
                     ) : (
-                      <p>rank</p>
+                      <p>Rank</p>
                     )}
                   </div>
                   <div className="w-[20%] flex items-center justify-center gap-x-2">
@@ -407,6 +450,29 @@ const Duo = () => {
                         />
                       );
                     })}
+                  </div>
+                  <div className="w-[10%] flex items-center justify-center gap-x-2">
+                    {duo.minRank === "" || duo.minRank === null ? (
+                      <LeaguePosition position={"Fill"} height={32} />
+                    ) : (
+                      <Image
+                        src={"/rank_emblems/" + duo.minRank + ".png"}
+                        width={48}
+                        height={48}
+                        alt={duo.minRank}
+                      />
+                    )}
+                    <p>-</p>
+                    {duo.maxRank === "" || duo.maxRank === null ? (
+                      <LeaguePosition position={"Fill"} height={32} />
+                    ) : (
+                      <Image
+                        src={"/rank_emblems/" + duo.maxRank + ".png"}
+                        width={48}
+                        height={48}
+                        alt={duo.maxRank}
+                      />
+                    )}
                   </div>
                   <div className="w-[15%] flex items-center justify-center gap-x-2">
                     {duo.championIds?.slice(0, 3).map((champion, key) => {
@@ -426,7 +492,7 @@ const Duo = () => {
                       );
                     })}
                   </div>
-                  <div className="w-[15%] flex items-center justify-center gap-x-2">
+                  <div className="w-[12%] flex items-center justify-center gap-x-2">
                     {duo.languages?.map((language, key) => {
                       return (
                         <p key={key} className="">
@@ -435,7 +501,7 @@ const Duo = () => {
                       );
                     })}
                   </div>
-                  <div className="w-[5%] flex items-center justify-center">
+                  <div className="w-[3%] flex items-center justify-center">
                     <BiSolidLock className="text-[32px] hover:text-amber duration-150 transition-all cursor-pointer" />
                   </div>
                 </div>

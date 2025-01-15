@@ -1,115 +1,117 @@
 import React, { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { SearchContext } from "../../context/SearchContext";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from "@/componentsShad/ui/dialog";
+import { FaUser } from "react-icons/fa6";
 
 import Image from "next/image";
 import { IoSettingsOutline } from "react-icons/io5";
 import Select, { components } from "react-select";
-import { customStyles } from "@/lib/styles/championNamesList";
+import { customStyles, customStylesDuo } from "@/lib/styles/championNamesList";
 
 const DuoSettings = ({ riotProfiles }) => {
   const { duoSettings, setDuoSettings } = useContext(UserContext);
   const { version } = useContext(SearchContext);
 
-  //duo settings musi byc z db, duo account z db, oprocz tego ustawianie interesujacych championow tez z db
-  //wszystko leci przez user context
-
-  //mapowanie profili riot na obiekty do selecta
   const profileOptions = riotProfiles
     ? riotProfiles.map((profile) => ({
         value: profile.gameName,
         label: (
-          <div className="flex items-center gap-x-4">
-            <Image
-              src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${profile.profileIconId}.png`}
-              width={30}
-              height={30}
-              alt="summonerIcon"
-              className="rounded-full border-2 border-white"
-            />
-            <span>
-              {profile.gameName} ({profile.server}) - {profile.summonerLevel}{" "}
-              lvl
-            </span>
+          <div className="flex items-center justify-between gap-x-4">
+            <div className="flex items-center  gap-x-5">
+              {profile.profileIconId ? (
+                <Image
+                  src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${data.profile.profileIconId}.png`}
+                  width={30}
+                  height={30}
+                  alt="summonerIcon"
+                  className="rounded-full border-2 border-white"
+                />
+              ) : (
+                <div className="w-[30px] h-[30px] flex items-center justify-center border-[1px] border-white-smoke rounded-full">
+                  <FaUser className="text-[15px]"></FaUser>
+                </div>
+              )}
+
+              <span>{profile.gameName ? profile.gameName : "Summoner"}</span>
+            </div>
+
+            {profile.rank === "" || profile.rank === null ? (
+              <p className="text-[14px]">Unranked</p>
+            ) : (
+              <p className="text-[14px]">Rank</p>
+            )}
           </div>
         ),
-        profileData: profile, // Przechowuje cały obiekt profilu
+        profileData: profile,
       }))
     : [];
 
-  //do wyswietlania placeholdera w selectcie
   const CustomSingleValue = (props) => {
-    const { data } = props; // dane wybranego profilu
+    const { data } = props;
     return (
       <components.SingleValue {...props}>
-        <div className="flex items-center gap-x-4">
-          <Image
-            src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${data.profileData.profileIconId}.png`}
-            width={30}
-            height={30}
-            alt="summonerIcon"
-            className="rounded-full border-2 border-white"
-          />
-          <span>
-            {data.profileData.gameName} ({data.profileData.server}) -{" "}
-            {data.profileData.summonerLevel} lvl
-          </span>
+        <div className="flex items-center justify-between gap-x-4">
+          <div className="flex items-center  gap-x-5">
+            {data.profileData.profileIconId ? (
+              <Image
+                src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${data.profileData.profileIconId}.png`}
+                width={30}
+                height={30}
+                alt="summonerIcon"
+                className="rounded-full border-2 border-white"
+              />
+            ) : (
+              <div className="w-[30px] h-[30px] flex items-center justify-center border-[1px] border-white-smoke rounded-full">
+                <FaUser className="text-[15px]"></FaUser>
+              </div>
+            )}
+
+            <span>
+              {data.profileData.gameName
+                ? data.profileData.gameName
+                : "Summoner"}
+            </span>
+          </div>
+
+          {data.rank === "" || data.rank === null ? (
+            <p className="text-[14px]">Unranked</p>
+          ) : (
+            <p className="text-[14px]">Rank</p>
+          )}
         </div>
       </components.SingleValue>
     );
   };
 
-  //funkcja do zmiany wybranego profilu do duo
   const handleSelectChange = (selectedOption) => {
-    console.log(selectedOption);
     setDuoSettings((prevSettings) => ({
       ...prevSettings,
-      duoAccount: selectedOption ? selectedOption.profileData : null, // Zapisuje pełny profil lub null, jeśli wyczyszczone
+      duoAccount: selectedOption ? selectedOption.profileData : null,
     }));
   };
 
   return (
-    <Dialog>
-      <div className="flex items-center gap-x-2 cursor-pointer hover:text-amber duration-150 transition-all">
-        <IoSettingsOutline className="text-[28px]" />
-        <p className="text-[20px]">Choose account</p>
-      </div>
-      <DialogContent className="bg-oxford-blue">
-        <DialogHeader>
-          <DialogTitle>Your duo settings</DialogTitle>
-          <DialogClose />
-        </DialogHeader>
-        <p>Choose account for duo:</p>
-        {riotProfiles && riotProfiles.length > 0 ? (
-          <Select
-            options={profileOptions}
-            styles={customStyles}
-            placeholder="Select a profile"
-            onChange={handleSelectChange} // Ustawienie funkcji onChange
-            components={{ SingleValue: CustomSingleValue }} // Ustawienie dostosowanego SingleValue
-            isSearchable={false}
-            value={
-              duoSettings.duoAccount
-                ? profileOptions.find(
-                    (opt) => opt.value === duoSettings.duoAccount.gameName
-                  )
-                : null
-            } // Wyświetlanie wybranego profilu
-          />
-        ) : (
-          <p>No profiles available</p>
-        )}
-        <button onClick={() => console.log(duoSettings)}>Click</button>
-      </DialogContent>
-    </Dialog>
+    <div className="w-[80%] mt-[2%]">
+      {riotProfiles && riotProfiles.length > 0 ? (
+        <Select
+          options={profileOptions}
+          styles={customStylesDuo}
+          placeholder="Select a profile"
+          onChange={handleSelectChange}
+          components={{ SingleValue: CustomSingleValue }}
+          isSearchable={false}
+          value={
+            duoSettings.duoAccount
+              ? profileOptions.find(
+                  (opt) => opt.value === duoSettings.duoAccount.gameName
+                )
+              : null
+          }
+        />
+      ) : (
+        <p>No profiles available</p>
+      )}
+    </div>
   );
 };
 

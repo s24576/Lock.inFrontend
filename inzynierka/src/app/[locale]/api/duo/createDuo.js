@@ -4,8 +4,9 @@ const createDuo = async (api, formData) => {
   const data = {
     puuid: formData.puuid,
     positions: formData.positions,
-    minRank: formData.minRank + " " + formData.minRankDivision,
-    maxRank: formData.maxRank + " " + formData.maxRankDivision,
+    lookedPositions: formData.lookedPositions,
+    minRank: formData.minRank,
+    maxRank: formData.maxRank,
     languages: formData.languages,
     championIds: formData.championIds,
   };

@@ -80,7 +80,7 @@ export const customStyles = {
 export const customStylesDuo = {
   control: (provided, state) => ({
     ...provided,
-    backgroundColor: "rgba(19, 19, 19, 0.7)", // Ustawienie tła z #131313 i 70% opacity
+    backgroundColor: "rgba(175, 175, 175, 0.15)", // Ustawienie tła z #131313 i 70% opacity
     border: "none", // Usunięcie obramowania
     color: "#f5f5f5",
     fontSize: "20px",
