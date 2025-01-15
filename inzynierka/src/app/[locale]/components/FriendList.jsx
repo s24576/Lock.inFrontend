@@ -14,14 +14,11 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import useAxios from "../hooks/useAxios";
 import { UserContext } from "../context/UserContext";
-import { toast } from "sonner";
 import { FaUser } from "react-icons/fa6";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BiSolidLock } from "react-icons/bi";
 import { useMutation, useQuery } from "react-query";
 import deleteFriend from "../api/profile/deleteFriend";
-import ReportForm from "./reports/ReportForm";
-import getNotifications from "../api/profile/getNotifications";
 import getYourInvites from "../api/profile/getYourInvites";
 import getSentInvites from "../api/profile/getSentInvites";
 import respondFriendRequest from "../api/profile/respondFriendRequest";
@@ -223,13 +220,18 @@ const FriendList = () => {
   }, [userData]);
 
   //wysylanie zaproszenia do znajomych
-  const { mutateAsync: handleSendFriendRequest } = useMutation(
+  const {
+    mutateAsync: handleSendFriendRequest,
+    error: sendFriendRequestError,
+    isError: sendFriendRequestIsError,
+  } = useMutation(
     () => {
       sendFriendRequest(axiosInstance, usernameInput);
     },
     {
       onSuccess: (data) => {
         console.log("Success adding friend:", data);
+        setUsernameInput("");
       },
       onError: (error) => {
         console.error("Error adding friend:", error);

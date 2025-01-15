@@ -15,6 +15,7 @@ import { CiWarning } from "react-icons/ci";
 import { BiSolidLock } from "react-icons/bi";
 import { RISwordFill, RITeamFill } from "@icongo/ri";
 import { IoDesktopOutline, IoNotifications, IoHome } from "react-icons/io5";
+import Notifications from "../Notifications";
 
 const Navbar = () => {
   const { userData, setUserData, isLogged, setIsLogged } =
@@ -164,7 +165,7 @@ const Navbar = () => {
               <Link href="/messenger">
                 <FaComment className="cursor-pointer text-[26px] text-[#F5B800] hover:text-silver transition-colors duration-150" />
               </Link>
-              <IoNotifications className="text-[28px] cursor-pointer hover:text-silver transition-colors duration-150" />
+              <Notifications></Notifications>
             </div>
           </div>
         )}

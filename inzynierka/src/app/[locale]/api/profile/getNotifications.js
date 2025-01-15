@@ -1,6 +1,8 @@
 const getNotifications = async (axiosInstance) => {
   try {
-    const response = await axiosInstance.get(`/profile/getNotifications`);
+    const response = await axiosInstance.get(
+      `/profile/getNotifications?size=10`
+    );
     console.log("notifications : ", response.data);
     return response.data; // Zwracamy dane
   } catch (error) {

@@ -8,7 +8,7 @@ const ClientLayout = ({ children }) => {
   return (
     <>
       <QueryClientProvider client={new QueryClient()}>
-        <Toaster richColors position="top-center"></Toaster>
+        <Toaster richColors closeButton position="top-center"></Toaster>
         <Navbar></Navbar>
         {children}
       </QueryClientProvider>
