@@ -17,6 +17,7 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { FaEdit, FaReply } from "react-icons/fa";
 import { FaUser, FaPlus } from "react-icons/fa6";
+import { AiOutlineDelete } from "react-icons/ai";
 import { IoIosSend } from "react-icons/io";
 import getChats from "../api/messenger/getChats";
 import getShortProfiles from "../api/profile/getShortProfiles";
@@ -24,6 +25,7 @@ import { formatTimestampToDateTime, formatTimeAgo } from "@/lib/formatTimeAgo";
 import getChatById from "../api/messenger/getChatById";
 import getMessages from "../api/messenger/getMessages";
 import sendMessage from "../api/messenger/sendMessage";
+import createChat from "../api/messenger/createChat";
 
 const Messenger = () => {
   const { userData, isLogged } = useContext(UserContext);
@@ -59,6 +61,10 @@ const Messenger = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [activeChat, setActiveChat] = useState(null);
   const [messagesSize, setMessagesSize] = useState(20);
+
+  //reply
+  const [replyTo, setReplyTo] = useState(null);
+  const [replyMessage, setReplyMessage] = useState("");
 
   const axiosInstance = useAxios();
 
@@ -141,7 +147,28 @@ const Messenger = () => {
     mutateAsync: handleSendMessage
   } = useMutation(
     () => {
-      sendMessage(axiosInstance, activeChat,{message: newMessage});
+      sendMessage(axiosInstance, activeChat,{message: newMessage, respondingTo: replyTo});
+    },
+    {
+      onSuccess: (data) => {
+        console.log("Success adding msg:", data);
+        setNewMessage("");
+        chatsRefetch();
+        messagesRefetch();
+        setReplyTo(null);
+        setReplyMessage("");
+      },
+      onError: (error) => {
+        console.error("Error adding msg:", error);
+      },
+    }
+  );
+
+  const {
+    mutateAsync: handleCreateChat
+  } = useMutation(
+    () => {
+      createChat(axiosInstance, {name: newChatName, members: selectedFriends.map((friend) => friend.username)});
     },
     {
       onSuccess: (data) => {
@@ -155,6 +182,29 @@ const Messenger = () => {
       },
     }
   );
+
+  const selectFriend = (friend) => {
+    setSelectedFriends((prev) => {
+      // Sprawdzamy, czy przyjaciel już istnieje w tablicy na podstawie `_id`
+      const alreadySelected = prev.some(
+        (selected) => selected._id === friend._id
+      );
+
+      // Jeżeli przyjaciel już istnieje, zwracamy poprzednią tablicę bez zmian
+      if (alreadySelected) {
+        return prev;
+      }
+
+      // Jeżeli przyjaciela nie ma, dodajemy go do tablicy
+      return [...prev, friend];
+    });
+  };
+
+  const unselectFriend = (friend) => {
+    setSelectedFriends((prev) =>
+      prev.filter((selected) => selected !== friend)
+    );
+  };
 
   const handleMessageForm = async (e) => {
     e.preventDefault();
@@ -184,6 +234,13 @@ const Messenger = () => {
             console.log("new message received: ", parsed)
             chatsRefetch();
             messagesRefetch();
+          }
+        );
+
+        client.subscribe(
+          `/user/${userData.username}/messenger/members/`,
+          (message) => {
+            chatsRefetch();
           }
         );
       },
@@ -228,8 +285,67 @@ const Messenger = () => {
         {chatsData && (
           <div className="flex flex-col items-center gap-y-4 w-full">
             <div className="flex justify-between items-center pb-[2%] w-full">
-              <p className="text-[24px] ">Chats</p>
-              <FaEdit className="text-[28px]" />
+              <p className="text-[24px]">Create chat</p>
+            <Dialog>
+          <DialogTrigger><FaEdit className="text-[28px]"></FaEdit></DialogTrigger>
+          <DialogContent className="bg-oxford-blue">
+            <p className="font-semibold">Create a chat</p>
+            <input
+              type="text"
+              placeholder="Chat name"
+              className="px-4 py-2 text-black"
+              value={newChatName}
+              onChange={(e) => setNewChatName(e.target.value)}
+            />
+            <div>
+              {userData.friends &&
+                userData.friends.map((friend, key) => {
+                  return (
+                    <div key={key} className="flex justify-between">
+                      <p>
+                        {friend.username !== userData._id
+                          ? friend.username
+                          : friend.username2}
+                      </p>
+                      <button onClick={() => selectFriend(friend)}>Add</button>
+                    </div>
+                  );
+                })}
+            </div>
+            <p>Picked friends:</p>
+            <div className="flex gap-x-5">
+              {selectedFriends.length > 0 &&
+                selectedFriends.map((friend) => {
+                  return (
+                    <div className="flex gap-x-1 items-center">
+                      <p>
+                        {friend.username !== userData._id
+                          ? friend.username
+                          : friend.username2}
+                      </p>
+                      <button
+                        onClick={() => unselectFriend(friend)}
+                        className="text-red-500 font-bold"
+                      >
+                        X
+                      </button>
+                    </div>
+                  );
+                })}
+            </div>
+
+            <DialogClose>
+              <button
+                onClick={() => handleCreateChat()}
+                className="border-2 border-white mx-auto px-5 py-2"
+              >
+                {selectedFriends.length > 1 && newChatName !== ""
+                  ? "Create chat"
+                  : "Add more"}
+              </button>
+            </DialogClose>
+          </DialogContent>
+        </Dialog>
             </div>
             {chatsData?.content?.map((chat, key) => {
               const otherMember = chat.members.find(
@@ -237,10 +353,12 @@ const Messenger = () => {
               );
               return (
                 <div
-                  key={key}
-                  onClick={() => setActiveChat(chat._id)}
-                  className="flex items-center gap-x-2 py-4 px-3 border-white-smoke border-[1px] rounded-xl cursor-pointer w-full hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
-                >
+  key={key}
+  onClick={() => setActiveChat(chat._id)}
+  className={`flex items-center gap-x-2 py-4 px-3 border-[1px] rounded-xl cursor-pointer w-full hover:bg-silver hover:bg-opacity-15 transition-all duration-150 ${
+    activeChat === chat._id ? 'border-amber' : 'border-white-smoke'
+  }`}
+>
                   {shortProfilesData &&
                   shortProfilesData[otherMember.username]?.image ? (
                     <div className="w-[48px] h-[48px] rounded-full border-[1px] border-white-smoke overflow-hidden">
@@ -309,7 +427,7 @@ const Messenger = () => {
             </div>
 
             {/* Kontener wiadomości */}
-            <div className="flex flex-col gap-y-1 px-[3%] w-full overflow-y-auto items-center">
+            <div className="flex flex-col gap-y-1 px-[3%] w-full overflow-y-auto items-center mb-[10%]">
               {messagesSize < messagesData.page.totalElements && <div className="flex items-center justify-center hover:text-amber cursor-pointer duration-150 transition-all">
                 <FaPlus onClick={() => setMessagesSize(messagesSize + 20)} className="text-[40px]">
                   </FaPlus></div>}
@@ -350,8 +468,23 @@ const Messenger = () => {
                         isUserMessage ? "text-right" : "text-left"
                       }`}
                     >
+                      {message.respondingTo !== null && (
+  <p>
+    Responding to: {
+      messagesData.content.find(msg => msg._id === message.respondingTo)?.message || "Message not found"
+    }
+  </p>
+)}
+
                       <p>{message.message}</p>
                     </div>
+                    {!isUserMessage && (
+                      <FaReply className="text-[24px]" onClick={() => {
+                        setReplyTo(message._id);
+                        setReplyMessage(`Replying to ${message.userId}: ${message.message}`);
+                      }}></FaReply>
+
+                    )}
                    
                   </div>
                 );
@@ -363,6 +496,17 @@ const Messenger = () => {
                 onSubmit={handleMessageForm}
               >
                 <div className="flex flex-col gap-y-1">
+                    {replyMessage && (
+                      <div className="flex gap-x-2 items-center pt-2">
+                        <p>{replyMessage}</p>
+                      <AiOutlineDelete onClick={() => {
+                    setReplyTo(null);
+                    setReplyMessage("");
+                  }} className="text-[20px] hover:text-amber duration-150 transition-all cursor-pointer"></AiOutlineDelete>
+                  </div>
+                    )}
+
+                  
                 <input
                   type="text"
                   value={newMessage}
@@ -381,11 +525,15 @@ const Messenger = () => {
         )}
         {chatByIdData && !messagesData && (
           <div className="w-full h-full flex flex-col items-center gap-y-2">
-            <p>
+           <div className="flex justify-between items-center w-full px-[3%]">
+            <p className="text-[32px]">
               {chatByIdData.members[0].username === userData.username
                 ? chatByIdData.members[1].username
                 : chatByIdData.members[0].username}
             </p>
+
+            </div>
+
             <div className="px-[3%] mt-[5%] w-full text-center">
               <p className="text-[24px]">Send a message to start chatting!</p>
             </div>
