@@ -1,7 +1,6 @@
 "use client";
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
-import { useQuery, useMutation } from "react-query";
 import useAxios from "../hooks/useAxios";
 import Link from "next/link";
 import {
@@ -15,15 +14,7 @@ import {
 } from "@/componentsShad/ui/dialog";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-import { FaEdit, FaReply } from "react-icons/fa";
-import { FaUser, FaPlus } from "react-icons/fa6";
-import { IoIosSend } from "react-icons/io";
-import getChats from "../api/messenger/getChats";
-import getShortProfiles from "../api/profile/getShortProfiles";
-import { formatTimestampToDateTime, formatTimeAgo } from "@/lib/formatTimeAgo";
-import getChatById from "../api/messenger/getChatById";
-import getMessages from "../api/messenger/getMessages";
-import sendMessage from "../api/messenger/sendMessage";
+import { FaReply, FaArrowUp } from "react-icons/fa";
 
 const Messenger = () => {
   const { userData, isLogged } = useContext(UserContext);
@@ -48,118 +39,238 @@ const Messenger = () => {
   //tresc nowej wiadomosci
   const [newMessage, setNewMessage] = useState("");
 
+  //wiadomosc na ktora sie odpowiada
+  const [isReplying, setIsReplying] = useState({});
+
   //wiadomosci konkretnego wybranego chatu
   const [chatMessages, setChatMessages] = useState({});
 
   //ilosc wiadomosci wyswietlonych w chacie
-  const [size, setSize] = useState(10);
-  const [usernamesToFetch, setUsernamesToFetch] = useState([]);
+  const [messagesLoaded, setMessagesLoaded] = useState(5);
 
-  //czy to pierwsze zaladowanie chatow
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messagesSize, setMessagesSize] = useState(20);
+  const api = useAxios();
 
-  const axiosInstance = useAxios();
+  const getAllChats = async () => {
+    try {
+      const response = await api.get(`/messenger/getChats?size=20`);
 
-  const {
-    refetch: chatsRefetch,
-    data: chatsData,
-    isLoading: chatsIsLoading,
-  } = useQuery(
-    ["chatsData", size], // Dodanie zmiennej jako klucz
-    () => getChats(axiosInstance, size),
-    {
-      refetchOnWindowFocus: false,
-      keepPreviousData: true,
-      onSuccess: (data) => {
-        const usernamesToFetch = data.content
-          .map(
-            (chat) =>
-              chat.members.find(
-                (member) => member.username !== userData.username
-              )?.username
-          )
-          .filter(Boolean); // Usuwamy ewentualne `undefined` jeśli `find` nic nie zwróci
+      console.log("all chats", response.data);
+      setAllChats(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-        setUsernamesToFetch(usernamesToFetch);
+  useEffect(() => {
+    getAllChats();
+  }, [selectedChat]);
 
-        if (isInitialLoad && data.content.length > 0) {
-          setActiveChat(data.content[0]._id);
-          setIsInitialLoad(false); // Ustawiamy, że załadowano początkowo
+  useEffect(() => {
+    const getChatById = async () => {
+      if (allChats?.content) {
+        let chatResponse; // Zmienna na dane odpowiedzi
+        const selectedChatObject = allChats.content.find(
+          (chat) => chat._id === selectedChat
+        );
+        if (selectedChatObject) {
+          try {
+            const response = await api.get(
+              `/messenger/getChatById?chatId=${selectedChatObject._id}`
+            );
+            console.log("selected Chat:", response.data);
+            setChatData(response.data); // Przechowaj dane czatu
+            chatResponse = response.data; // Przechwyć dane do zmiennej
+          } catch (error) {
+            console.log(error);
+          } finally {
+            if (chatResponse && chatResponse._id) {
+              getMessages(chatResponse._id); // Użyj ID czatu w finally
+            }
+          }
         }
-      },
-    }
-  );
-
-  const {
-    refetch: shortProfilesRefetch,
-    data: shortProfilesData,
-    isLoading: shortProfilesIsLoading,
-  } = useQuery(
-    ["shortProfilesData", usernamesToFetch], // Dodanie zmiennej jako klucz
-    () => getShortProfiles(axiosInstance, usernamesToFetch),
-    {
-      refetchOnWindowFocus: false,
-      keepPreviousData: true,
-      enabled: usernamesToFetch.length > 0,
-    }
-  );
-
-  const {
-    refetch: chatByIdrefetch,
-    data: chatByIdData,
-    isLoading: chatByIdIsLoading,
-  } = useQuery(
-    ["getChatById", activeChat], // Klucz zawiera ID czatu, aby zmiana powodowała nowe zapytanie
-    () => getChatById(axiosInstance, activeChat),
-    {
-      refetchOnWindowFocus: false,
-      enabled: Boolean(activeChat), // Zapytanie wykona się tylko, gdy ID jest prawidłowe
-    }
-  );
-
-  const {
-    refetch: messagesRefetch,
-    data: messagesData,
-    isLoading: messagesIsLoading,
-  } = useQuery(
-    ["getMessages", activeChat, messagesSize], // Upewnij się, że te dane są poprawne
-    () => {
-      if (activeChat && messagesSize) {
-        return getMessages(axiosInstance, activeChat, messagesSize); // Upewnij się, że activeChat i messagesSize są prawidłowe
       }
-      throw new Error("Invalid parameters for getMessages");
-    },
-    {
-      refetchOnWindowFocus: false,
-      enabled: Boolean(activeChat), // Zapytanie wykona się tylko, gdy ID jest prawidłowe
-    }
-  );
+    };
 
-  const {
-    mutateAsync: handleSendMessage
-  } = useMutation(
-    () => {
-      sendMessage(axiosInstance, activeChat,{message: newMessage});
-    },
-    {
-      onSuccess: (data) => {
-        console.log("Success adding msg:", data);
-        setNewMessage("");
-        chatsRefetch();
-        messagesRefetch();
-      },
-      onError: (error) => {
-        console.error("Error adding msg:", error);
-      },
+    if (allChats?.content?.length > 0) {
+      getChatById(); // Wywołaj funkcję, gdy załadowane są dane czatów
     }
-  );
+  }, [allChats, selectedChat]);
 
-  const handleMessageForm = async (e) => {
-    e.preventDefault();
-    await handleSendMessage();
-  }
+  const createChat = async () => {
+    console.log("creating chat");
+
+    if (newChatName === "") return;
+
+    // Tworzymy tablicę nowych obiektów na podstawie `selectedFriends`
+    const members = selectedFriends.map((friend) => {
+      // Jeżeli `username` jest różne od `userData._id`, wybieramy `username`, inaczej `username2`
+      const username =
+        friend.username !== userData._id ? friend.username : friend.username2;
+      return { username }; // Zwracamy nowy obiekt z polem `username`
+    });
+
+    const members2 = selectedFriends.map((friend) =>
+      friend.username !== userData._id ? friend.username : friend.username2
+    );
+
+    console.log("members::::::", members2);
+
+    //dodaj do members samego siebie
+
+    try {
+      // Wykonujemy żądanie z nową tablicą członków (`members`)
+      const response = await api.post(`/messenger/createChat`, {
+        name: newChatName,
+        members: members2, // Przekazujemy tablicę obiektów
+      });
+
+      console.log("Chat created:", response.data);
+
+      // Możesz również chcieć wyczyścić stan `selectedFriends` oraz `newChatName`
+      getAllChats();
+      setSelectedFriends([]);
+      setNewChatName("");
+    } catch (error) {
+      console.error("Error creating chat:", error);
+    }
+  };
+
+  //do naprawy
+  const deleteChat = async () => {
+    try {
+      const response =
+        await api.delete(`/messenger/deleteChat?chatId=${chatData._id}
+      `);
+
+      if (response.status === 200) console.log("chat deleted", chatData._id);
+
+      if (selectedChat === 0) {
+        setSelectedChat(1);
+      } else {
+        setSelectedChat(0);
+      }
+      getAllChats();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const leaveChat = async () => {
+    try {
+      const response = await api.delete(
+        `/messenger/leaveChat?chatId=${chatData._id}`
+      );
+      console.log(response.status);
+      getAllChats();
+      if (selectedChat === 0) {
+        setSelectedChat(1);
+      } else {
+        setSelectedChat(0);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const selectFriend = (friend) => {
+    setSelectedFriends((prev) => {
+      // Sprawdzamy, czy przyjaciel już istnieje w tablicy na podstawie `_id`
+      const alreadySelected = prev.some(
+        (selected) => selected._id === friend._id
+      );
+
+      // Jeżeli przyjaciel już istnieje, zwracamy poprzednią tablicę bez zmian
+      if (alreadySelected) {
+        return prev;
+      }
+
+      // Jeżeli przyjaciela nie ma, dodajemy go do tablicy
+      return [...prev, friend];
+    });
+  };
+
+  const unselectFriend = (friend) => {
+    setSelectedFriends((prev) =>
+      prev.filter((selected) => selected !== friend)
+    );
+  };
+
+  const addNewMembers = async (chatId, username) => {
+    // Tworzymy tablicę nowych obiektów na podstawie `selectedFriends`
+    const members = selectedFriends.map((friend) => {
+      // Jeżeli `username` jest różne od `userData._id`, wybieramy `username`, inaczej `username2`
+      const username =
+        friend.username !== userData._id ? friend.username : friend.username2;
+      return { username }; // Zwracamy nowy obiekt z polem `username`
+    });
+
+    try {
+      const response = await api.post(
+        `/messenger/addChatter?username=${username}&chatId=${chatId}`
+      );
+
+      console.log(response.status);
+      getAllChats();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //wyslij wiadomosc
+  const sendMessage = async (chatId) => {
+    try {
+      const response = await api.post(
+        `/messenger/sendMessage?chatId=${chatId}`,
+        {
+          message: newMessage,
+          respondingTo: isReplying ? isReplying._id : null,
+        }
+      );
+      console.log(response.data);
+      setChatMessages((prev) => ({
+        ...prev, // Kopiuj poprzedni stan
+        content: [...prev.content, response.data], // Dodaj nową wiadomość do tablicy content
+      }));
+      setIsReplying({});
+      getAllChats();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleIsReplying = (msg) => {
+    setIsReplying(msg);
+  };
+
+  //wiadomosci dla konkretnego chatu
+  const getMessages = async (chatId) => {
+    console.log("chat id: ", chatId);
+    try {
+      const response = await api.get(`/messenger/getMessages?chatId=${chatId}`);
+
+      console.log("messages content:", response.data);
+      setChatMessages(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //zaladuj wiecej wiadomosci
+  const loadMessages = async () => {
+    try {
+      const response = await api.get(
+        `/messenger/getMessages?chatId=${chatData._id}&size=${
+          messagesLoaded + 5
+        }`
+      );
+
+      console.log("loading content:", response.data);
+      setChatMessages(response.data);
+      setMessagesLoaded(messagesLoaded + 5);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const [stompClient, setStompClient] = useState(null);
   const [newMessageReceived, setNewMessageReceived] = useState();
@@ -169,25 +280,31 @@ const Messenger = () => {
     const socket = new SockJS("http://localhost:8080/ws");
     const client = new Client({
       webSocketFactory: () => socket,
-      debug: function (str) {},
+      debug: function (str) {
+        console.log("STOMP Debug: ", str);
+      },
       onConnect: () => {
+        console.log("Connected");
+
         //nasluchiwanie do powiadomienia
         client.subscribe(
           `/user/${userData.username}/messenger/message`,
           (message) => {
+            console.log("Message received: ", message.body); // Debug incoming messages
             const parsed = JSON.parse(message.body);
-            // setNewMessageReceived(parsed.message);
-            // setChatMessages((prev) => ({
-            //   ...prev, // Kopiuj poprzedni stan
-            //   content: [...prev.content, parsed], // Dodaj nową wiadomość do tablicy content
-            // }));
-            console.log("new message received: ", parsed)
-            chatsRefetch();
-            messagesRefetch();
+            console.log("Message received2: ", parsed); // Debug incoming messages
+            setNewMessageReceived(parsed.message);
+            setChatMessages((prev) => ({
+              ...prev, // Kopiuj poprzedni stan
+              content: [...prev.content, parsed], // Dodaj nową wiadomość do tablicy content
+            }));
           }
         );
       },
-      onStompError: (frame) => {},
+      onStompError: (frame) => {
+        console.error("STOMP Error: ", frame.headers["message"]);
+        console.error("Additional details: ", frame.body);
+      },
     });
 
     client.activate();
@@ -200,215 +317,249 @@ const Messenger = () => {
     };
   }, [userData]);
 
-  const getImageSrc = (image) => {
-    if (image && image.data) {
-      return `data:${image.contentType};base64,${image.data}`;
-    }
-    return null;
-  };
-
-  const messagesEndRef = useRef(null); // Ref dla końca kontenera wiadomości
-
-  useEffect(() => {
-    // Sprawdzamy, czy ref jest dostępny, i przewijamy na dół
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({
-        // behavior: "smooth", // Używamy płynnego przewijania
-        block: "end", // Ustalamy, by przewinęło na sam dół
-      });
-    }
-  }, [messagesData]);
-
   return (
-    <div className="bg-night min-h-screen w-full flex font-chewy">
-      {/* Kontener z listą czatów */}
-      <div className="w-[30%] pt-[5%] flex flex-col items-center gap-y-3 px-6 h-screen overflow-y-auto">
-        {chatsIsLoading && <div>Loading...</div>}
-
-        {chatsData && (
-          <div className="flex flex-col items-center gap-y-4 w-full">
-            <div className="flex justify-between items-center pb-[2%] w-full">
-              <p className="text-[24px] ">Chats</p>
-              <FaEdit className="text-[28px]" />
+    <div className="flex">
+      <div className="flex flex-col gap-y-6 mt-[70px]">
+        {userData && <p>Hello, {userData.username}</p>}
+        <Dialog>
+          <DialogTrigger>Create chat</DialogTrigger>
+          <DialogContent className="bg-oxford-blue">
+            <p className="font-semibold">Create a chat</p>
+            <input
+              type="text"
+              placeholder="Chat name"
+              className="px-4 py-2 text-black"
+              value={newChatName}
+              onChange={(e) => setNewChatName(e.target.value)}
+            />
+            <div>
+              {userData.friends &&
+                userData.friends.map((friend, key) => {
+                  return (
+                    <div key={key} className="flex justify-between">
+                      <p>
+                        {friend.username !== userData._id
+                          ? friend.username
+                          : friend.username2}
+                      </p>
+                      <button onClick={() => selectFriend(friend)}>Add</button>
+                    </div>
+                  );
+                })}
             </div>
-            {chatsData?.content?.map((chat, key) => {
-              const otherMember = chat.members.find(
-                (member) => member.username !== userData.username
-              );
-              return (
-                <div
-                  key={key}
-                  onClick={() => setActiveChat(chat._id)}
-                  className="flex items-center gap-x-2 py-4 px-3 border-white-smoke border-[1px] rounded-xl cursor-pointer w-full hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
-                >
-                  {shortProfilesData &&
-                  shortProfilesData[otherMember.username]?.image ? (
-                    <div className="w-[48px] h-[48px] rounded-full border-[1px] border-white-smoke overflow-hidden">
-                      <img
-                        src={getImageSrc(
-                          shortProfilesData[otherMember.username]?.image
-                        )}
-                        className="object-cover h-full w-full"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-[48px] h-[48px] bg-night flex items-center justify-center border-[1px] border-white-smoke rounded-full">
-                      <FaUser className="text-[24px]" />
-                    </div>
-                  )}
-                  <div className="flex justify-between items-center w-full">
-                    <div className="flex flex-col gap-y-1">
-                      <p className="text-[24px]">
-                        {chat.name === "Private Chat" && otherMember
-                          ? otherMember.username
-                          : chat.name}
+            <p>Picked friends:</p>
+            <div className="flex gap-x-5">
+              {selectedFriends.length > 0 &&
+                selectedFriends.map((friend) => {
+                  return (
+                    <div className="flex gap-x-1 items-center">
+                      <p>
+                        {friend.username !== userData._id
+                          ? friend.username
+                          : friend.username2}
                       </p>
-                      <p className="flex items-center gap-x-1">
-                        {chat.lastMessage.userId
-                          ? chat.lastMessage.userId === userData.username
-                            ? "You: "
-                            : chat.lastMessage.userId + ": "
-                          : ""}
-                        {chat.lastMessage?.message.length > 80
-                          ? chat.lastMessage.message.slice(0, 80) + "..."
-                          : chat.lastMessage?.message}
-                      </p>
+                      <button
+                        onClick={() => unselectFriend(friend)}
+                        className="text-red-500 font-bold"
+                      >
+                        X
+                      </button>
                     </div>
-                    {chat.lastMessage?.timestamp !== null ? (
-                      <p>{formatTimeAgo(chat.lastMessage.timestamp)}</p>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-            <button></button>
-          </div>
-        )}
-        <button
-          onClick={() => setSize(size + 5)}
-          className="w-[45%] border-[1px] border-white-smoke px-5 py-2 text-[20px] text-center rounded-full hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
-        >
-          Load more chats
-        </button>
+                  );
+                })}
+            </div>
+
+            <DialogClose>
+              <button
+                onClick={() => createChat()}
+                className="border-2 border-white mx-auto px-5 py-2"
+              >
+                {selectedFriends.length > 1 && newChatName !== ""
+                  ? "Create chat"
+                  : "Add more"}
+              </button>
+            </DialogClose>
+          </DialogContent>
+        </Dialog>
+        {allChats !== null &&
+          Array.isArray(allChats.content) &&
+          allChats.content.map((chat, index) => {
+            return (
+              <div
+                key={index}
+                onClick={() => {
+                  setSelectedChat(chat._id);
+                  setMessagesLoaded(5);
+                }}
+                className="cursor-pointer hover:bg-[#3a3a3a]"
+              >
+                <p>Chat {index}</p>
+                {chat.members.map((member, key) => {
+                  return (
+                    <p key={key}>
+                      {member.username !== userData._id ? member.username : ""}
+                    </p>
+                  );
+                })}
+                <p>chat name: {chat.name}</p>
+                <p>chat id: {chat._id}</p>
+
+                {chat.lastMessage &&
+                chat.lastMessage.message &&
+                chat.lastMessage.userId ? (
+                  <p>
+                    {chat.lastMessage.userId}: {chat.lastMessage.message}
+                  </p>
+                ) : (
+                  <p>write message to start chatting</p>
+                )}
+              </div>
+            );
+          })}
       </div>
+      <div className="mt-[70px]">
+        <p>Current chat</p>
+        {chatData ? (
+          <div>
+            <p>{chatData._id}</p>
+            <p>chat name: {chatData.name}</p>
+            <p>number of messages: {chatData.totalMessages}</p>
+            {chatData.members.map((member, key) => {
+              return <p key={key}>{member.username}</p>;
+            })}
 
-      {/* Kontener z wiadomościami */}
-      <div className="w-[70%] pt-[5%] h-screen overflow-y-auto z-10">
-        {chatByIdIsLoading && messagesIsLoading && <div>Loading...</div>}
-        {chatByIdData && messagesData && (
-          <div className="w-full h-full flex flex-col gap-y-2">
-            <div className="flex justify-between items-center w-full px-[3%]">
-            <p className="text-[32px]">
-              {chatByIdData.members[0].username === userData.username
-                ? chatByIdData.members[1].username
-                : chatByIdData.members[0].username}
-            </p>
-
-            </div>
-
-            {/* Kontener wiadomości */}
-            <div className="flex flex-col gap-y-1 px-[3%] w-full overflow-y-auto items-center">
-              {messagesSize < messagesData.page.totalElements && <div className="flex items-center justify-center hover:text-amber cursor-pointer duration-150 transition-all">
-                <FaPlus onClick={() => setMessagesSize(messagesSize + 20)} className="text-[40px]">
-                  </FaPlus></div>}
-              {messagesData.content.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)).map((message, key) => {
-                const isUserMessage = message.userId === userData.username;
-
-                return (
-                  <div
-                    key={key}
-                    className={`flex gap-x-2 px-4 py-3 items-center w-full ${
-                      isUserMessage ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    {/* Profil autora wiadomości */}
-                    {!isUserMessage && (
-                      <div>
-                        {shortProfilesData &&
-                        shortProfilesData[message.userId]?.image ? (
-                          <div className="w-[48px] h-[48px] rounded-full border-[1px] border-white-smoke overflow-hidden">
-                            <img
-                              src={getImageSrc(
-                                shortProfilesData[message.userId]?.image
-                              )}
-                              className="object-cover h-full w-full"
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-[48px] h-[48px] bg-night flex items-center justify-center border-[1px] border-white-smoke rounded-full">
-                            <FaUser className="text-[24px]" />
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Treść wiadomości z tłem na 40% */}
+            <button onClick={() => leaveChat()}>Leave chat</button>
+            {chatData.privateChat === true ? (
+              ""
+            ) : (
+              <Dialog>
+                <DialogTrigger className="border-2 border-white px-4 py-2">
+                  Delete chat
+                </DialogTrigger>
+                <DialogContent className="bg-oxford-blue">
+                  <DialogTitle className="font-semibold">
+                    Delete chat
+                  </DialogTitle>
+                  <p>Are you sure?</p>
+                  <DialogClose className="flex gap-x-3 justify-center">
                     <div
-                      className={`max-w-[40%] bg-silver bg-opacity-15 rounded-xl py-2 px-3 break-words ${
-                        isUserMessage ? "text-right" : "text-left"
-                      }`}
+                      className="px-4 py-2 border-white border-2"
+                      onClick={() => deleteChat()}
                     >
-                      <p>{message.message}</p>
+                      Yes
                     </div>
-                   
-                  </div>
-                );
-              })}
-              {/* Dodajemy ref do kontenera wiadomości, by przewinąć na dół */}
-              <form
-                ref={messagesEndRef}
-                className="w-[64%] flex justify-between items-center absolute bottom-0 px-[1%] z-30 border-t-[1px] border-white-smoke bg-night"
-                onSubmit={handleMessageForm}
-              >
-                <div className="flex flex-col gap-y-1">
-                <input
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  className="w-[90%] bg-night  px-3 py-2 text-[18px] focus:outline-none h-[7vh]"
-                  placeholder="Aa"
-                />
+                    <div className="px-4 py-2 border-white border-2">No</div>
+                  </DialogClose>
+                </DialogContent>
+              </Dialog>
+            )}
 
+            <Dialog>
+              <DialogTrigger className="border-2 border-white px-4 py-2">
+                Add new members
+              </DialogTrigger>
+              <DialogContent className="bg-oxford-blue">
+                <DialogTitle className="font-semibold">
+                  Add new members
+                </DialogTitle>
+                <div>
+                  {userData.friends && userData.friends.length > 0 ? (
+                    userData.friends.filter((friend) => {
+                      // Sprawdź, czy friend znajduje się już w chatData.members
+                      const isAlreadyInChat = chatData.members.some(
+                        (member) =>
+                          member.username ===
+                          (friend.username !== userData._id
+                            ? friend.username
+                            : friend.username2)
+                      );
+                      return !isAlreadyInChat;
+                    }).length > 0 ? (
+                      userData.friends
+                        .filter((friend) => {
+                          const isAlreadyInChat = chatData.members.some(
+                            (member) =>
+                              member.username ===
+                              (friend.username !== userData._id
+                                ? friend.username
+                                : friend.username2)
+                          );
+                          return !isAlreadyInChat;
+                        })
+                        .map((friend, key) => (
+                          <div key={key} className="flex justify-between">
+                            <p>
+                              {friend.username !== userData._id
+                                ? friend.username
+                                : friend.username2}
+                            </p>
+                            <button
+                              onClick={() =>
+                                addNewMembers(
+                                  chatData._id,
+                                  friend.username !== userData._id
+                                    ? friend.username
+                                    : friend.username2
+                                )
+                              }
+                            >
+                              Add
+                            </button>
+                          </div>
+                        ))
+                    ) : (
+                      <p>No friends to add</p>
+                    )
+                  ) : (
+                    <p>Add some friends to start chatting</p>
+                  )}
                 </div>
-                <button type="submit" className="bg-night">
-                <IoIosSend className="text-[32px] hover:text-amber cursor-pointer duration-150 transition-all z-30"></IoIosSend>
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
-        {chatByIdData && !messagesData && (
-          <div className="w-full h-full flex flex-col items-center gap-y-2">
-            <p>
-              {chatByIdData.members[0].username === userData.username
-                ? chatByIdData.members[1].username
-                : chatByIdData.members[0].username}
-            </p>
-            <div className="px-[3%] mt-[5%] w-full text-center">
-              <p className="text-[24px]">Send a message to start chatting!</p>
-            </div>
-            <form
-                ref={messagesEndRef}
-                className="w-[64%] flex justify-between items-center absolute bottom-0 px-[1%] z-30 border-t-[1px] border-white-smoke bg-night"
-                onSubmit={handleMessageForm}
-              >
-                <div className="flex flex-col gap-y-1">
-                <input
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  className="w-[90%] bg-night  px-3 py-2 text-[18px] focus:outline-none h-[7vh]"
-                  placeholder="Aa"
-                />
+              </DialogContent>
+            </Dialog>
+            {isReplying !== null && isReplying.message && isReplying.userId ? (
+              <p>
+                {isReplying.userId} : {isReplying.message}
+              </p>
+            ) : null}
+            <input
+              type="text"
+              value={newMessage}
+              className="text-black py-2 px-5"
+              onChange={(e) => setNewMessage(e.target.value)}
+            />
+            <button onClick={() => sendMessage(chatData._id)}>
+              Send message
+            </button>
 
-                </div>
-                <button type="submit" className="bg-night">
-                <IoIosSend className="text-[32px] hover:text-amber cursor-pointer duration-150 transition-all z-30"></IoIosSend>
-                </button>
-              </form>
+            {/* wyswietlanie wiadomosci w chacie */}
+            {chatData && chatData.totalMessages > messagesLoaded ? (
+              <FaArrowUp
+                className="text-[36px] cursor-pointer"
+                onClick={() => loadMessages()}
+              ></FaArrowUp>
+            ) : null}
+            {chatMessages.content &&
+              [...chatMessages.content]
+                .sort((a, b) => a.timestamp - b.timestamp) // Sortowanie rosnąco po timestamp
+                .map((msg, key) => {
+                  return (
+                    <div key={key} className="flex gap-x-3 items-center">
+                      {msg.respondingTo !== null ? (
+                        <p>Responding to (agregacja): </p>
+                      ) : null}
+                      <p>
+                        {msg.userId}: {msg.message}{" "}
+                      </p>
+                      <FaReply
+                        className="cursor-pointer"
+                        onClick={() => handleIsReplying(msg)}
+                      ></FaReply>
+                    </div>
+                  );
+                })}
           </div>
+        ) : (
+          <p>No chat selected or data is still loading...</p>
         )}
       </div>
     </div>
