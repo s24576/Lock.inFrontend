@@ -88,6 +88,7 @@ const Notifications = () => {
                 position: "top-right",
               }
             );
+            notificationsRefetch();
           }
         );
 
@@ -146,6 +147,7 @@ const Notifications = () => {
                 position: "top-right",
               }
             );
+            notificationsRefetch();
           }
         );
       },
@@ -166,9 +168,8 @@ const Notifications = () => {
   }, [userData]);
 
   return (
-    <div className="relative">
+    <div className="relative" ref={buttonRef}>
       <IoNotifications
-        ref={buttonRef}
         className="text-[28px] cursor-pointer hover:text-silver transition-colors duration-150"
         onClick={toggleDropdown}
       />

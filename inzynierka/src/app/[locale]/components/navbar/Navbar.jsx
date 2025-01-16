@@ -161,7 +161,7 @@ const Navbar = () => {
 
             <div className="flex gap-x-1 items-center mr-2">
               <LanguageChanger></LanguageChanger>
-              <FriendList className="cursor-pointer " />
+              {/* <FriendList className="cursor-pointer " /> */}
               <Link href="/messenger">
                 <FaComment className="cursor-pointer text-[26px] text-[#F5B800] hover:text-silver transition-colors duration-150" />
               </Link>
