@@ -327,12 +327,12 @@ const Messenger = () => {
               <p className="text-[24px]">Create chat</p>
             <Dialog>
           <DialogTrigger><FaEdit className="text-[28px]"></FaEdit></DialogTrigger>
-          <DialogContent className="bg-oxford-blue">
-            <p className="font-semibold">Create a chat</p>
+          <DialogContent className="bg-night font-chewy">
+            <p className="text-[24px]">Create a chat</p>
             <input
               type="text"
               placeholder="Chat name"
-              className="px-4 py-2 text-black"
+              className="px-4 py-2 text-white-smoke bg-transparent border-[1px] border-white-smoke rounded-lg focus:outline-none"
               value={newChatName}
               onChange={(e) => setNewChatName(e.target.value)}
             />
@@ -340,7 +340,8 @@ const Messenger = () => {
               {userData.friends &&
                 userData.friends.map((friend, key) => {
                   return (
-                    <div key={key} className="flex justify-between">
+                    <div key={key} className="flex justify-between px-[1%]">
+                    
                       <p>
                         {friend.username !== userData._id
                           ? friend.username
@@ -362,12 +363,12 @@ const Messenger = () => {
                           ? friend.username
                           : friend.username2}
                       </p>
-                      <button
+                      <AiOutlineDelete
                         onClick={() => unselectFriend(friend)}
-                        className="text-red-500 font-bold"
+                        className="hover:text-amber transition-all duration-150 cursor-pointer"
                       >
-                        X
-                      </button>
+                        
+                      </AiOutlineDelete>
                     </div>
                   );
                 })}
@@ -376,7 +377,7 @@ const Messenger = () => {
             <DialogClose>
               <button
                 onClick={() => handleCreateChat()}
-                className="border-2 border-white mx-auto px-5 py-2"
+                className="border-2 border-white mx-auto px-5 py-2 w-[30%] rounded-full text-[20px] text-center hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
               >
                 {selectedFriends.length > 1 && newChatName !== ""
                   ? "Create chat"
