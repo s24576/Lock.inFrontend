@@ -16,9 +16,10 @@ import {
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { FaEdit, FaReply } from "react-icons/fa";
-import { FaUser, FaPlus } from "react-icons/fa6";
+import { FaUser, FaPlus, FaDoorOpen} from "react-icons/fa6";
 import { AiOutlineDelete } from "react-icons/ai";
 import { IoIosSend } from "react-icons/io";
+import { MdPersonAdd } from "react-icons/md";
 import getChats from "../api/messenger/getChats";
 import getShortProfiles from "../api/profile/getShortProfiles";
 import { formatTimestampToDateTime, formatTimeAgo } from "@/lib/formatTimeAgo";
@@ -26,6 +27,8 @@ import getChatById from "../api/messenger/getChatById";
 import getMessages from "../api/messenger/getMessages";
 import sendMessage from "../api/messenger/sendMessage";
 import createChat from "../api/messenger/createChat";
+import leaveChat from "../api/messenger/leaveChat";
+import addChatter from "../api/messenger/addChatter";
 
 const Messenger = () => {
   const { userData, isLogged } = useContext(UserContext);
@@ -157,6 +160,42 @@ const Messenger = () => {
         messagesRefetch();
         setReplyTo(null);
         setReplyMessage("");
+      },
+      onError: (error) => {
+        console.error("Error adding msg:", error);
+      },
+    }
+  );
+
+  //wyjscie z chatu
+  const {
+    mutateAsync: handleLeaveChat
+  } = useMutation(
+    () => {
+      leaveChat(axiosInstance, activeChat);
+    },
+    {
+      onSuccess: (data) => {
+        setIsInitialLoad(true);
+        chatsRefetch();
+      },
+      onError: (error) => {
+        console.error("Error adding msg:", error);
+      },
+    }
+  );
+
+  //dodanie uzytkownika
+  const {
+    mutateAsync: handleAddChatter
+  } = useMutation(
+    (username) => {
+      addChatter(axiosInstance, activeChat, username);
+    },
+    {
+      onSuccess: (data) => {
+        chatsRefetch();
+        messagesRefetch()
       },
       onError: (error) => {
         console.error("Error adding msg:", error);
@@ -419,10 +458,84 @@ const Messenger = () => {
           <div className="w-full h-full flex flex-col gap-y-2">
             <div className="flex justify-between items-center w-full px-[3%]">
             <p className="text-[32px]">
-              {chatByIdData.members[0].username === userData.username
+              {chatByIdData.privateChat ? chatByIdData.members[0].username === userData.username
                 ? chatByIdData.members[1].username
-                : chatByIdData.members[0].username}
+                : chatByIdData.members[0].username : chatByIdData.name}
+              
             </p>
+            {chatByIdData.privateChat === false && (<div className="flex items-center gap-x-2 text-[28px]">
+              <Dialog>
+              <DialogTrigger className="">
+              <div className="flex items-center gap-x-2 hover:text-amber transition-all duration-150 cursor-pointer">
+                
+                <MdPersonAdd className="cursor-pointer"></MdPersonAdd>
+                <p className="text-[20px]">Add member</p>
+              </div>
+              </DialogTrigger>
+              <DialogContent className="bg-oxford-blue">
+                <DialogTitle className="font-semibold">
+                  Add new members
+                </DialogTitle>
+                <div>
+                  {userData.friends && userData.friends.length > 0 ? (
+                    userData.friends.filter((friend) => {
+                      // Sprawdź, czy friend znajduje się już w chatData.members
+                      const isAlreadyInChat = chatByIdData.members.some(
+                        (member) =>
+                          member.username ===
+                          (friend.username !== userData._id
+                            ? friend.username
+                            : friend.username2)
+                      );
+                      return !isAlreadyInChat;
+                    }).length > 0 ? (
+                      userData.friends
+                        .filter((friend) => {
+                          const isAlreadyInChat = chatByIdData.members.some(
+                            (member) =>
+                              member.username ===
+                              (friend.username !== userData._id
+                                ? friend.username
+                                : friend.username2)
+                          );
+                          return !isAlreadyInChat;
+                        })
+                        .map((friend, key) => (
+                          <div key={key} className="flex justify-between">
+                            <p>
+                              {friend.username !== userData._id
+                                ? friend.username
+                                : friend.username2}
+                            </p>
+                            <button
+                              onClick={() => {
+                                const username = friend.username !== userData._id
+                                ? friend.username
+                                : friend.username2
+                                handleAddChatter(username)
+                              }
+                              }
+                            >
+                              Add
+                            </button>
+                          </div>
+                        ))
+                    ) : (
+                      <p>No friends to add</p>
+                    )
+                  ) : (
+                    <p>Add some friends to start chatting</p>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
+              
+              <div className="flex items-center gap-x-2 hover:text-amber transition-all duration-150 cursor-pointer" onClick={() => handleLeaveChat()}>
+                <FaDoorOpen className=""></FaDoorOpen>
+                <p className="text-[20px]">Leave chat</p>
+              </div>
+            </div>)}
+            
 
             </div>
 
