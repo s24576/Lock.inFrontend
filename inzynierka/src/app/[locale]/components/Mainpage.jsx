@@ -136,8 +136,8 @@ const Mainpage = () => {
           <div className="flex items-center gap-x-8">
             <p className="text-[112px]">Lock.in</p>
             <div className="flex flex-col items-center">
-              <p className="text-[32px]">No. 1 League of Legends</p>
-              <p className="text-[32px]">Social Media</p>
+              <p className="text-[32px]">{t("mainpage:header")}</p>
+              <p className="text-[32px]">{t("mainpage:header2")}</p>
             </div>
           </div>
 

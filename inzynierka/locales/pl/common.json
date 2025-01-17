@@ -1,1 +1,11 @@
-{}
+{
+    "sortBy": "Sortuj wedlug",
+    "allRoles": "Wszystkie",
+    "top": "Gora",
+    "jungle": "Dzungla",
+    "mid": "Srodek",
+    "bot": "Dól",
+    "support": "Wsparcie",
+    "reset" :"Reset",
+    "searchByAuthor": "Szukaj po autorze"
+}

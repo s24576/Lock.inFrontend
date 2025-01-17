@@ -16,6 +16,7 @@ import findPlayer from "../api/riot/findPlayer";
 import findProfile from "../api/profile/findProfile";
 import getChats from "../api/messenger/getChats";
 import ShortMatch from "./riot/ShortMatch";
+import { useTranslation } from "react-i18next";
 
 const HomePage = () => {
   const [profileUsername, setProfileUsername] = useState("");
@@ -127,6 +128,8 @@ const HomePage = () => {
     return null;
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className="h-screen w-full flex justify-between px-[8%] pt-[120px] bg-night font-chewy">
       <div className="flex flex-col">
@@ -144,7 +147,7 @@ const HomePage = () => {
           )}
           <div className="flex flex-col gap-y-4">
             <div className="flex gap-x-2 items-center">
-              <p className="text-[48px]">Hello, {userData.username}</p>
+              <p className="text-[48px]"> {t("mainpage:homepageHeader")}{userData.username}</p>
               <Link href="/account/settings">
                 <IoSettingsSharp className="text-[24px] hover:text-amber transition-colors duration-150"></IoSettingsSharp>
               </Link>
@@ -153,11 +156,11 @@ const HomePage = () => {
               <div className=" flex items-center gap-x-2 text-amber">
                 <CiWarning className="text-[28px] "></CiWarning>
                 <p className=" font-chewy">
-                  Your account is not confirmed yet, click{" "}
+                {t("mainpage:notClaimed")}{" "}
                   <Link href="/login/confirmRegistration" className="underline">
-                    here
+                  {t("mainpage:notClaimed2")}
                   </Link>{" "}
-                  to confirm
+                  {t("mainpage:notClaimed3")}
                 </p>
               </div>
             )}
@@ -167,7 +170,7 @@ const HomePage = () => {
                 className="flex items-center gap-x-1 cursor-pointer"
                 onClick={() => setShowClaimedAccounts(!showClaimedAccounts)}
               >
-                <p className="text-[20px]">Claimed Accounts</p>
+                <p className="text-[20px]"> {t("mainpage:claimedAccounts")}</p>
                 <GoChevronDown className="text-[20px] cursor-pointer" />
               </div>
               {showClaimedAccounts && (
@@ -240,16 +243,16 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        <p className="text-[32px] mt-8 pl-[5%]">Last matches</p>
+        <p className="text-[32px] mt-8 pl-[5%]"> {t("mainpage:lastMatches")}</p>
         <div className="mt-4 pl-[5%] flex flex-col gap-y-4">
-          {/* <ShortMatch></ShortMatch>
           <ShortMatch></ShortMatch>
           <ShortMatch></ShortMatch>
           <ShortMatch></ShortMatch>
-          <ShortMatch></ShortMatch> */}
-          <p className="text-[20px]">
-            Claim League of Legends account to see your last matches
-          </p>
+          <ShortMatch></ShortMatch>
+          <ShortMatch></ShortMatch>
+          {/* <p className="text-[20px]">
+          {t("mainpage:claimToSee")}
+          </p> */}
         </div>
       </div>
       <div className="flex flex-col gap-y-4 w-[35%]">
@@ -262,7 +265,7 @@ const HomePage = () => {
             type="text"
             value={profileUsername}
             onChange={(e) => setProfileUsername(e.target.value)}
-            placeholder="Search profile..."
+            placeholder={t("mainpage:searchProfile")}
             className="bg-transparent text-[20px] focus:outline-none text-night"
           />
           <button type="submit">
@@ -270,7 +273,7 @@ const HomePage = () => {
           </button>
         </form>
         <div className="flex flex-col gap-y-2 mt-4 ml-2">
-          <p className="text-[24px]">Last chats</p>
+          <p className="text-[24px]"> {t("mainpage:lastChats")}</p>
           {chatsLoading && <p>Loading...</p>}
           {/* sa 3 last messages przypadek jak nie ma */}
           {chatsData && (
@@ -311,11 +314,11 @@ const HomePage = () => {
             href="/messenger"
             className="text-end text-[18px] hover:text-silver transition-colors duration-150"
           >
-            See more...
+             {t("mainpage:seeMore")}
           </Link>
         </div>
         <div className="flex flex-col gap-y-2 mt-3 ml-2">
-          <p className="text-[24px]">Followed profiles</p>
+          <p className="text-[24px]"> {t("mainpage:followedProfiles")}</p>
           {followedProfilesLoading && <p>Loading...</p>}
           {followedProfilesData && (
             <div className="flex flex-col gap-y-3">
@@ -374,7 +377,7 @@ const HomePage = () => {
             href="/messenger"
             className="mt-3 text-end text-[18px] hover:text-silver transition-colors duration-150"
           >
-            See more...
+             {t("mainpage:seeMore")}
           </Link>
         </div>
       </div>

@@ -14,6 +14,7 @@ import {
   SelectTrigger,
 } from "@/componentsShad/ui/select";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const servers = [
   {
@@ -40,6 +41,8 @@ const FindPlayerForm = () => {
 
   const router = useRouter();
   const axiosInstance = useAxiosPublic();
+
+  const {t} = useTranslation();
 
   const { refetch: findPlayerRefetch, isLoading: findPlayerIsLoading } =
     useQuery(
@@ -110,14 +113,14 @@ const FindPlayerForm = () => {
         <input
           type="text"
           className="border-x-2 border-x-white-smoke px-4 bg-transparent text-white-smoke focus:outline-none text-[24px] placeholder-white-smoke w-[350px] text-center"
-          placeholder="Username"
+          placeholder={t("mainpage:username")}
           onChange={(e) => setUsername(e.target.value)}
           value={username}
         />
         <input
           type="text"
           className=" px-4 bg-transparent text-white-smoke focus:outline-none text-[24px] placeholder-white-smoke w-[180px] text-center"
-          placeholder="Tag"
+          placeholder={t("mainpage:tag")}
           onChange={(e) => setTag(e.target.value)}
           value={tag}
         />

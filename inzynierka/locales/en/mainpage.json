@@ -1,4 +1,20 @@
 {
-  "header": "Followed summoners",
-  "noneFollowed": "You are not following any summonners"
+  "header": "No.1 League of Legends",
+  "header2": "Social Media",
+  "noneFollowed": "You are not following any summonners",
+  "username": "Username",
+  "tag": "Tag",
+
+
+  "homepageHeader": "Hello, ",
+  "notClaimed" : "Your account is not confirmed yet click",
+  "notClaimed2" : "here ",
+  "notClaimed3" : "to confirm",
+  "lastMatches": "Last matches",
+  "claimedAccounts": "Claimed accounts",
+  "claimToSee": "Claim League of Legends account to see your matches",
+  "searchProfile": "Search profile",
+  "lastChats": "Last chats",
+  "seeMore" : "See more",
+  "followedProfiles": "Followed profiles" 
 }

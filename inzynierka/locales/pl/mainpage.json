@@ -1,4 +1,19 @@
 {
-  "header": "Podążałem za przywoływaczami",
-  "noneFollowed": "Nie obserwujesz jeszcze żadnych przywoływaczy"
+  "header": "Najlepszy lolowy",
+  "header2": "Serwis społecznościowy",
+  "noneFollowed": "Nie obserwujesz jeszcze żadnych przywoływaczy",
+  "username": "Nazwa",
+  "tag": "Tag",
+
+  "homepageHeader": "Siema, ",
+  "notClaimed" : "Nie potwierdziles jeszcze konta kliknij",
+  "notClaimed2" : "tutaj ",
+  "notClaimed3" : "zeby potwierdzic",
+  "lastMatches": "Ostatnie mecze",
+  "claimedAccounts": "Twoje konta",
+  "claimToSee": "Dodaj konto League of Legends aby zobaczyc ostatnie mecze",
+  "searchProfile": "Szukaj profil Lock.in",
+  "lastChats": "Ostatnie wiadomosci",
+  "seeMore" : "Zobacz wiecej",
+  "followedProfiles": "Obserwowane profile" 
 }

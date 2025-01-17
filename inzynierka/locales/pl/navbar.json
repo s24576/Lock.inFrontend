@@ -7,5 +7,21 @@
   "courses": "Kursy",
   "team-up": "Drużyna",
   "desktop": "Desktopowa",
-  "home": "Hub"
+  "home": "Hub",
+
+  "allBuilds": "Wszystkie buildy",
+  "createBuild": "Stwórz build",
+  "myBuilds": "Moje buildy",
+  "savedBuilds": "Zapisane buildy",
+  "findDuo": "Znajdź duo",
+  "duoInvites": "Zaproszenia duo",
+  "allCourses": "Wszystkie kursy",
+  "createCourse": "Stwórz kurs",
+  "myCourses": "Moje kursy",
+  "ownedCourses": "Nabyte kursy",
+  "user": "Użytkownik",
+  "settings": "Ustawienia",
+  "signOut": "Wyloguj"
+
+
 }

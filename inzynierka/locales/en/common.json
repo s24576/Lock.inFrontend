@@ -1,1 +1,11 @@
-{}
+{
+    "sortBy": "Sort by",
+    "allRoles": "All roles",
+    "top": "Top",
+    "jungle": "Jungle",
+    "mid": "Mid",
+    "bot": "Bottom",
+    "support": "Support",
+    "reset" :"Reset",
+    "searchByAuthor": "Search by author"
+}

@@ -7,5 +7,20 @@
   "courses": "Courses",
   "team-up": "Team Up",
   "desktop": "Desktop",
-  "home": "Home"
+  "home": "Home",
+
+  "allBuilds": "All Builds",
+  "createBuild": "Create Build",
+  "myBuilds": "My Builds",
+  "savedBuilds": "Saved Builds",
+  "findDuo": "Find Duo",
+  "duoInvites": "Duo Invites",
+  "allCourses": "All Courses",
+  "createCourse": "Create Course",
+  "myCourses": "My Courses",
+  "ownedCourses": "Owned Courses",
+  "user": "User",
+  "settings": "Settings",
+  "signOut": "Sign Out"
+
 }
