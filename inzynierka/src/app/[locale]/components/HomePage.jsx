@@ -21,6 +21,7 @@ import { useTranslation } from "react-i18next";
 const HomePage = () => {
   const [profileUsername, setProfileUsername] = useState("");
   const [showClaimedAccounts, setShowClaimedAccounts] = useState(false);
+  const [lastMatches, setLastMatches] = useState([]);
   const claimedAccountsRef = useRef(null);
 
   const { userData, isLogged } = useContext(UserContext);
@@ -68,6 +69,14 @@ const HomePage = () => {
         ),
       enabled: isLogged && !!claimedAccountsData,
       refetchOnWindowFocus: false, // Zapobiega odświeżeniu na zmianę okna
+      onSuccess: (data) => {
+        if (data && data.matches) {
+          setLastMatches((prevMatches) => [
+            ...prevMatches,
+            ...data.matches.slice(0, 5), // Dodanie 5 ostatnich meczów do listy
+          ]);
+        }
+      },
     })) || []
   );
 
@@ -131,7 +140,7 @@ const HomePage = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="h-screen w-full flex justify-between px-[8%] pt-[120px] bg-night font-chewy">
+    <div className="min-h-screen w-full flex justify-between px-[8%] pt-[120px] bg-night font-chewy">
       <div className="flex flex-col">
         {/* czesc profilowa + last matches */}
         <div className="flex gap-x-6 items-center">
@@ -190,6 +199,7 @@ const HomePage = () => {
                             "/" +
                             account.gameName
                           }
+                          key={index}
                         >
                           <li
                             key={index}
@@ -245,14 +255,10 @@ const HomePage = () => {
         </div>
         <p className="text-[32px] mt-8 pl-[5%]"> {t("mainpage:lastMatches")}</p>
         <div className="mt-4 pl-[5%] flex flex-col gap-y-4">
-          <ShortMatch></ShortMatch>
-          <ShortMatch></ShortMatch>
-          <ShortMatch></ShortMatch>
-          <ShortMatch></ShortMatch>
-          <ShortMatch></ShortMatch>
-          {/* <p className="text-[20px]">
-          {t("mainpage:claimToSee")}
-          </p> */}
+          {lastMatches && lastMatches.length > 0 && lastMatches.sort((a, b) => b.timestamp - a.timestamp).slice(0, 5).map((match, key) => {
+            return <ShortMatch key={key} match={match}></ShortMatch>;
+          })}
+          {lastMatches.length === 0 && <p>No matches found</p>}
         </div>
       </div>
       <div className="flex flex-col gap-y-4 w-[35%]">
