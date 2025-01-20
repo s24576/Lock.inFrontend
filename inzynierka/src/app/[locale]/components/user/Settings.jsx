@@ -1,11 +1,20 @@
-import React, { useState } from "react";
-import { useMutation } from "react-query";
-import changePassword from "../../api/user/changePassword";
-import changeEmail from "../../api/user/changeEmail";
+import React, { useState, useContext } from "react";
+import { useQuery, useMutation } from "react-query";
+import addProfilePicture from "../../api/profile/addProfilePicture";
+import addBio from "../../api/profile/addBio";
 import useAxios from "../../hooks/useAxios";
-import Link from "next/link";
+import Image from "next/image";
+import { UserContext } from "../../context/UserContext";
+import { BiLock } from "react-icons/bi";
+import { FaSave } from "react-icons/fa";
+import getUserData from "../../api/user/getUserData";
+import changeEmail from "../../api/user/changeEmail";
+import changePassword from "../../api/user/changePassword";
+import { toast } from "sonner";
 
-const Settings = () => {
+const Profile = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewSrc, setPreviewSrc] = useState(null);
   const [passwordData, setPasswordData] = useState({
     oldPassword: "",
     newPassword: "",
@@ -17,14 +26,120 @@ const Settings = () => {
     password: "",
   });
 
+  const { userData, setUserData } = useContext(UserContext);
   const axiosInstance = useAxios();
+
+  const [bio, setBio] = useState("");
+
+  const {
+    data: userInfo,
+    isLoading: userInfoLoading,
+    error: userInfoError,
+    refetch: userInfoRefetch,
+  } = useQuery("userInfo", () => getUserData(axiosInstance), {
+    refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      setUserData(data);
+    },
+  });
+
+  const handleBioChange = (event) => {
+    setBio(event.target.value);
+  };
+
+  const handleBioSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      await uploadBio(bio);
+      console.log("success");
+    } catch (error) {
+      console.error("Error updating bio:", error);
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+    if (file) {
+      setPreviewSrc(URL.createObjectURL(file));
+    }
+  };
+
+  const { mutateAsync: uploadBio } = useMutation(
+    (bio) => addBio(axiosInstance, bio),
+    {
+      onSuccess: () => {
+        console.log("bio uploaded successfully");
+        setUserData((prevData) => ({
+          ...prevData,
+          bio: bio,
+        }));
+      },
+      onError: (error) => {
+        console.error("Error uploading bio:", error);
+      },
+    }
+  );
+
+  const handleSubmit = async () => {
+    if (!selectedFile) {
+      console.error("No file selected");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    console.log("FormData contents:");
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    try {
+      const response = await axiosInstance.post(
+        "/profile/addProfilePicture",
+        formData
+      );
+      console.log("Profile picture uploaded successfully:", response.data);
+    } catch (error) {
+      console.error("Error submitting profile picture:", error);
+    }
+  };
+
+  const handleSave = async () => {
+    await handleSubmit();
+    if (bio !== "") {
+      await uploadBio(bio);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    userInfoRefetch();
+  };
 
   const { mutateAsync: handleChangePassword } = useMutation(
     ({ oldPassword, newPassword, confirmPassword }) =>
       changePassword(axiosInstance, oldPassword, newPassword, confirmPassword),
     {
       onSuccess: () => {
-        console.log("Change password successfully");
+        toast.custom(
+          (t) => (
+            <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-chewy flex flex-col">
+              <div className="flex items-center justify-between gap-x-2 px-4">
+                <h1 className="px-[10px]">Notification</h1>
+                <button onClick={() => toast.dismiss(t)}>Close</button>
+              </div>
+              <div className="flex items-start gap-x-2 px-4 mt-2 w-full">
+                <p className="pl-[10px] text-[16px] min-w-[30%]">
+                  Your password has been changed
+                </p>
+              </div>
+            </div>
+          ),
+          {
+            duration: 6000,
+            position: "top-right",
+          }
+        );
       },
       onError: () => {
         console.error("Error changing password");
@@ -36,7 +151,25 @@ const Settings = () => {
     ({ password, email }) => changeEmail(axiosInstance, password, email),
     {
       onSuccess: () => {
-        console.log("Change email successfully");
+        toast.custom(
+          (t) => (
+            <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-chewy flex flex-col">
+              <div className="flex items-center justify-between gap-x-2 px-4">
+                <h1 className="px-[10px]">Notification</h1>
+                <button onClick={() => toast.dismiss(t)}>Close</button>
+              </div>
+              <div className="flex items-start gap-x-2 px-4 mt-2 w-full">
+                <p className="pl-[10px] text-[16px] min-w-[30%]">
+                  Your email has been changed
+                </p>
+              </div>
+            </div>
+          ),
+          {
+            duration: 6000,
+            position: "top-right",
+          }
+        );
       },
       onError: () => {
         console.error("Error changing email");
@@ -60,90 +193,162 @@ const Settings = () => {
     }));
   };
 
-  const handleSubmit = async (event) => {
+  const handlePasswordSubmit = async (event) => {
     event.preventDefault();
     console.log("Form data:", passwordData);
     await handleChangePassword(passwordData);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    setPasswordData({
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
   };
 
   const handleEmailSubmit = async (event) => {
     event.preventDefault();
     console.log("Email data:", emailData);
     await handleChangeEmail(emailData);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    setEmailData({
+      email: "",
+      password: "",
+    });
+  };
+
+  const getImageSrc = (image) => {
+    if (image && image.data) {
+      return `data:${image.contentType};base64,${image.data}`;
+    }
+    return null;
   };
 
   return (
-    <div className="p-[120px] flex flex-col h-screen items-center bg-[#131313] text-[#f5f5f5]">
-      <Link href="/account/profile" className="underline">
-        Your Profile
-      </Link>
-      <p className="text-xl mb-4">Change Password</p>
-      <form
-        className="flex flex-col gap-y-2 text-black w-[25%]"
-        onSubmit={handleSubmit}
-      >
-        <input
-          type="password"
-          name="oldPassword"
-          placeholder="Old Password"
-          value={passwordData.oldPassword}
-          onChange={handleInputChange}
-          className="w-full p-2 border border-gray-300 rounded-md"
-        />
-        <input
-          type="password"
-          name="newPassword"
-          placeholder="New Password"
-          value={passwordData.newPassword}
-          onChange={handleInputChange}
-          className="w-full p-2 border border-gray-300 rounded-md"
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          value={passwordData.confirmPassword}
-          onChange={handleInputChange}
-          className="w-full p-2 border border-gray-300 rounded-md"
-        />
-        <button
-          type="submit"
-          className="w-full bg-[#f5b800] text-[#131313] font-semibold p-2 rounded-md"
-        >
-          Change Password
-        </button>
-      </form>
+    <div className="flex flex-col h-screen bg-[#131313] text-white-smoke font-chewy px-[10%]">
+      <div className="mt-[8%] flex-col flex">
+        <p className="font-bangers text-[64px]">Profile settings</p>
+        <div className="mt-3 flex items-center gap-x-8">
+          <label className="cursor-pointer">
+            {previewSrc ? (
+              <img
+                src={previewSrc}
+                className="w-[200px] h-[200px] rounded-full border-white-smoke object-cover"
+                alt="Selected Preview"
+              />
+            ) : userData.image ? (
+              <img
+                src={getImageSrc(userData.image)}
+                className="w-[200px] h-[200px] rounded-full border-white-smoke object-cover"
+                alt="Profile"
+              />
+            ) : (
+              <div className="w-[200px] h-[200px] rounded-full flex items-center justify-center border border-dashed text-gray-400">
+                No profile picture
+              </div>
+            )}
+            <input
+              type="file"
+              name="profilePicture"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </label>
 
-      <p className="text-xl mb-4 mt-8">Change Email</p>
-      <form
-        className="flex flex-col gap-y-2 text-black w-[25%]"
-        onSubmit={handleEmailSubmit}
-      >
-        <input
-          type="email"
-          name="email"
-          placeholder="New Email"
-          value={emailData.email}
-          onChange={handleEmailChange}
-          className="w-full p-2 border border-gray-300 rounded-md"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={emailData.password}
-          onChange={handleEmailChange}
-          className="w-full p-2 border border-gray-300 rounded-md"
-        />
-        <button
-          type="submit"
-          className="w-full border-[1px] border-[#afafaf] hover:text-[#f5b800] text-white p-2 rounded-md"
-        >
-          Change Email
-        </button>
-      </form>
+          <div className="flex flex-col gap-y-1">
+            <div className="flex items-center gap-x-5">
+              <p className="text-[48px]">{userData._id}</p>
+              <button
+                onClick={() => handleSave()}
+                className="flex items-center gap-x-1 hover:text-amber transition-all duration-150 cursor-pointer"
+              >
+                <FaSave className="text-[24px]"></FaSave>
+                <p className="text-[18px] ">Save changes</p>
+              </button>
+            </div>
+            <div className="flex">
+              <form onSubmit={handleBioSubmit}>
+                <textarea
+                  className="bg-transparent focus:outline-none w-full h-full py-2 rounded-md resize-none"
+                  placeholder={userData.bio || "Enter your bio"}
+                  rows={3}
+                  cols={50}
+                  value={bio}
+                  onChange={handleBioChange}
+                />
+              </form>
+            </div>
+          </div>
+        </div>
+        <p className="mt-[4%] font-bangers text-[64px]">Account settings</p>
+        <div className="flex gap-x-16 w-full">
+          <form
+            className="mt-3 flex flex-col gap-y-2 text-black w-[30%]"
+            onSubmit={handlePasswordSubmit}
+          >
+            <input
+              type="password"
+              name="oldPassword"
+              placeholder="Old Password"
+              value={passwordData.oldPassword}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
+            />
+            <input
+              type="password"
+              name="newPassword"
+              placeholder="New Password"
+              value={passwordData.newPassword}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
+            />
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={passwordData.confirmPassword}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
+            />
+            <button
+              type="submit"
+              className="flex items-center gap-x-1 hover:text-amber transition-all duration-150 cursor-pointer pl-3 text-white-smoke mt-3"
+            >
+              <FaSave className="text-[28px]"></FaSave>
+              <p className="text-[20px] ">Change password</p>
+            </button>
+          </form>
+          <form
+            className="mt-3  flex flex-col gap-y-2 text-black w-[25%]"
+            onSubmit={handleEmailSubmit}
+          >
+            <input
+              type="email"
+              name="email"
+              placeholder="New Email"
+              value={emailData.email}
+              onChange={handleEmailChange}
+              className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={emailData.password}
+              onChange={handleEmailChange}
+              className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
+            />
+            <button
+              type="submit"
+              className="flex items-center gap-x-1 hover:text-amber transition-all duration-150 cursor-pointer pl-3 text-white-smoke mt-3"
+            >
+              <FaSave className="text-[28px]"></FaSave>
+              <p className="text-[20px] ">Change email</p>
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Settings;
+export default Profile;

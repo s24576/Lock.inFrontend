@@ -1,6 +1,4 @@
 const getMatchInfo = async (axiosInstance, matchId) => {
-  console.log(matchId);
-
   try {
     const response = await axiosInstance.get(
       `/riot/getMatchInfo?matchId=${matchId}`
