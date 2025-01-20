@@ -34,8 +34,8 @@ const gamemode = (gameMode) => {
 
 const ShortMatch = ({ match }) => {
   return (
-    <Link
-      href={"/match/" + match.matchId}
+    <div
+      // href={"/match/" + match.matchId}
       className={`h-[80px] w-[100%] border-[1px] rounded-2xl flex items-center px-3 transition-colors duration-100 ${
         match.win ? "border-amber" : "border-white-smoke"
       } hover:bg-white-smoke hover:bg-opacity-5`}
@@ -220,7 +220,7 @@ const ShortMatch = ({ match }) => {
       </div>
       <div className="flex flex-col justify-center items-center ml-4 text-[16px] w-[20%]">
         <p>{gamemode(match.queueType)}</p>
-        <p>
+        <p className="text-nowrap">
           {formatDistanceToNow(new Date(match.timestamp), { addSuffix: true })}
         </p>
 
@@ -231,7 +231,7 @@ const ShortMatch = ({ match }) => {
           {/* <p>30:39</p> */}
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

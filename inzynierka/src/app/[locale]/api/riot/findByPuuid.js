@@ -1,17 +1,9 @@
-import axios from "axios";
-
-const findByPuuid = async (matchId, puuid) => {
-  const server = matchId.split("_")[0];
-
+const findByPuuid = async (axiosInstance, server, puuid) => {
   try {
-    const response = await axios.get(
-      `http://localhost:8080/riot/findPlayer?server=${server}&puuid=${puuid}`,
-      {
-        headers: {
-          "Accept-Language": "en",
-        },
-      }
+    const response = await axiosInstance.get(
+      `/riot/findPlayer?server=${server}&puuid=${puuid}`
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);

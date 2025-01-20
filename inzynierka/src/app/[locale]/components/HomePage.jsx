@@ -17,12 +17,14 @@ import findProfile from "../api/profile/findProfile";
 import getChats from "../api/messenger/getChats";
 import ShortMatch from "./riot/ShortMatch";
 import { useTranslation } from "react-i18next";
+import FullMatch from "./riot/FullMatch";
 
 const HomePage = () => {
   const [profileUsername, setProfileUsername] = useState("");
   const [showClaimedAccounts, setShowClaimedAccounts] = useState(false);
   const [lastMatches, setLastMatches] = useState([]);
   const claimedAccountsRef = useRef(null);
+  const [showFullMatch, setShowFullMatch] = useState(null);
 
   const { userData, isLogged } = useContext(UserContext);
 
@@ -137,6 +139,11 @@ const HomePage = () => {
     return null;
   };
 
+  const toggleFullMatch = (matchId) => {
+    console.log("siema");
+    setShowFullMatch(showFullMatch === matchId ? null : matchId);
+  };
+
   const { t } = useTranslation();
 
   return (
@@ -156,7 +163,11 @@ const HomePage = () => {
           )}
           <div className="flex flex-col gap-y-4">
             <div className="flex gap-x-2 items-center">
-              <p className="text-[48px]"> {t("mainpage:homepageHeader")}{userData.username}</p>
+              <p className="text-[48px]">
+                {" "}
+                {t("mainpage:homepageHeader")}
+                {userData.username}
+              </p>
               <Link href="/account/settings">
                 <IoSettingsSharp className="text-[24px] hover:text-amber transition-colors duration-150"></IoSettingsSharp>
               </Link>
@@ -165,9 +176,9 @@ const HomePage = () => {
               <div className=" flex items-center gap-x-2 text-amber">
                 <CiWarning className="text-[28px] "></CiWarning>
                 <p className=" font-chewy">
-                {t("mainpage:notClaimed")}{" "}
+                  {t("mainpage:notClaimed")}{" "}
                   <Link href="/login/confirmRegistration" className="underline">
-                  {t("mainpage:notClaimed2")}
+                    {t("mainpage:notClaimed2")}
                   </Link>{" "}
                   {t("mainpage:notClaimed3")}
                 </p>
@@ -255,9 +266,28 @@ const HomePage = () => {
         </div>
         <p className="text-[32px] mt-8 pl-[5%]"> {t("mainpage:lastMatches")}</p>
         <div className="mt-4 pl-[5%] flex flex-col gap-y-4">
-          {lastMatches && lastMatches.length > 0 && lastMatches.sort((a, b) => b.timestamp - a.timestamp).slice(0, 5).map((match, key) => {
-            return <ShortMatch key={key} match={match}></ShortMatch>;
-          })}
+          {lastMatches &&
+            lastMatches.length > 0 &&
+            lastMatches
+              .sort((a, b) => b.timestamp - a.timestamp)
+              .slice(0, 5)
+              .map((match, key) => {
+                return (
+                  <div key={key} className="flex flex-col">
+                    <div
+                      onClick={() => toggleFullMatch(match.matchId)}
+                      className="cursor-pointer"
+                    >
+                      <ShortMatch match={match} />
+                    </div>
+                    {showFullMatch === match.matchId && (
+                      <div className="mt-2">
+                        <FullMatch matchId={match.matchId} />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
           {lastMatches.length === 0 && <p>No matches found</p>}
         </div>
       </div>
@@ -320,7 +350,7 @@ const HomePage = () => {
             href="/messenger"
             className="text-end text-[18px] hover:text-silver transition-colors duration-150"
           >
-             {t("mainpage:seeMore")}
+            {t("mainpage:seeMore")}
           </Link>
         </div>
         <div className="flex flex-col gap-y-2 mt-3 ml-2">
@@ -383,7 +413,7 @@ const HomePage = () => {
             href="/messenger"
             className="mt-3 text-end text-[18px] hover:text-silver transition-colors duration-150"
           >
-             {t("mainpage:seeMore")}
+            {t("mainpage:seeMore")}
           </Link>
         </div>
       </div>

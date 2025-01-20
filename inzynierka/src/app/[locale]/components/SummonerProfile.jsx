@@ -29,6 +29,7 @@ import followProfile from "../api/profile/followProfile";
 import getMatchHistory from "../api/riot/getMatchHistory";
 import { getSummonerSpell } from "@/lib/getSummonerSpell";
 import claimAccount from "../api/profile/claimAccount";
+import FullMatch from "./riot/FullMatch";
 
 const serverVisuals = (server) => {
   switch (server) {
@@ -91,6 +92,8 @@ const SummonerProfile = () => {
   const [filterValue, setFilterValue] = useState("");
   const [queue, setQueue] = useState("");
 
+  const [showFullMatch, setShowFullMatch] = useState(null);
+
   const params = useParams();
   const axios = useAxios();
   const axiosPublic = useAxiosPublic();
@@ -151,6 +154,11 @@ const SummonerProfile = () => {
   const handleQueueFilter = async (value) => {
     console.log(value.value);
     setQueue(value.value);
+  };
+
+  const toggleFullMatch = (matchId) => {
+    console.log("siema");
+    setShowFullMatch(showFullMatch === matchId ? null : matchId);
   };
 
   if (playerIsLoading || !playerData || matchesIsLoading || !matchesData) {
@@ -467,13 +475,26 @@ const SummonerProfile = () => {
             </div>
             {matchesData.length > 0 ? (
               <div className="mt-6 flex flex-col gap-y-4 w-full">
-                {matchesData.map((match, key) => {
-                  return <ShortMatch key={key} match={match} />;
-                })}
+                {matchesData.map((match, key) => (
+                  <div key={key} className="flex flex-col">
+                    <div
+                      onClick={() => toggleFullMatch(match.matchId)}
+                      className="cursor-pointer"
+                    >
+                      <ShortMatch match={match} />
+                    </div>
+                    {showFullMatch === match.matchId && (
+                      <div className="mt-2">
+                        <FullMatch matchId={match.matchId} />
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             ) : (
               <p>No matches found</p>
             )}
+
             <button
               onClick={() => setMatchesShown(matchesShown + 10)}
               className="w-[25%] px-5 py-2 border-[1px] border-white-smoke text-[20px] rounded-3xl mt-6 hover:bg-white-smoke hover:bg-opacity-15 duration-150 transition-all"
