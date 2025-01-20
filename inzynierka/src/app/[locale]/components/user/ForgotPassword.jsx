@@ -24,7 +24,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="pt-[10%] flex flex-col w-full h-screen items-center bg-night text-white-smoke">
+    <div className="flex flex-col w-full h-screen items-center justify-center bg-night text-white-smoke">
       <p className="font-bangers text-[48px]">Forgot Password</p>
 
       <form
