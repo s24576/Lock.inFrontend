@@ -16,7 +16,7 @@ import {
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { FaEdit, FaReply } from "react-icons/fa";
-import { FaUser, FaPlus, FaDoorOpen} from "react-icons/fa6";
+import { FaUser, FaPlus, FaDoorOpen } from "react-icons/fa6";
 import { AiOutlineDelete } from "react-icons/ai";
 import { IoIosSend } from "react-icons/io";
 import { MdPersonAdd } from "react-icons/md";
@@ -146,11 +146,12 @@ const Messenger = () => {
     }
   );
 
-  const {
-    mutateAsync: handleSendMessage
-  } = useMutation(
+  const { mutateAsync: handleSendMessage } = useMutation(
     () => {
-      sendMessage(axiosInstance, activeChat,{message: newMessage, respondingTo: replyTo});
+      sendMessage(axiosInstance, activeChat, {
+        message: newMessage,
+        respondingTo: replyTo,
+      });
     },
     {
       onSuccess: (data) => {
@@ -168,9 +169,7 @@ const Messenger = () => {
   );
 
   //wyjscie z chatu
-  const {
-    mutateAsync: handleLeaveChat
-  } = useMutation(
+  const { mutateAsync: handleLeaveChat } = useMutation(
     () => {
       leaveChat(axiosInstance, activeChat);
     },
@@ -186,16 +185,14 @@ const Messenger = () => {
   );
 
   //dodanie uzytkownika
-  const {
-    mutateAsync: handleAddChatter
-  } = useMutation(
+  const { mutateAsync: handleAddChatter } = useMutation(
     (username) => {
       addChatter(axiosInstance, activeChat, username);
     },
     {
       onSuccess: (data) => {
         chatsRefetch();
-        messagesRefetch()
+        messagesRefetch();
       },
       onError: (error) => {
         console.error("Error adding msg:", error);
@@ -203,11 +200,12 @@ const Messenger = () => {
     }
   );
 
-  const {
-    mutateAsync: handleCreateChat
-  } = useMutation(
+  const { mutateAsync: handleCreateChat } = useMutation(
     () => {
-      createChat(axiosInstance, {name: newChatName, members: selectedFriends.map((friend) => friend.username)});
+      createChat(axiosInstance, {
+        name: newChatName,
+        members: selectedFriends.map((friend) => friend.username),
+      });
     },
     {
       onSuccess: (data) => {
@@ -248,7 +246,7 @@ const Messenger = () => {
   const handleMessageForm = async (e) => {
     e.preventDefault();
     await handleSendMessage();
-  }
+  };
 
   const [stompClient, setStompClient] = useState(null);
   const [newMessageReceived, setNewMessageReceived] = useState();
@@ -270,7 +268,7 @@ const Messenger = () => {
             //   ...prev, // Kopiuj poprzedni stan
             //   content: [...prev.content, parsed], // Dodaj nową wiadomość do tablicy content
             // }));
-            console.log("new message received: ", parsed)
+            console.log("new message received: ", parsed);
             chatsRefetch();
             messagesRefetch();
           }
@@ -325,67 +323,71 @@ const Messenger = () => {
           <div className="flex flex-col items-center gap-y-4 w-full">
             <div className="flex justify-between items-center pb-[2%] w-full">
               <p className="text-[24px]">Create chat</p>
-            <Dialog>
-          <DialogTrigger><FaEdit className="text-[28px]"></FaEdit></DialogTrigger>
-          <DialogContent className="bg-night font-chewy">
-            <p className="text-[24px]">Create a chat</p>
-            <input
-              type="text"
-              placeholder="Chat name"
-              className="px-4 py-2 text-white-smoke bg-transparent border-[1px] border-white-smoke rounded-lg focus:outline-none"
-              value={newChatName}
-              onChange={(e) => setNewChatName(e.target.value)}
-            />
-            <div>
-              {userData.friends &&
-                userData.friends.map((friend, key) => {
-                  return (
-                    <div key={key} className="flex justify-between px-[1%]">
-                    
-                      <p>
-                        {friend.username !== userData._id
-                          ? friend.username
-                          : friend.username2}
-                      </p>
-                      <button onClick={() => selectFriend(friend)}>Add</button>
-                    </div>
-                  );
-                })}
-            </div>
-            <p>Picked friends:</p>
-            <div className="flex gap-x-5">
-              {selectedFriends.length > 0 &&
-                selectedFriends.map((friend) => {
-                  return (
-                    <div className="flex gap-x-1 items-center">
-                      <p>
-                        {friend.username !== userData._id
-                          ? friend.username
-                          : friend.username2}
-                      </p>
-                      <AiOutlineDelete
-                        onClick={() => unselectFriend(friend)}
-                        className="hover:text-amber transition-all duration-150 cursor-pointer"
-                      >
-                        
-                      </AiOutlineDelete>
-                    </div>
-                  );
-                })}
-            </div>
+              <Dialog>
+                <DialogTrigger>
+                  <FaEdit className="text-[28px]"></FaEdit>
+                </DialogTrigger>
+                <DialogContent className="bg-night font-chewy">
+                  <p className="text-[24px]">Create a chat</p>
+                  <input
+                    type="text"
+                    placeholder="Chat name"
+                    className="px-4 py-2 text-white-smoke bg-transparent border-[1px] border-white-smoke rounded-lg focus:outline-none"
+                    value={newChatName}
+                    onChange={(e) => setNewChatName(e.target.value)}
+                  />
+                  <div>
+                    {userData.friends &&
+                      userData.friends.map((friend, key) => {
+                        return (
+                          <div
+                            key={key}
+                            className="flex justify-between px-[1%]"
+                          >
+                            <p>
+                              {friend.username !== userData._id
+                                ? friend.username
+                                : friend.username2}
+                            </p>
+                            <button onClick={() => selectFriend(friend)}>
+                              Add
+                            </button>
+                          </div>
+                        );
+                      })}
+                  </div>
+                  <p>Picked friends:</p>
+                  <div className="flex gap-x-5">
+                    {selectedFriends.length > 0 &&
+                      selectedFriends.map((friend) => {
+                        return (
+                          <div className="flex gap-x-1 items-center">
+                            <p>
+                              {friend.username !== userData._id
+                                ? friend.username
+                                : friend.username2}
+                            </p>
+                            <AiOutlineDelete
+                              onClick={() => unselectFriend(friend)}
+                              className="hover:text-amber transition-all duration-150 cursor-pointer"
+                            ></AiOutlineDelete>
+                          </div>
+                        );
+                      })}
+                  </div>
 
-            <DialogClose>
-              <button
-                onClick={() => handleCreateChat()}
-                className="border-2 border-white mx-auto px-5 py-2 w-[30%] rounded-full text-[20px] text-center hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
-              >
-                {selectedFriends.length > 1 && newChatName !== ""
-                  ? "Create chat"
-                  : "Add more"}
-              </button>
-            </DialogClose>
-          </DialogContent>
-        </Dialog>
+                  <DialogClose>
+                    <button
+                      onClick={() => handleCreateChat()}
+                      className="border-2 border-white mx-auto px-5 py-2 w-[30%] rounded-full text-[20px] text-center hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
+                    >
+                      {selectedFriends.length > 1 && newChatName !== ""
+                        ? "Create chat"
+                        : "Add more"}
+                    </button>
+                  </DialogClose>
+                </DialogContent>
+              </Dialog>
             </div>
             {chatsData?.content?.map((chat, key) => {
               const otherMember = chat.members.find(
@@ -393,12 +395,14 @@ const Messenger = () => {
               );
               return (
                 <div
-  key={key}
-  onClick={() => setActiveChat(chat._id)}
-  className={`flex items-center gap-x-2 py-4 px-3 border-[1px] rounded-xl cursor-pointer w-full hover:bg-silver hover:bg-opacity-15 transition-all duration-150 ${
-    activeChat === chat._id ? 'border-amber' : 'border-white-smoke'
-  }`}
->
+                  key={key}
+                  onClick={() => setActiveChat(chat._id)}
+                  className={`flex items-center gap-x-2 py-4 px-3 border-[1px] rounded-xl cursor-pointer w-full hover:bg-silver hover:bg-opacity-15 transition-all duration-150 ${
+                    activeChat === chat._id
+                      ? "border-amber"
+                      : "border-white-smoke"
+                  }`}
+                >
                   {shortProfilesData &&
                   shortProfilesData[otherMember.username]?.image ? (
                     <div className="w-[48px] h-[48px] rounded-full border-[1px] border-white-smoke overflow-hidden">
@@ -458,151 +462,163 @@ const Messenger = () => {
         {chatByIdData && messagesData && (
           <div className="w-full h-full flex flex-col gap-y-2">
             <div className="flex justify-between items-center w-full px-[3%]">
-            <p className="text-[32px]">
-              {chatByIdData.privateChat ? chatByIdData.members[0].username === userData.username
-                ? chatByIdData.members[1].username
-                : chatByIdData.members[0].username : chatByIdData.name}
-              
-            </p>
-            {chatByIdData.privateChat === false && (<div className="flex items-center gap-x-2 text-[28px]">
-              <Dialog>
-              <DialogTrigger className="">
-              <div className="flex items-center gap-x-2 hover:text-amber transition-all duration-150 cursor-pointer">
-                
-                <MdPersonAdd className="cursor-pointer"></MdPersonAdd>
-                <p className="text-[20px]">Add member</p>
-              </div>
-              </DialogTrigger>
-              <DialogContent className="bg-oxford-blue">
-                <DialogTitle className="font-semibold">
-                  Add new members
-                </DialogTitle>
-                <div>
-                  {userData.friends && userData.friends.length > 0 ? (
-                    userData.friends.filter((friend) => {
-                      // Sprawdź, czy friend znajduje się już w chatData.members
-                      const isAlreadyInChat = chatByIdData.members.some(
-                        (member) =>
-                          member.username ===
-                          (friend.username !== userData._id
-                            ? friend.username
-                            : friend.username2)
-                      );
-                      return !isAlreadyInChat;
-                    }).length > 0 ? (
-                      userData.friends
-                        .filter((friend) => {
-                          const isAlreadyInChat = chatByIdData.members.some(
-                            (member) =>
-                              member.username ===
-                              (friend.username !== userData._id
-                                ? friend.username
-                                : friend.username2)
-                          );
-                          return !isAlreadyInChat;
-                        })
-                        .map((friend, key) => (
-                          <div key={key} className="flex justify-between">
-                            <p>
-                              {friend.username !== userData._id
-                                ? friend.username
-                                : friend.username2}
-                            </p>
-                            <button
-                              onClick={() => {
-                                const username = friend.username !== userData._id
-                                ? friend.username
-                                : friend.username2
-                                handleAddChatter(username)
-                              }
-                              }
-                            >
-                              Add
-                            </button>
-                          </div>
-                        ))
-                    ) : (
-                      <p>No friends to add</p>
-                    )
-                  ) : (
-                    <p>Add some friends to start chatting</p>
-                  )}
-                </div>
-              </DialogContent>
-            </Dialog>
-              
-              <div className="flex items-center gap-x-2 hover:text-amber transition-all duration-150 cursor-pointer" onClick={() => handleLeaveChat()}>
-                <FaDoorOpen className=""></FaDoorOpen>
-                <p className="text-[20px]">Leave chat</p>
-              </div>
-            </div>)}
-            
+              <p className="text-[32px]">
+                {chatByIdData.privateChat
+                  ? chatByIdData.members[0].username === userData.username
+                    ? chatByIdData.members[1].username
+                    : chatByIdData.members[0].username
+                  : chatByIdData.name}
+              </p>
+              {chatByIdData.privateChat === false && (
+                <div className="flex items-center gap-x-2 text-[28px]">
+                  <Dialog>
+                    <DialogTrigger className="">
+                      <div className="flex items-center gap-x-2 hover:text-amber transition-all duration-150 cursor-pointer">
+                        <MdPersonAdd className="cursor-pointer"></MdPersonAdd>
+                        <p className="text-[20px]">Add member</p>
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="bg-oxford-blue">
+                      <DialogTitle className="font-semibold">
+                        Add new members
+                      </DialogTitle>
+                      <div>
+                        {userData.friends && userData.friends.length > 0 ? (
+                          userData.friends.filter((friend) => {
+                            // Sprawdź, czy friend znajduje się już w chatData.members
+                            const isAlreadyInChat = chatByIdData.members.some(
+                              (member) =>
+                                member.username ===
+                                (friend.username !== userData._id
+                                  ? friend.username
+                                  : friend.username2)
+                            );
+                            return !isAlreadyInChat;
+                          }).length > 0 ? (
+                            userData.friends
+                              .filter((friend) => {
+                                const isAlreadyInChat =
+                                  chatByIdData.members.some(
+                                    (member) =>
+                                      member.username ===
+                                      (friend.username !== userData._id
+                                        ? friend.username
+                                        : friend.username2)
+                                  );
+                                return !isAlreadyInChat;
+                              })
+                              .map((friend, key) => (
+                                <div key={key} className="flex justify-between">
+                                  <p>
+                                    {friend.username !== userData._id
+                                      ? friend.username
+                                      : friend.username2}
+                                  </p>
+                                  <button
+                                    onClick={() => {
+                                      const username =
+                                        friend.username !== userData._id
+                                          ? friend.username
+                                          : friend.username2;
+                                      handleAddChatter(username);
+                                    }}
+                                  >
+                                    Add
+                                  </button>
+                                </div>
+                              ))
+                          ) : (
+                            <p>No friends to add</p>
+                          )
+                        ) : (
+                          <p>Add some friends to start chatting</p>
+                        )}
+                      </div>
+                    </DialogContent>
+                  </Dialog>
 
+                  <div
+                    className="flex items-center gap-x-2 hover:text-amber transition-all duration-150 cursor-pointer"
+                    onClick={() => handleLeaveChat()}
+                  >
+                    <FaDoorOpen className=""></FaDoorOpen>
+                    <p className="text-[20px]">Leave chat</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Kontener wiadomości */}
             <div className="flex flex-col gap-y-1 px-[3%] w-full overflow-y-auto items-center mb-[10%]">
-              {messagesSize < messagesData.page.totalElements && <div className="flex items-center justify-center hover:text-amber cursor-pointer duration-150 transition-all">
-                <FaPlus onClick={() => setMessagesSize(messagesSize + 20)} className="text-[40px]">
-                  </FaPlus></div>}
-              {messagesData.content.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)).map((message, key) => {
-                const isUserMessage = message.userId === userData.username;
+              {messagesSize < messagesData.page.totalElements && (
+                <div className="flex items-center justify-center hover:text-amber cursor-pointer duration-150 transition-all">
+                  <FaPlus
+                    onClick={() => setMessagesSize(messagesSize + 20)}
+                    className="text-[40px]"
+                  ></FaPlus>
+                </div>
+              )}
+              {messagesData.content
+                .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
+                .map((message, key) => {
+                  const isUserMessage = message.userId === userData.username;
 
-                return (
-                  <div
-                    key={key}
-                    className={`flex gap-x-2 px-4 py-3 items-center w-full ${
-                      isUserMessage ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    {/* Profil autora wiadomości */}
-                    {!isUserMessage && (
-                      <div>
-                        {shortProfilesData &&
-                        shortProfilesData[message.userId]?.image ? (
-                          <div className="w-[48px] h-[48px] rounded-full border-[1px] border-white-smoke overflow-hidden">
-                            <img
-                              src={getImageSrc(
-                                shortProfilesData[message.userId]?.image
-                              )}
-                              className="object-cover h-full w-full"
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-[48px] h-[48px] bg-night flex items-center justify-center border-[1px] border-white-smoke rounded-full">
-                            <FaUser className="text-[24px]" />
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Treść wiadomości z tłem na 40% */}
+                  return (
                     <div
-                      className={`max-w-[40%] bg-silver bg-opacity-15 rounded-xl py-2 px-3 break-words ${
-                        isUserMessage ? "text-right" : "text-left"
+                      key={key}
+                      className={`flex gap-x-2 px-4 py-3 items-center w-full ${
+                        isUserMessage ? "justify-end" : "justify-start"
                       }`}
                     >
-                      {message.respondingTo !== null && (
-  <p>
-    Responding to: {
-      messagesData.content.find(msg => msg._id === message.respondingTo)?.message || "Message not found"
-    }
-  </p>
-)}
+                      {!isUserMessage && (
+                        <div>
+                          {shortProfilesData &&
+                          shortProfilesData[message.userId]?.image ? (
+                            <div className="w-[48px] h-[48px] rounded-full border-[1px] border-white-smoke overflow-hidden">
+                              <img
+                                src={getImageSrc(
+                                  shortProfilesData[message.userId]?.image
+                                )}
+                                className="object-cover h-full w-full"
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-[48px] h-[48px] bg-night flex items-center justify-center border-[1px] border-white-smoke rounded-full">
+                              <FaUser className="text-[24px]" />
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      <div
+                        className={`max-w-[40%] bg-silver bg-opacity-15 rounded-xl py-2 px-3 break-words ${
+                          isUserMessage ? "text-right" : "text-left"
+                        }`}
+                      >
+                        {message.respondingTo !== null && (
+                          <p>
+                            Responding to:{" "}
+                            {messagesData.content.find(
+                              (msg) => msg._id === message.respondingTo
+                            )?.message || "Message not found"}
+                          </p>
+                        )}
 
-                      <p>{message.message}</p>
+                        <p>{message.message}</p>
+                      </div>
+                      {!isUserMessage && (
+                        <FaReply
+                          className="text-[24px]"
+                          onClick={() => {
+                            setReplyTo(message._id);
+                            setReplyMessage(
+                              `Replying to ${message.userId}: ${message.message}`
+                            );
+                          }}
+                        ></FaReply>
+                      )}
                     </div>
-                    {!isUserMessage && (
-                      <FaReply className="text-[24px]" onClick={() => {
-                        setReplyTo(message._id);
-                        setReplyMessage(`Replying to ${message.userId}: ${message.message}`);
-                      }}></FaReply>
-
-                    )}
-                   
-                  </div>
-                );
-              })}
+                  );
+                })}
               {/* Dodajemy ref do kontenera wiadomości, by przewinąć na dół */}
               <form
                 ref={messagesEndRef}
@@ -610,28 +626,29 @@ const Messenger = () => {
                 onSubmit={handleMessageForm}
               >
                 <div className="flex flex-col gap-y-1">
-                    {replyMessage && (
-                      <div className="flex gap-x-2 items-center pt-2">
-                        <p>{replyMessage}</p>
-                      <AiOutlineDelete onClick={() => {
-                    setReplyTo(null);
-                    setReplyMessage("");
-                  }} className="text-[20px] hover:text-amber duration-150 transition-all cursor-pointer"></AiOutlineDelete>
-                  </div>
-                    )}
+                  {replyMessage && (
+                    <div className="flex gap-x-2 items-center pt-2">
+                      <p>{replyMessage}</p>
+                      <AiOutlineDelete
+                        onClick={() => {
+                          setReplyTo(null);
+                          setReplyMessage("");
+                        }}
+                        className="text-[20px] hover:text-amber duration-150 transition-all cursor-pointer"
+                      ></AiOutlineDelete>
+                    </div>
+                  )}
 
-                  
-                <input
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  className="w-[90%] bg-night  px-3 py-2 text-[18px] focus:outline-none h-[7vh]"
-                  placeholder="Aa"
-                />
-
+                  <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    className="w-[90%] bg-night  px-3 py-2 text-[18px] focus:outline-none h-[7vh]"
+                    placeholder="Aa"
+                  />
                 </div>
                 <button type="submit" className="bg-night">
-                <IoIosSend className="text-[32px] hover:text-amber cursor-pointer duration-150 transition-all z-30"></IoIosSend>
+                  <IoIosSend className="text-[32px] hover:text-amber cursor-pointer duration-150 transition-all z-30"></IoIosSend>
                 </button>
               </form>
             </div>
@@ -639,24 +656,23 @@ const Messenger = () => {
         )}
         {chatByIdData && !messagesData && (
           <div className="w-full h-full flex flex-col items-center gap-y-2">
-           <div className="flex justify-between items-center w-full px-[3%]">
-            <p className="text-[32px]">
-              {chatByIdData.members[0].username === userData.username
-                ? chatByIdData.members[1].username
-                : chatByIdData.members[0].username}
-            </p>
-
+            <div className="flex justify-between items-center w-full px-[3%]">
+              <p className="text-[32px]">
+                {chatByIdData.members[0].username === userData.username
+                  ? chatByIdData.members[1].username
+                  : chatByIdData.members[0].username}
+              </p>
             </div>
 
             <div className="px-[3%] mt-[5%] w-full text-center">
               <p className="text-[24px]">Send a message to start chatting!</p>
             </div>
             <form
-                ref={messagesEndRef}
-                className="w-[64%] flex justify-between items-center absolute bottom-0 px-[1%] z-30 border-t-[1px] border-white-smoke bg-night"
-                onSubmit={handleMessageForm}
-              >
-                <div className="flex flex-col gap-y-1">
+              ref={messagesEndRef}
+              className="w-[64%] flex justify-between items-center absolute bottom-0 px-[1%] z-30 border-t-[1px] border-white-smoke bg-night"
+              onSubmit={handleMessageForm}
+            >
+              <div className="flex flex-col gap-y-1">
                 <input
                   type="text"
                   value={newMessage}
@@ -664,12 +680,11 @@ const Messenger = () => {
                   className="w-[90%] bg-night  px-3 py-2 text-[18px] focus:outline-none h-[7vh]"
                   placeholder="Aa"
                 />
-
-                </div>
-                <button type="submit" className="bg-night">
+              </div>
+              <button type="submit" className="bg-night">
                 <IoIosSend className="text-[32px] hover:text-amber cursor-pointer duration-150 transition-all z-30"></IoIosSend>
-                </button>
-              </form>
+              </button>
+            </form>
           </div>
         )}
       </div>

@@ -19,6 +19,7 @@ import {
   FaHeartCirclePlus,
   FaHeartCircleXmark,
   FaCheck,
+  FaHeart,
 } from "react-icons/fa6";
 import { BiLock } from "react-icons/bi";
 import ShortMatch from "./riot/ShortMatch";
@@ -208,8 +209,8 @@ const SummonerProfile = () => {
                     className="flex items-center gap-x-2 cursor-pointer hover:text-white-smoke duration-150 transition-all text-amber"
                     onClick={() => handleFollow()}
                   >
-                    <FaHeartCircleXmark className="text-[24px]" />
-                    <p className="text-[20px]">Unfollow profile</p>
+                    <FaHeart className="text-[24px]" />
+                    <p className="text-[20px]">Following</p>
                   </div>
                 ) : (
                   <div
