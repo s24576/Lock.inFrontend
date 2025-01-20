@@ -3,6 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { SearchContext } from "@/app/[locale]/context/SearchContext";
 import axios from "axios";
 import useAxios from "../hooks/useAxios";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 import { useParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import { UserContext } from "@/app/[locale]/context/UserContext";
@@ -11,413 +12,479 @@ import { BiWorld } from "react-icons/bi";
 import { GoLock } from "react-icons/go";
 import { MdOutlineRefresh } from "react-icons/md";
 import { toast } from "sonner";
+import { useQuery, useMutation } from "react-query";
+import findPlayer from "../api/riot/findPlayer";
+import { FaGlobeAmericas, FaGlobeEurope } from "react-icons/fa";
+import {
+  FaHeartCirclePlus,
+  FaHeartCircleXmark,
+  FaCheck,
+} from "react-icons/fa6";
+import { BiLock } from "react-icons/bi";
+import ShortMatch from "./riot/ShortMatch";
+import WinRatioChart from "./riot/WinRatioChart";
+import Select from "react-select";
+import { customStylesDuo } from "@/lib/styles/championNamesList";
+import followProfile from "../api/profile/followProfile";
+import getMatchHistory from "../api/riot/getMatchHistory";
+import { getSummonerSpell } from "@/lib/getSummonerSpell";
+import claimAccount from "../api/profile/claimAccount";
+
+const serverVisuals = (server) => {
+  switch (server) {
+    case "eun1":
+      return { icon: <FaGlobeEurope className="text-[32px]" />, name: "EUNE" };
+    case "euw1":
+      return { icon: <FaGlobeEurope className="text-[32px]" />, name: "EUW" };
+    case "na1":
+      return { icon: <FaGlobeAmericas className="text-[32px]" />, name: "NA" };
+    default:
+      return {
+        icon: <FaGlobeAmericas className="text-[32px]" />,
+        name: "Unknown",
+      };
+  }
+};
+
+const masteryMapping = (mastery) => {
+  if (mastery >= 10) {
+    return 10;
+  }
+
+  switch (mastery) {
+    case 1:
+      return 1;
+    case 2:
+      return 2;
+    case 3:
+      return 3;
+    case 4:
+      return 4;
+    case 5:
+      return 5;
+    case 6:
+      return 6;
+    case 7:
+      return 7;
+    case 8:
+      return 8;
+    case 9:
+      return 9;
+    default:
+      return 1;
+  }
+};
+
+const queueOptions = [
+  { value: "", label: "All" },
+  { value: "420", label: "Ranked Solo" },
+  { value: "440", label: "Ranked Flex" },
+  { value: "450", label: "ARAM" },
+  { value: "1700", label: "Arena" },
+];
 
 const SummonerProfile = () => {
-  const { playerData, setPlayerData, version } = useContext(SearchContext);
-
   const { userData, setUserData, isLogged, setIsLogged } =
     useContext(UserContext);
 
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [matchesShown, setMatchesShown] = useState(5);
+  const [matchesShown, setMatchesShown] = useState(10);
   const [filterValue, setFilterValue] = useState("");
-  const [showMoreButton, setShowMoreButton] = useState(true);
+  const [queue, setQueue] = useState("");
 
   const params = useParams();
-  const pathname = usePathname();
-  const api = useAxios();
+  const axios = useAxios();
+  const axiosPublic = useAxiosPublic();
+  const axiosInstance = isLogged ? axios : axiosPublic;
 
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const response = await api.get("/user/getUserData");
-        if (response.status === 200) {
-          setUserData((prevUserData) => ({
-            ...prevUserData,
-            ...response.data, // Poprawne rozpakowanie danych użytkownika do stanu
-          }));
-          console.log(response.data);
-          setIsLogged(true);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        // Możesz dodać tutaj dodatkową obsługę błędów, jeśli jest potrzebna
-      }
-    };
-
-    checkToken();
-  }, []);
-
-  const fetchData = async () => {
-    const langRegex = /^\/([a-z]{2})\//;
-    const langMatch = pathname.match(langRegex);
-    const language = langMatch ? langMatch[1] : "en";
-
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/riot/findPlayer?server=${params.server}&tag=${params.tag}&name=${params.username}`,
-        {
-          headers: {
-            "Accept-Language": language,
-          },
-        }
-      );
-
-      setPlayerData(response.data);
-      console.log("setplayer data: ", response.data);
-
-      setLoading(false);
-    } catch (error) {
-      console.error("Error occurred:", error);
+  const {
+    data: playerData,
+    isLoading: playerIsLoading,
+    error: playerError,
+    refetch: playerDataRefetch,
+  } = useQuery(
+    "summonerData",
+    () => findPlayer(axiosInstance, params.server, params.username, params.tag),
+    {
+      refetchOnWindowFocus: false,
     }
+  );
+
+  const {
+    data: matchesData,
+    isLoading: matchesIsLoading,
+    error: matchesError,
+    refetch: matchesRefetch,
+  } = useQuery(
+    ["matchesData", matchesShown, queue],
+    () => getMatchHistory(axiosInstance, playerData.puuid, matchesShown, queue),
+    {
+      refetchOnWindowFocus: false,
+      keepPreviousData: true,
+      enabled: !!playerData,
+    }
+  );
+
+  const { mutateAsync: handleFollow } = useMutation(
+    () => followProfile(axiosInstance, playerData.server, playerData.puuid),
+    {
+      onSuccess: (data) => {
+        playerDataRefetch();
+      },
+      onError: (error) => {
+        console.error("Error following/unfollowing:", error);
+      },
+    }
+  );
+
+  const { mutateAsync: handleClaimAccount } = useMutation(
+    () => claimAccount(axiosInstance, playerData.server, playerData.puuid),
+    {
+      onSuccess: (data) => {
+        playerDataRefetch();
+      },
+      onError: (error) => {
+        console.error("Error claiming/unclaiming:", error);
+      },
+    }
+  );
+
+  const handleQueueFilter = async (value) => {
+    console.log(value.value);
+    setQueue(value.value);
   };
 
-  const showMore = async () => {
-    console.log(playerData.puuid);
-    console.log(filterValue);
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/riot/getMatchHistory?puuid=${
-          playerData.puuid
-        }&count=${matchesShown + 5}&queue=${filterValue}`,
-        {
-          headers: {
-            "Accept-Language": "en",
-          },
-        }
-      );
-
-      if (response.data.length % 5 === 0) {
-        console.log(response.data);
-        setMatchesShown(matchesShown + 5);
-        setPlayerData((prevData) => ({
-          ...prevData,
-          matches: response.data,
-        }));
-      } else {
-        setShowMoreButton(false);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  if (loading) {
+  if (playerIsLoading || !playerData || matchesIsLoading || !matchesData) {
     return (
-      <div className="h-screen w-full flex flex-col justify-center items-center">
-        <p>Loading</p>
+      <div className="flex h-screen w-full items-center justify-center">
+        Loading...
       </div>
     );
   }
 
-  const followSummoner = async () => {
-    if (isLogged) {
-      console.log(userData.token);
-      console.log(playerData.puuid);
-      const param = playerData.server + "_" + playerData.puuid;
-      console.log(param);
-      try {
-        const response = await api.put(
-          `/profile/manageWatchlist?server_puuid=${param}`,
-          {}
-        );
-
-        console.log(response.data);
-        setUserData((prevUserData) => ({
-          ...prevUserData,
-          watchList: response.data,
-        }));
-        toast.success("You have followed", {
-          duration: 1000,
-        });
-      } catch (error) {
-        toast.error("An error occured", {
-          description: error,
-          duration: 1000,
-        });
-        console.log(error);
-      }
-    } else {
-      setErrorMessage("Log in to follow other summoner");
-    }
-  };
-
-  const unfollowSummoner = async () => {
-    if (isLogged) {
-      const param = playerData.server + "_" + playerData.puuid;
-      try {
-        const response = await api.put(
-          `/profile/manageWatchlist?server_puuid=${param}`,
-          {}
-        );
-
-        console.log(response.data);
-        setUserData((prevUserData) => ({
-          ...prevUserData,
-          watchList: response.data,
-        }));
-        toast.success("You have unfollowed", {
-          duration: 1000,
-        });
-      } catch (error) {
-        toast.error("An error occured", {
-          description: error,
-          duration: 1000,
-        });
-        console.log(error);
-      }
-    } else {
-      setErrorMessage("Log in to unfollow other summoner");
-    }
-  };
-
-  const claimAccount = async () => {
-    const param = playerData.server + "_" + playerData.puuid;
-    try {
-      const response = await api.put(
-        `/profile/manageMyAccount?server_puuid=${param}`,
-        {}
-      );
-
-      console.log("account claiming status:", response.status);
-      toast.success("You have claimed this account", { duration: 2000 });
-    } catch (error) {
-      toast.error("An error occured", {
-        description: error,
-        duration: 2000,
-      });
-      console.log(error);
-    }
-  };
-
-  const handleQueueFilter = async (value) => {
-    setFilterValue(value);
-    setShowMoreButton(true);
-    setMatchesShown(5);
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/riot/getMatchHistory?puuid=${playerData.puuid}&queue=${value}`,
-        {
-          headers: {
-            "Accept-Language": "en",
-          },
-        }
-      );
-      console.log(response.data);
-      setPlayerData((prevData) => ({
-        ...prevData,
-        matches: response.data,
-      }));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  return (
-    <div className="min-h-screen w-full flex flex-col justify-center items-center bg-[#131313]">
-      <div className="mt-[80px] py-6 px-4 w-[80%] flex justify-between items-center rounded-3xl">
-        <div className="flex items-center gap-x-3 ml-[15%]">
-          <BiWorld className="text-[60px]"></BiWorld>
-          <p className="text-[48px]">{playerData.server}</p>
-        </div>
-        <div className="flex items-center gap-x-12">
+  if (!playerIsLoading && playerData && !matchesIsLoading && matchesData) {
+    return (
+      <div className="min-h-screen w-full bg-night flex flex-col px-[10%]">
+        <div className="mt-[10%] w-full flex items-center gap-x-4">
           <Image
             src={
               "https://ddragon.leagueoflegends.com/cdn/" +
-              version +
+              "15.1.1" +
               "/img/profileicon/" +
               playerData.profileIconId +
               ".png"
             }
-            width={150}
-            height={150}
-            alt="summonerIcon"
-            className="rounded-full border-2 border-white"
+            height={180}
+            width={180}
+            className="border-[1px] border-white-smoke"
           />
-          <div className="flex flex-col items-center justify-center">
-            <p className="text-[48px] font-semibold">{playerData.gameName}</p>
-            <p className="text-[40px]">#{playerData.tagLine}</p>
-          </div>
-        </div>
-        <div className="flex items-center justify-center gap-x-3  mr-[15%]">
-          <MdOutlineRefresh className="text-[64px] cursor-pointer" />
-          <GoLock
-            onClick={() => claimAccount()}
-            className="text-[60px] cursor-pointer"
-          ></GoLock>
-        </div>
-      </div>
-
-      {isLogged && (
-        <div className="flex gap-x-3">
-          <button
-            onClick={followSummoner}
-            className="border-2 border-white px-6 py-2 hover:bg-green-600"
-          >
-            Follow
-          </button>
-          <button
-            onClick={unfollowSummoner}
-            className="border-2 border-white px-6 py-2 hover:bg-red-600"
-          >
-            Unfollow
-          </button>
-        </div>
-      )}
-
-      <div className="w-[80%] flex justify-end">
-        <select
-          className="text-black w-[20%]"
-          value={filterValue}
-          onChange={(e) => handleQueueFilter(e.target.value)}
-        >
-          <option value="">All</option>
-          <option value="420">Ranked Solo</option>
-          <option value="440">Ranked Flex</option>
-          <option value="450">ARAM</option>
-          <option value="1700">Arena</option>
-        </select>
-      </div>
-
-      <div className="flex w-[80%]">
-        <div className="flex flex-col w-[35%]">
-          <div className="mt-8 flex justify-center gap-x-8  py-7 rounded-3xl border-[1px] border-[#f5f5f5]">
-            {Array.isArray(playerData.ranks) && playerData.ranks.length > 0 ? (
-              playerData.ranks.map((rank, key) => (
-                <div key={key} className="flex flex-col items-center">
-                  <p>{rank.queueType}</p>
-                  <Image
-                    src={"/rank_emblems/" + rank.tier + ".png"}
-                    width={110}
-                    height={110}
-                    alt="ranktier"
-                  />
-                  <p>
-                    {rank.tier} {rank.rank}{" "}
-                    {rank.leaguePoints ? rank.leaguePoints + " LP" : "Unranked"}
-                  </p>
-                  <p>
-                    {rank.wins} W - {rank.losses} L
-                  </p>
-                  <p>
-                    {((rank.wins / (rank.wins + rank.losses)) * 100).toFixed(2)}
-                    % WR
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p className="h-[206px] flex justify-center items-center">
-                No rank data available
-              </p>
-            )}
-          </div>
-          <div className="mt-8 flex justify-center items-center gap-x-6  py-7 rounded-3xl border-[1px] border-[#f5f5f5]">
-            {Array.isArray(playerData.mastery) &&
-            playerData.mastery.length > 1 ? (
-              playerData.mastery.map((mastery, key) => (
-                <div key={key} className="flex flex-col items-center">
-                  <Image
-                    src={
-                      "https://ddragon.leagueoflegends.com/cdn/" +
-                      version +
-                      "/img/champion/" +
-                      mastery.championName +
-                      ".png"
-                    }
-                    width={120}
-                    height={120}
-                    alt={mastery.championId}
-                    className="rounded-full"
-                  />
-                  <Image
-                    src="/masteryPlaceholder.png"
-                    width={60}
-                    height={60}
-                    alt="mastery"
-                  />
-                  <p>{(mastery.championPoints / 1000).toFixed(1) + "k"}</p>
-                </div>
-              ))
-            ) : (
-              <p>No mastery data available</p>
+          <div className="flex flex-col justify-between">
+            <div className="flex items-center gap-x-4 font-bangers">
+              <p className="text-[64px]">{playerData.gameName}</p>
+              <p className="text-[28px]">#{playerData.tagLine}</p>
+            </div>
+            <div className="flex items-center gap-x-2">
+              {(() => {
+                const { icon, name } = serverVisuals(playerData.server); // Wywołanie funkcji z przekazaniem 'server'
+                return (
+                  <>
+                    {icon}
+                    <p className="font-chewy text-[20px]">{name}</p>
+                  </>
+                );
+              })()}
+            </div>
+            {isLogged && (
+              <div className="flex items-center gap-x-3 font-chewy py-5 pl-1">
+                {playerData.inWatchlist === true ? (
+                  <div
+                    className="flex items-center gap-x-2 cursor-pointer hover:text-white-smoke duration-150 transition-all text-amber"
+                    onClick={() => handleFollow()}
+                  >
+                    <FaHeartCircleXmark className="text-[24px]" />
+                    <p className="text-[20px]">Unfollow profile</p>
+                  </div>
+                ) : (
+                  <div
+                    className="flex items-center gap-x-2 cursor-pointer hover:text-amber duration-150 transition-all"
+                    onClick={() => handleFollow()}
+                  >
+                    <FaHeartCirclePlus className="text-[24px]" />
+                    <p className="text-[20px]">Follow profile</p>
+                  </div>
+                )}
+                {playerData.myAccount ? (
+                  <div
+                    className="flex items-center gap-x-1 text-amber"
+                    // onClick={() => handleClaimAccount()}
+                  >
+                    <FaCheck className="text-[24px]" />
+                    <p className="text-[20px]">My account</p>
+                  </div>
+                ) : (
+                  <div
+                    className="flex items-center gap-x-2 cursor-pointer hover:text-amber duration-150 transition-all"
+                    onClick={() => handleClaimAccount()}
+                  >
+                    <BiLock className="text-[24px]" />
+                    <p className="text-[20px]">Claim account</p>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
-        <div className="ml-[5%] mt-8 w-[60%] py-6  rounded-3xl flex flex-col gap-y-6 items-center justify-center">
-          {Array.isArray(playerData.matches) &&
-          playerData.matches.length > 0 ? (
-            playerData.matches.map((match, index) => {
-              return (
-                <div
-                  key={index}
-                  className={
-                    match.win
-                      ? "flex items-center gap-x-4  w-[90%] py-1 px-8 rounded-3xl border-[1px] border-[#f5b800]"
-                      : "flex items-center gap-x-4  w-[90%] py-1 px-8 rounded-3xl border-[1px] border-[#afafaf]"
-                  }
-                >
-                  <div className="flex gap-x-3 items-center">
-                    <Image
-                      src={
-                        "https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/" +
-                        match.championName +
-                        ".png"
-                      }
-                      width={60}
-                      height={60}
-                      className="rounded-full"
-                      alt={match.championName}
-                    />
-                    <p
-                      className={
-                        match.win
-                          ? "text-[#f5b800] font-semibold text-[24px] w-[100px] text-center"
-                          : "text-[#afafaf] font-semibold text-[24px] w-[100px] text-center"
-                      }
-                    >
-                      {match.win ? "Victory" : "Loss"}
-                    </p>
-                  </div>
 
-                  <p className="w-[200px] text-center font-bold text-[20px] text-[#f5f5f5]">
-                    {match.queueType}
-                  </p>
-
-                  <div className="flex gap-x-3 items-center">
-                    <p className="w-[100px] text-center font-bold text-[24px] text-[#f5f5f5]">
-                      {" "}
-                      {match.kills}/{match.deaths}/{match.assists}
-                    </p>
-                    <Link
-                      href={"/match/" + match.matchId}
-                      className="ml-10  py-1 px-4 text-[24px] rounded-full "
-                    >
-                      See more
-                    </Link>
+        <div className="mt-[2%] flex justify-between w-full font-chewy">
+          <div className="flex flex-col w-[40%] ">
+            <div className="bg-silver bg-opacity-15 rounded-2xl py-4 px-6">
+              {playerData.ranks.find(
+                (rank) => rank.queueType === "RANKED_SOLO_5x5"
+              ) ? (
+                <div className="flex flex-col gap-y-2">
+                  <p className="text-[24px]">Ranked Solo/Duo</p>
+                  <div className="flex items-center gap-x-3 w-full justify-between">
+                    <div className="flex items-center gap-x-3">
+                      <Image
+                        src={
+                          "/rank_emblems/" +
+                          playerData.ranks
+                            .find(
+                              (rank) => rank.queueType === "RANKED_SOLO_5x5"
+                            )
+                            .tier.charAt(0)
+                            .toUpperCase() +
+                          playerData.ranks
+                            .find(
+                              (rank) => rank.queueType === "RANKED_SOLO_5x5"
+                            )
+                            .tier.slice(1)
+                            .toLowerCase() +
+                          ".png"
+                        }
+                        height={80}
+                        width={80}
+                      />
+                      <div className="flex flex-col items-center">
+                        <p className="text-[24px]">
+                          {
+                            playerData.ranks.find(
+                              (rank) => rank.queueType === "RANKED_SOLO_5x5"
+                            ).tier
+                          }{" "}
+                          {
+                            playerData.ranks.find(
+                              (rank) => rank.queueType === "RANKED_SOLO_5x5"
+                            ).rank
+                          }
+                        </p>
+                        <p className="text-[20px]">
+                          {
+                            playerData.ranks.find(
+                              (rank) => rank.queueType === "RANKED_SOLO_5x5"
+                            ).leaguePoints
+                          }{" "}
+                          LP
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <p className="text-[24px] pl-4">
+                        <span className="">
+                          {
+                            playerData.ranks.find(
+                              (rank) => rank.queueType === "RANKED_SOLO_5x5"
+                            ).wins
+                          }
+                          W
+                        </span>{" "}
+                        -{" "}
+                        {
+                          playerData.ranks.find(
+                            (rank) => rank.queueType === "RANKED_SOLO_5x5"
+                          ).losses
+                        }
+                        L
+                      </p>
+                      <p>
+                        WR:{" "}
+                        {(
+                          (playerData.ranks.find(
+                            (rank) => rank.queueType === "RANKED_SOLO_5x5"
+                          ).wins /
+                            (playerData.ranks.find(
+                              (rank) => rank.queueType === "RANKED_SOLO_5x5"
+                            ).wins +
+                              playerData.ranks.find(
+                                (rank) => rank.queueType === "RANKED_SOLO_5x5"
+                              ).losses)) *
+                          100
+                        ).toFixed(0)}{" "}
+                        %
+                      </p>
+                    </div>
                   </div>
                 </div>
-              );
-            })
-          ) : (
-            <p>No data for your last matches</p>
-          )}
-          {showMoreButton && (
+              ) : (
+                <p>No rank for Solo/Duo</p>
+              )}
+            </div>
+            <div className="bg-silver bg-opacity-15 rounded-2xl py-4 px-6 mt-4">
+              {playerData.ranks.find(
+                (rank) => rank.queueType === "RANKED_FLEX_SR"
+              ) ? (
+                <div className="flex flex-col gap-y-2">
+                  <p className="text-[24px]">Ranked Flex</p>
+                  <div className="flex items-center gap-x-3 w-full justify-between">
+                    <div className="flex items-center gap-x-3">
+                      <Image
+                        src={
+                          "/rank_emblems/" +
+                          playerData.ranks
+                            .find((rank) => rank.queueType === "RANKED_FLEX_SR")
+                            .tier.charAt(0)
+                            .toUpperCase() +
+                          playerData.ranks
+                            .find((rank) => rank.queueType === "RANKED_FLEX_SR")
+                            .tier.slice(1)
+                            .toLowerCase() +
+                          ".png"
+                        }
+                        height={80}
+                        width={80}
+                      />
+                      <div className="flex flex-col items-center">
+                        <p className="text-[24px]">
+                          {
+                            playerData.ranks.find(
+                              (rank) => rank.queueType === "RANKED_FLEX_SR"
+                            ).tier
+                          }{" "}
+                          {
+                            playerData.ranks.find(
+                              (rank) => rank.queueType === "RANKED_FLEX_SR"
+                            ).rank
+                          }
+                        </p>
+                        <p className="text-[20px]">
+                          {
+                            playerData.ranks.find(
+                              (rank) => rank.queueType === "RANKED_FLEX_SR"
+                            ).leaguePoints
+                          }{" "}
+                          LP
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center flex-col gap-y-1">
+                      <p className="text-[24px] pl-4">
+                        <span className="">
+                          {
+                            playerData.ranks.find(
+                              (rank) => rank.queueType === "RANKED_FLEX_SR"
+                            ).wins
+                          }
+                          W
+                        </span>{" "}
+                        -{" "}
+                        {
+                          playerData.ranks.find(
+                            (rank) => rank.queueType === "RANKED_FLEX_SR"
+                          ).losses
+                        }
+                        L
+                      </p>
+                      <p>
+                        WR:{" "}
+                        {(
+                          (playerData.ranks.find(
+                            (rank) => rank.queueType === "RANKED_FLEX_SR"
+                          ).wins /
+                            (playerData.ranks.find(
+                              (rank) => rank.queueType === "RANKED_FLEX_SR"
+                            ).wins +
+                              playerData.ranks.find(
+                                (rank) => rank.queueType === "RANKED_FLEX_SR"
+                              ).losses)) *
+                          100
+                        ).toFixed(0)}{" "}
+                        %
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <p>No rank for Ranked Flex</p>
+              )}
+            </div>
+            <div className="bg-silver bg-opacity-15 rounded-2xl py-4 px-6 mt-4">
+              <p className="text-[24px]">Champion mastery</p>
+              <div className="flex gap-x-6 mt-4">
+                {playerData.mastery.map((champion, key) => {
+                  return (
+                    <div key={key} className="flex flex-col items-center">
+                      <Image
+                        src={
+                          "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/champion/" +
+                          champion.championName +
+                          ".png"
+                        }
+                        height={80}
+                        width={80}
+                        className="rounded-full border-[1px] border-white-smoke"
+                      />
+                      <div className="flex flex-col items-center">
+                        <p className="text-[32px]">{champion.championLevel}</p>
+                        <Image
+                          src={
+                            "/mastery_emblems/" +
+                            masteryMapping(champion.championLevel) +
+                            ".webp"
+                          }
+                          width={64}
+                          height={64}
+                        />
+                        <p className="text-[20px]">
+                          {(champion.championPoints / 1000).toFixed(1)}k
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          <div className="w-[45%] flex flex-col items-center">
+            <div className="flex justify-between items-end h-[150px] w-full">
+              <WinRatioChart matchesData={matchesData} />
+              <Select
+                styles={customStylesDuo}
+                options={queueOptions}
+                onChange={handleQueueFilter}
+                placeholder="All"
+                className="w-[35%]"
+                isSearchable={false}
+              />
+            </div>
+            {matchesData.length > 0 ? (
+              <div className="mt-6 flex flex-col gap-y-4 w-full">
+                {matchesData.map((match, key) => {
+                  return <ShortMatch key={key} match={match} />;
+                })}
+              </div>
+            ) : (
+              <p>No matches found</p>
+            )}
             <button
-              className="bg-[#f5b800] text-[#131313] py-1 px-10 text-[24px] rounded-md "
-              onClick={() => showMore()}
+              onClick={() => setMatchesShown(matchesShown + 10)}
+              className="w-[25%] px-5 py-2 border-[1px] border-white-smoke text-[20px] rounded-3xl mt-6 hover:bg-white-smoke hover:bg-opacity-15 duration-150 transition-all"
             >
               Show more
             </button>
-          )}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default SummonerProfile;

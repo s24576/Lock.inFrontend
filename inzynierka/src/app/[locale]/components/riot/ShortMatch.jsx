@@ -2,9 +2,9 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatTimestampToDateTime } from "@/lib/formatTimeAgo";
-import fromUnixTime from 'date-fns/fromUnixTime';
-import { format, formatDistanceToNow } from 'date-fns';
-
+import fromUnixTime from "date-fns/fromUnixTime";
+import { format, formatDistanceToNow } from "date-fns";
+import { getSummonerSpell } from "@/lib/getSummonerSpell";
 
 const multiKill = (kills) => {
   switch (kills) {
@@ -17,7 +17,7 @@ const multiKill = (kills) => {
     default:
       return "";
   }
-}
+};
 
 const gamemode = (gameMode) => {
   switch (gameMode) {
@@ -30,35 +30,34 @@ const gamemode = (gameMode) => {
     default:
       return "Game";
   }
-}
+};
 
 const ShortMatch = ({ match }) => {
   return (
     <Link
-  href="/match/EUN1_3713685209"
-  className={`h-[80px] w-[110%] border-[1px] rounded-2xl flex items-center px-3 transition-colors duration-100 ${
-    match.win ? 'border-amber' : 'border-white-smoke'
-  } hover:bg-white-smoke hover:bg-opacity-5`}
->
-      <div className="w-[10%]">
-
-      <Image
-        src={
-          "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/champion/" +
-          match.championName +
-          ".png"
-        }
-        height={55}
-        width={55}
-        className="rounded-full border-[1px] border-amber"
-        alt="test"
-      />
+      href={"/match/" + match.matchId}
+      className={`h-[80px] w-[100%] border-[1px] rounded-2xl flex items-center px-3 transition-colors duration-100 ${
+        match.win ? "border-amber" : "border-white-smoke"
+      } hover:bg-white-smoke hover:bg-opacity-5`}
+    >
+      <div className="">
+        <Image
+          src={
+            "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/champion/" +
+            match.championName +
+            ".png"
+          }
+          height={55}
+          width={55}
+          className="rounded-full border-[1px] border-amber"
+          alt="test"
+        />
       </div>
       <div className="flex flex-col gap-y-1 ml-3 w-[5%]">
         <Image
           src={
             "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/spell/" +
-            match.summoner1 +
+            getSummonerSpell(match.summonerId1) +
             ".png"
           }
           height={24}
@@ -68,7 +67,7 @@ const ShortMatch = ({ match }) => {
         <Image
           src={
             "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/spell/" +
-            match.summoner2 +
+            getSummonerSpell(match.summonerId2) +
             ".png"
           }
           height={24}
@@ -91,16 +90,27 @@ const ShortMatch = ({ match }) => {
         />
       </div> */}
       <div className="flex flex-col justify-center ml-3 w-[15%]">
-        <p className="text-[24px]">{match.kills + "/" + match.deaths + "/" + match.assists}</p>
-        <p className="text-[16px]">KDA: {((match.kills + match.assists) / match.deaths).toFixed(2)}:{match.deaths}</p>
+        <p className="text-[24px]">
+          {match.kills + "/" + match.deaths + "/" + match.assists}
+        </p>
+        <p className="text-[16px]">
+          KDA: {((match.kills + match.assists) / match.deaths).toFixed(2)}:
+          {match.deaths}
+        </p>
       </div>
       <div className="flex flex-col justify-center ml-4 w-[15%]">
-        <p className="text-[16px]">CS: {match.cs} (6)</p>
-        <p className="text-[16px]">KP:{(match.kills / match.totalKills).toFixed(1)}%</p>
+        <p className="text-[16px]">CS: {match.cs}</p>
+        <p className="text-[16px]">
+          KP:{" "}
+          {(((match.kills + match.assists) / match.totalKills) * 100).toFixed(
+            0
+          )}
+          %
+        </p>
         <p className="text-[16px] text-amber">{multiKill(match.multiKill)}</p>
       </div>
-      <div className="grid grid-cols-3 gap-y-2 gap-x-1 ml-4 w-[15%]">
-      {match.item0 !== 0 ? (
+      <div className="grid grid-cols-3 gap-y-2 gap-x-1 ml-4">
+        {match.item0 !== 0 ? (
           <Image
             src={
               "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
@@ -113,9 +123,7 @@ const ShortMatch = ({ match }) => {
             alt={match.item0}
           />
         ) : (
-          <div
-            className="border-[1px] border-white-smoke w-[28px] h-[28px]"
-          />
+          <div className="border-[1px] border-white-smoke w-[28px] h-[28px]" />
         )}
         {match.item1 !== "0" ? (
           <Image
@@ -130,9 +138,7 @@ const ShortMatch = ({ match }) => {
             alt={match.item1}
           />
         ) : (
-          <div
-            className="border-[1px] border-white-smoke w-[28px] h-[28px]"
-          />
+          <div className="border-[1px] border-white-smoke w-[28px] h-[28px]" />
         )}
         {match.item2 !== "0" ? (
           <Image
@@ -147,9 +153,7 @@ const ShortMatch = ({ match }) => {
             alt={match.item2}
           />
         ) : (
-          <div
-            className="border-[1px] border-white-smoke w-[28px] h-[28px]"
-          />
+          <div className="border-[1px] border-white-smoke w-[28px] h-[28px]" />
         )}
         {match.item3 !== "0" ? (
           <Image
@@ -164,9 +168,7 @@ const ShortMatch = ({ match }) => {
             alt={match.item3}
           />
         ) : (
-          <div
-            className="border-[1px] border-white-smoke w-[28px] h-[28px]"
-          />
+          <div className="border-[1px] border-white-smoke w-[28px] h-[28px]" />
         )}
         {match.item4 !== "0" ? (
           <Image
@@ -181,9 +183,7 @@ const ShortMatch = ({ match }) => {
             alt={match.item4}
           />
         ) : (
-          <div
-            className="border-[1px] border-white-smoke w-[28px] h-[28px]"
-          />
+          <div className="border-[1px] border-white-smoke w-[28px] h-[28px]" />
         )}
         {match.item5 !== "0" ? (
           <Image
@@ -198,13 +198,11 @@ const ShortMatch = ({ match }) => {
             alt={match.item5}
           />
         ) : (
-          <div
-            className="border-[1px] border-white-smoke w-[28px] h-[28px]"
-          />
+          <div className="border-[1px] border-white-smoke w-[28px] h-[28px]" />
         )}
       </div>
-      <div>
-      {match.item6 !== "0" ? (
+      <div className="ml-2">
+        {match.item6 !== "0" ? (
           <Image
             src={
               "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
@@ -217,17 +215,19 @@ const ShortMatch = ({ match }) => {
             alt={match.item6}
           />
         ) : (
-          <div
-            className="border-[1px] border-white-smoke w-[28px] h-[28px]"
-          />
+          <div className="border-[1px] border-white-smoke w-[28px] h-[28px]" />
         )}
       </div>
       <div className="flex flex-col justify-center items-center ml-4 text-[16px] w-[20%]">
         <p>{gamemode(match.queueType)}</p>
-        <p>{formatDistanceToNow(new Date(match.timestamp), { addSuffix: true })}</p>
+        <p>
+          {formatDistanceToNow(new Date(match.timestamp), { addSuffix: true })}
+        </p>
 
         <div className="flex items-center gap-x-1">
-          <p className={match.win ? "text-amber" : "text-white-smoke"}>{match.win === true ? "VICTORY" : "DEFEAT"}</p>
+          <p className={match.win ? "text-amber" : "text-white-smoke"}>
+            {match.win === true ? "VICTORY" : "DEFEAT"}
+          </p>
           {/* <p>30:39</p> */}
         </div>
       </div>
