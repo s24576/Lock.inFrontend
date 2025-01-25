@@ -44,7 +44,7 @@ const ConfirmRegistration = () => {
 
   return (
     <div className=" flex flex-col w-full h-screen items-center justify-center bg-night text-white-smoke font-chewy">
-      <p className="font-bangers text-[48px]">Forgot Password</p>
+      <p className="font-bangers text-[48px]">Confirm registration</p>
 
       <p>
         Didn't get an email with confirmation code?{" "}

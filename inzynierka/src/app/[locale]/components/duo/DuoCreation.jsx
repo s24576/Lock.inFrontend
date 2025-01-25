@@ -178,7 +178,8 @@ const DuoCreation = () => {
     // Nadpisanie pola puuid wartością z duoSettings
     const updatedFormData = {
       ...duoBody,
-      puuid: duoSettings.duoAccount.server + "_" + duoSettings.duoAccount.puuid,
+      puuid:
+        duoSettings?.duoAccount?.server + "_" + duoSettings?.duoAccount?.puuid,
     };
 
     console.log(updatedFormData);
@@ -384,7 +385,7 @@ const DuoCreation = () => {
           <DialogClose>
             <button
               type="submit"
-              className="w-[40%] px-4 py-2 border-2 border-white-smoke text-[20px] rounded-3xl mt-[6%] hover:bg-silver hover:bg-opacity-15 duration-150 transition-all mx-auto block"
+              className="w-[100%] px-4 py-2 border-2 border-white-smoke text-[20px] rounded-3xl mt-[8%] hover:bg-silver hover:bg-opacity-15 duration-150 transition-all mx-auto block"
             >
               Submit
             </button>

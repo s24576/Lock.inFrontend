@@ -42,7 +42,7 @@ const FindPlayerForm = () => {
   const router = useRouter();
   const axiosInstance = useAxiosPublic();
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const { refetch: findPlayerRefetch, isLoading: findPlayerIsLoading } =
     useQuery(
@@ -85,31 +85,28 @@ const FindPlayerForm = () => {
         className="flex py-3 pr-6 items-center"
         onSubmit={handleSubmit} // Poprawione wywołanie `handleSubmit`
       >
-        <Select>
+        <Select value={server} onValueChange={setServer}>
           <SelectTrigger className="flex items-center gap-x-2 bg-transparent text-[24px] text-white-smoke focus:border-none focus:outline-none hover:text-amber px-10 w-[150px]">
-            <FaGlobeAmericas className="text-[28px] "></FaGlobeAmericas>
-            <p>EUNE</p>
+            {servers.find((s) => s.value === server)?.icon || (
+              <FaGlobeAmericas className="text-[28px]" />
+            )}
+            <p>{servers.find((s) => s.value === server)?.name || "EUNE"}</p>
           </SelectTrigger>
           <SelectContent
             className="text-white-smoke mt-2"
             style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
           >
-            {servers.map((server, key) => {
-              return (
-                <SelectItem
-                  key={key}
-                  value={server.value}
-                  onClick={() => setServer(server.value)}
-                >
-                  <div className="flex font-bangers text-[28px] items-center gap-x-2 hover:bg-transparent">
-                    {server.icon}
-                    <p className="text-[24px]">{server.name}</p>
-                  </div>
-                </SelectItem>
-              );
-            })}
+            {servers.map((serverOption, key) => (
+              <SelectItem key={key} value={serverOption.value}>
+                <div className="flex font-bangers text-[28px] items-center gap-x-2 hover:bg-transparent">
+                  {serverOption.icon}
+                  <p className="text-[24px]">{serverOption.name}</p>
+                </div>
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
+
         <input
           type="text"
           className="border-x-2 border-x-white-smoke px-4 bg-transparent text-white-smoke focus:outline-none text-[24px] placeholder-white-smoke w-[350px] text-center"

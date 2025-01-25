@@ -8,10 +8,10 @@ const WinRatioChart = ({ matchesData }) => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
+    const wins = matchesData.filter((match) => match.win === true).length;
+    const losses = matchesData.filter((match) => match.win === false).length;
     if (matchesData) {
       // Obliczanie liczby wygranych i przegranych
-      const wins = matchesData.filter((match) => match.win === true).length;
-      const losses = matchesData.filter((match) => match.win === false).length;
 
       const totalGames = wins + losses;
       const winPercentage = totalGames === 0 ? 0 : (wins / totalGames) * 100;
@@ -60,11 +60,15 @@ const WinRatioChart = ({ matchesData }) => {
       <div className="flex flex-col gap-y-3">
         <div className="flex items-center gap-x-3">
           <div className="size-8 bg-amber rounded-full"></div>
-          <p className="text-[24px] font-chewy text-amber">Wins</p>
+          <p className="text-[24px] font-chewy text-amber">
+            Wins ({matchesData.filter((match) => match.win === true).length})
+          </p>
         </div>
         <div className="flex items-center gap-x-3">
           <div className="size-8 bg-silver rounded-full"></div>
-          <p className="text-[24px] font-chewy text-silver">Losses</p>
+          <p className="text-[24px] font-chewy text-silver">
+            Losses ({matchesData.filter((match) => match.win === false).length})
+          </p>
         </div>
       </div>
     </div>
