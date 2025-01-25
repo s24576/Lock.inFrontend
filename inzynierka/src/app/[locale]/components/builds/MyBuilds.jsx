@@ -6,11 +6,14 @@ import getMyBuilds from "../../api/builds/getMyBuilds";
 import getShortProfiles from "../../api/profile/getShortProfiles";
 import ShortBuild from "./ShortBuild";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 
 export const MyBuilds = () => {
   const [filterParams, setFilterParams] = useState({
     page: 0,
   });
+
+  const { t } = useTranslation();
 
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
   const [championOptions, setChampionOptions] = useState([]);
@@ -85,7 +88,7 @@ export const MyBuilds = () => {
       ></div>
 
       <p className="mt-[10%] font-bangers text-[96px] text-amber z-20">
-        My Builds
+        {t("builds:myBuilds")}
       </p>
       {buildsData?.content && buildsData.content.length > 0 ? (
         <div className="z-20 bg-night bg-opacity-50 w-full px-[14%] mt-[7%] py-[2%] font-chewy">
@@ -112,7 +115,7 @@ export const MyBuilds = () => {
                   className="cursor-pointer hover:text-amber duration-100 transition-colors"
                   onClick={() => handlePageChange(filterParams.page - 1)}
                 >
-                  Back
+                  {t("common:back")}
                 </p>
               )}
 
@@ -144,7 +147,7 @@ export const MyBuilds = () => {
                   className="cursor-pointer hover:text-amber duration-100 transition-colors"
                   onClick={() => handlePageChange(filterParams.page + 1)}
                 >
-                  Next
+                  {t("common:next")}
                 </p>
               )}
             </div>
@@ -153,7 +156,7 @@ export const MyBuilds = () => {
       ) : (
         <div>
           <p className="z-20 text-[32px] font-chewy text-white-smoke mt-[7%]">
-            Create a build to see it here
+            {t("builds:myBuildsInfo")}
           </p>
         </div>
       )}

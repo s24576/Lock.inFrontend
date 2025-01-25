@@ -1,0 +1,36 @@
+{
+  "nav1": "Champion & Position",
+  "nav2": "Runes & Summoner spells",
+  "nav3": "Items",
+  "nav4": "Info",
+
+  "newBuild": "New build",
+  "newDescription": "Build description...",
+  "searchChampion": "Search champion",
+  "searchItem": "Search item...",
+  "selectPosition": "Select position:",
+  "selectSumms": "Select summoner spells:",
+  "filterByTags": "Filter by tags:",
+  "hp": "Health",
+  "dmg": "Damage",
+  "cdr": "Cooldown reduction",
+  "armor": "Armor",
+  "mr": "Magic resist",
+  "ms": "Movement speed",
+  "as": "Attack speed",
+  "armorPen": "Armor penetration",
+  "lifesteal": "Lifesteal",
+  "onHit": "On-hit",
+  "boots": "Boots",
+  "mana": "Mana",
+  "title": "Title",
+  "description": "Description",
+  "createBuild": "Create build",
+  "nextPage": "Next page",
+
+  "myBuilds": "My builds",
+  "myBuildsInfo": "Create a build to see it here",
+
+  "savedBuilds": "Saved builds",
+  "savedBuildsInfo": "You have no saved builds yet"
+}

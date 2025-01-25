@@ -5,6 +5,7 @@ import { formatTimestampToDateTime } from "@/lib/formatTimeAgo";
 import fromUnixTime from "date-fns/fromUnixTime";
 import { format, formatDistanceToNow } from "date-fns";
 import { getSummonerSpell } from "@/lib/getSummonerSpell";
+import { useTranslation } from "react-i18next";
 
 const multiKill = (kills) => {
   switch (kills) {
@@ -33,6 +34,8 @@ const gamemode = (gameMode) => {
 };
 
 const ShortMatch = ({ match }) => {
+  const { t } = useTranslation();
+
   return (
     <div
       // href={"/match/" + match.matchId}
@@ -226,7 +229,7 @@ const ShortMatch = ({ match }) => {
 
         <div className="flex items-center gap-x-1">
           <p className={match.win ? "text-amber" : "text-white-smoke"}>
-            {match.win === true ? "VICTORY" : "DEFEAT"}
+            {match.win === true ? t("riot:victory") : t("riot:defeat")}
           </p>
           {/* <p>30:39</p> */}
         </div>

@@ -28,7 +28,7 @@ const Builds = () => {
 
   const axiosInstance = useAxiosPublic();
 
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   const {
     refetch: refetchBuilds,
@@ -160,7 +160,7 @@ const Builds = () => {
       ></div>
 
       <p className="mt-[10%] font-bangers text-[96px] text-amber z-20">
-      {t("navbar:builds")}
+        {t("navbar:builds")}
       </p>
       <form
         onSubmit={handleFilter}
@@ -188,7 +188,7 @@ const Builds = () => {
             styles={customStyles}
             options={championOptions}
             onChange={handleFilterChange}
-            placeholder="All champions"
+            placeholder={t("common:searchByChampion")}
             className="w-[13%]"
           />
           <div className="border-[1px] border-amber rounded-md pl-2 pr-4 py-[5px] flex items-center justify-center gap-x-2 text-[24px] cursor-pointer hover:bg-silver-hover transition-colors duration-150">
@@ -316,7 +316,7 @@ const Builds = () => {
                 className="cursor-pointer hover:text-amber duration-100 transition-colors"
                 onClick={() => handlePageChange(filterParams.page - 1)}
               >
-                Back
+                {t("common:back")}
               </p>
             )}
 
@@ -345,7 +345,7 @@ const Builds = () => {
                 className="cursor-pointer hover:text-amber duration-100 transition-colors"
                 onClick={() => handlePageChange(filterParams.page + 1)}
               >
-                Next
+                {t("common:next")}
               </p>
             )}
           </div>

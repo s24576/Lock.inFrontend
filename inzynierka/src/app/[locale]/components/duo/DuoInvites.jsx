@@ -11,6 +11,7 @@ import Link from "next/link";
 import { FaCheck, FaHandMiddleFinger, FaUser } from "react-icons/fa6";
 import { BiSolidLock } from "react-icons/bi";
 import { AiOutlineDelete } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
 
 const DuoInvites = () => {
   const axiosInstance = useAxios();
@@ -20,6 +21,8 @@ const DuoInvites = () => {
   const [filterParams, setFilterParams] = useState({
     page: 0,
   });
+
+  const { t } = useTranslation();
 
   const {
     refetch: duoInvitesRefetch,
@@ -78,7 +81,7 @@ const DuoInvites = () => {
       ></div>
 
       <p className="mt-[10%] font-bangers text-[96px] text-amber z-20">
-        My Duo invites
+        {t("duo:duoInvites")}
       </p>
 
       {duoInvites?.content && duoInvites.content.length > 0 ? (
@@ -184,7 +187,7 @@ const DuoInvites = () => {
                   className="cursor-pointer hover:text-amber duration-100 transition-colors"
                   onClick={() => handlePageChange(filterParams.page - 1)}
                 >
-                  Back
+                  {t("common:back")}
                 </p>
               )}
 
@@ -216,7 +219,7 @@ const DuoInvites = () => {
                   className="cursor-pointer hover:text-amber duration-100 transition-colors"
                   onClick={() => handlePageChange(filterParams.page + 1)}
                 >
-                  Next
+                  {t("common:next")}
                 </p>
               )}
             </div>
@@ -225,7 +228,7 @@ const DuoInvites = () => {
       ) : (
         <div>
           <p className="z-20 text-[32px] font-chewy text-white-smoke mt-[7%]">
-            No duo invites yet
+            {t("duo:duoInvitesInfo")}
           </p>
         </div>
       )}

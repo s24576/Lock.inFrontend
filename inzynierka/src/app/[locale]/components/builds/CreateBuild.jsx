@@ -13,6 +13,7 @@ import getRunes from "../../api/ddragon/getRunes";
 import { IoChevronForward } from "react-icons/io5";
 import getFinalItems from "../../api/ddragon/getFinalItems";
 import createBuild from "../../api/builds/createBuild";
+import { useTranslation } from "react-i18next";
 
 const statShardsArray = {
   firstRow: ["Adaptive", "Attack Speed", "Ability Haste"],
@@ -44,57 +45,6 @@ const runeShards = [
   "HPScaling",
 ];
 
-const itemTags = [
-  {
-    tag: "Health",
-    name: "Health",
-  },
-  {
-    tag: "Damage",
-    name: "Damage",
-  },
-  {
-    tag: "CooldownReduction",
-    name: "Cooldown Reduction",
-  },
-  {
-    tag: "ArmorPenetration",
-    name: "Armor Penetration",
-  },
-  {
-    tag: "LifeSteal",
-    name: "Lifesteal",
-  },
-  {
-    tag: "OnHit",
-    name: "On-hit",
-  },
-  {
-    tag: "Armor",
-    name: "Armor",
-  },
-  {
-    tag: "AttackSpeed",
-    name: "Attack Speed",
-  },
-  {
-    tag: "NonbootsMovement",
-    name: "Movement Speed",
-  },
-  {
-    tag: "MagicResist",
-    name: "Magic Resist",
-  },
-  {
-    tag: "Boots",
-    name: "Boots",
-  },
-  {
-    tag: "Mana",
-    name: "Mana",
-  },
-];
-
 const CreateBuild = () => {
   const { userData, isLogged } = useContext(UserContext);
   const [titlePlaceholder, setTitlePlaceholder] = useState("");
@@ -108,6 +58,7 @@ const CreateBuild = () => {
 
   const [navigation, setNavigation] = useState(0);
 
+  const { t } = useTranslation();
   //rune tree selection
   const [runeTree, setRuneTree] = useState(0);
 
@@ -129,8 +80,8 @@ const CreateBuild = () => {
   const [selectedShards, setSelectedShards] = useState(["", "", ""]);
 
   const [formValues, setFormValues] = useState({
-    title: "New build",
-    description: "Build description...",
+    title: t("builds:newBuild"),
+    description: t("builds:newDescription"),
     champion: "",
     championKey: "",
     position: "",
@@ -401,6 +352,57 @@ const CreateBuild = () => {
     await handleCreateBuild(requestBody);
   };
 
+  const itemTags = [
+    {
+      tag: "Health",
+      name: t("builds:hp"),
+    },
+    {
+      tag: "Damage",
+      name: t("builds:dmg"),
+    },
+    {
+      tag: "CooldownReduction",
+      name: t("builds:cdr"),
+    },
+    {
+      tag: "ArmorPenetration",
+      name: t("builds:armorPen"),
+    },
+    {
+      tag: "LifeSteal",
+      name: t("builds:lifesteal"),
+    },
+    {
+      tag: "OnHit",
+      name: t("builds:onHit"),
+    },
+    {
+      tag: "Armor",
+      name: t("builds:armor"),
+    },
+    {
+      tag: "AttackSpeed",
+      name: t("builds:as"),
+    },
+    {
+      tag: "NonbootsMovement",
+      name: t("builds:ms"),
+    },
+    {
+      tag: "MagicResist",
+      name: t("builds:mr"),
+    },
+    {
+      tag: "Boots",
+      name: t("builds:boots"),
+    },
+    {
+      tag: "Mana",
+      name: t("builds:mana"),
+    },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col items-center relative px-[5%] font-chewy">
       <div
@@ -424,7 +426,7 @@ const CreateBuild = () => {
               : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
           }
         >
-          Champion & Position
+          {t("builds:nav1")}
         </p>
         <IoChevronForward />
         <p
@@ -435,7 +437,7 @@ const CreateBuild = () => {
               : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
           }
         >
-          Runes & Summoner spells
+          {t("builds:nav2")}
         </p>
         <IoChevronForward />
         <p
@@ -446,7 +448,7 @@ const CreateBuild = () => {
               : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
           }
         >
-          Items
+          {t("builds:nav3")}
         </p>
         <IoChevronForward />
         <p
@@ -457,7 +459,7 @@ const CreateBuild = () => {
               : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
           }
         >
-          Info
+          {t("builds:nav4")}
         </p>
       </div>
       <div className="mt-[1%] w-full flex items-center gap-x-8 z-20 bg-night bg-opacity-70 py-4 px-[5%] rounded-xl h-[10vh]">
@@ -614,13 +616,13 @@ const CreateBuild = () => {
           <div className="w-[30%] flex flex-col justify-between">
             <input
               type="text"
-              placeholder="Search Champion"
+              placeholder={t("builds:searchChampion")}
               value={searchChampion}
               onChange={handleChampionSearch}
               className="w-full bg-night bg-opacity-70 rounded-xl p-4 text-[16px] focus:outline-none"
             />
             <div className="w-full flex flex-col gap-y-2 pb-[20%]">
-              <p className="text-[28px]">Select position:</p>
+              <p className="text-[28px]">{t("builds:selectPosition")}</p>
               <div className="flex flex-wrap gap-4">
                 {/* toplane */}
                 <div
@@ -634,7 +636,7 @@ const CreateBuild = () => {
                   }
                 >
                   <LeaguePosition height={32} position={"Top"} />
-                  <p className="text-[20px]">Top</p>
+                  <p className="text-[20px]">{t("common:top")}</p>
                 </div>
                 {/* jungle */}
                 <div
@@ -648,7 +650,7 @@ const CreateBuild = () => {
                   }
                 >
                   <LeaguePosition height={32} position={"Jungle"} />
-                  <p className="text-[20px]">Jungle</p>
+                  <p className="text-[20px]">{t("common:jungle")}</p>
                 </div>
                 {/* midlane */}
                 <div
@@ -662,7 +664,7 @@ const CreateBuild = () => {
                   }
                 >
                   <LeaguePosition height={32} position={"Mid"} />
-                  <p className="text-[20px]">Mid</p>
+                  <p className="text-[20px]">{t("common:mid")}</p>
                 </div>
                 {/* bottom */}
                 <div
@@ -676,7 +678,7 @@ const CreateBuild = () => {
                   }
                 >
                   <LeaguePosition height={32} position={"Bottom"} />
-                  <p className="text-[20px]">Bottom</p>
+                  <p className="text-[20px]">{t("common:bot")}</p>
                 </div>
                 {/* support */}
                 <div
@@ -690,7 +692,7 @@ const CreateBuild = () => {
                   }
                 >
                   <LeaguePosition height={32} position={"Support"} />
-                  <p className="text-[20px]">Support</p>
+                  <p className="text-[20px]">{t("common:support")}</p>
                 </div>
               </div>
             </div>
@@ -698,7 +700,7 @@ const CreateBuild = () => {
               className="flex items-center hover:text-amber duration-150 transition-all cursor-pointer pb-[5%]"
               onClick={() => setNavigation(1)}
             >
-              <p className="text-[28px]">Next page</p>
+              <p className="text-[28px]">{t("builds:nextPage")}</p>
               <IoChevronForward className="text-[28px]" />
             </div>
           </div>
@@ -740,7 +742,7 @@ const CreateBuild = () => {
         <div className="w-full flex justify-between mt-[3%] z-20">
           <div className="w-[30%] flex flex-col justify-between">
             <div className="flex flex-col gap-y-2 w-full">
-              <p className="text-[28px]">Select summoner spells:</p>
+              <p className="text-[28px]">{t("builds:selectSumms")}</p>
               <div className="flex flex-wrap gap-4">
                 {summoners.map((summoner) => {
                   return (
@@ -770,7 +772,7 @@ const CreateBuild = () => {
               className="flex items-center hover:text-amber duration-150 transition-all cursor-pointer pb-[5%]"
               onClick={() => setNavigation(2)}
             >
-              <p className="text-[28px]">Next page</p>
+              <p className="text-[28px]">{t("builds:nextPage")}</p>
               <IoChevronForward className="text-[28px]" />
             </div>
           </div>
@@ -947,12 +949,12 @@ const CreateBuild = () => {
           <div className="w-[30%] flex flex-col justify-between">
             <input
               type="text"
-              placeholder="Search item..."
+              placeholder={t("builds:searchItem")}
               value={itemSearch}
               onChange={(e) => setItemSearch(e.target.value)}
               className="w-full bg-night bg-opacity-70 rounded-xl p-4 text-[16px] focus:outline-none"
             />
-            <p className="text-[28px] mt-[7%]">Filter by tags:</p>
+            <p className="text-[28px] mt-[7%]">{t("builds:filterByTags")}</p>
             <div className="flex flex-wrap gap-4 mt-[3%]">
               {itemTags.map((item, key) => {
                 return (
@@ -1042,7 +1044,7 @@ const CreateBuild = () => {
               setTitlePlaceholder(value);
               setFormValues((prevValues) => ({ ...prevValues, title: value }));
             }}
-            placeholder="Title"
+            placeholder={t("builds:title")}
             className="w-[30%] bg-night bg-opacity-70 rounded-xl text-[24px] px-6 py-3 mt-[4%] focus:outline-none"
           />
           <textarea
@@ -1057,13 +1059,13 @@ const CreateBuild = () => {
               }));
             }}
             className="w-[30%] bg-night bg-opacity-70 rounded-xl text-[24px] px-6 py-3 mt-[1%] focus:outline-none"
-            placeholder="Description"
+            placeholder={t("builds:description")}
           ></textarea>
           <button
             onClick={() => handleSubmit()}
             className="w-[15%] text-[20px] bg-night bg-opacity-70 py-2 border-[1px] border-white-smoke rounded-3xl hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
           >
-            Create build
+            {t("builds:createBuild")}
           </button>
         </div>
       )}

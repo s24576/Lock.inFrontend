@@ -22,11 +22,13 @@ import {
   DialogTrigger,
 } from "@/componentsShad/ui/dialog";
 import CommentsSection from "../comments/CommentsSection";
+import { useTranslation } from "react-i18next";
 
 const CourseDetails = () => {
   const { userData } = useContext(UserContext);
   const axiosInstance = useAxios();
   const params = useParams();
+  const { t } = useTranslation();
 
   const [videoToShow, setVideoToShow] = useState(null);
   const [newVideo, setNewVideo] = useState({
@@ -139,7 +141,7 @@ const CourseDetails = () => {
             )}
           </div>
           <div className="mt-[5%] w-full flex flex-col items-center px-4 py-2 border-[1px] border-white-smoke rounded-xl font-chewy">
-            <p className="text-[20px]">About author</p>
+            <p className="text-[20px]">{t("courses:aboutAuthor")}</p>
             <Link
               href={"/profile/" + authorProfileData?.username}
               className="flex items-center gap-x-4 py-4"
@@ -216,7 +218,9 @@ const CourseDetails = () => {
                   : course.description}
               </p>
             </div>
-            <p className="mt-[4%] text-[32px] ml-1 font-chewy">Videos</p>
+            <p className="mt-[4%] text-[32px] ml-1 font-chewy">
+              {t("courses:videos")}
+            </p>
 
             <div className="mt-[3%] flex flex-col gap-y-4">
               {course.films?.map((film, key) => {
@@ -259,6 +263,11 @@ const CourseDetails = () => {
                   </div>
                 );
               })}
+              {course.films?.length === 0 && (
+                <p className="font-chewy text-[18px]">
+                  {t("courses:noVideos")}
+                </p>
+              )}
 
               {userData?.username === course.username && (
                 <Dialog>

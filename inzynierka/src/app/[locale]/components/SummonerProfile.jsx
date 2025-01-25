@@ -31,6 +31,7 @@ import getMatchHistory from "../api/riot/getMatchHistory";
 import { getSummonerSpell } from "@/lib/getSummonerSpell";
 import claimAccount from "../api/profile/claimAccount";
 import FullMatch from "./riot/FullMatch";
+import { useTranslation } from "react-i18next";
 
 const serverVisuals = (server) => {
   switch (server) {
@@ -92,6 +93,8 @@ const SummonerProfile = () => {
   const [matchesShown, setMatchesShown] = useState(10);
   const [filterValue, setFilterValue] = useState("");
   const [queue, setQueue] = useState("");
+
+  const { t } = useTranslation();
 
   const [showFullMatch, setShowFullMatch] = useState(null);
 
@@ -210,7 +213,7 @@ const SummonerProfile = () => {
                     onClick={() => handleFollow()}
                   >
                     <FaHeart className="text-[24px]" />
-                    <p className="text-[20px]">Following</p>
+                    <p className="text-[20px]">{t("riot:following")}</p>
                   </div>
                 ) : (
                   <div
@@ -218,7 +221,7 @@ const SummonerProfile = () => {
                     onClick={() => handleFollow()}
                   >
                     <FaHeartCirclePlus className="text-[24px]" />
-                    <p className="text-[20px]">Follow profile</p>
+                    <p className="text-[20px]">{t("riot:followProfile")}</p>
                   </div>
                 )}
                 {playerData.myAccount ? (
@@ -227,7 +230,7 @@ const SummonerProfile = () => {
                     // onClick={() => handleClaimAccount()}
                   >
                     <FaCheck className="text-[24px]" />
-                    <p className="text-[20px]">My account</p>
+                    <p className="text-[20px]">{t("riot:myAccount")}</p>
                   </div>
                 ) : (
                   <div
@@ -235,7 +238,7 @@ const SummonerProfile = () => {
                     onClick={() => handleClaimAccount()}
                   >
                     <BiLock className="text-[24px]" />
-                    <p className="text-[20px]">Claim account</p>
+                    <p className="text-[20px]">{t("riot:claimAccount")}</p>
                   </div>
                 )}
               </div>
@@ -250,7 +253,7 @@ const SummonerProfile = () => {
                 (rank) => rank.queueType === "RANKED_SOLO_5x5"
               ) ? (
                 <div className="flex flex-col gap-y-2">
-                  <p className="text-[24px]">Ranked Solo/Duo</p>
+                  <p className="text-[24px]">{t("riot:rankSoloDuo")}</p>
                   <div className="flex items-center gap-x-3 w-full justify-between">
                     <div className="flex items-center gap-x-3">
                       <Image
@@ -334,7 +337,7 @@ const SummonerProfile = () => {
                   </div>
                 </div>
               ) : (
-                <p>No rank for Solo/Duo</p>
+                <p>{t("riot:noRankSoloDuo")}</p>
               )}
             </div>
             <div className="bg-silver bg-opacity-15 rounded-2xl py-4 px-6 mt-4">
@@ -342,7 +345,7 @@ const SummonerProfile = () => {
                 (rank) => rank.queueType === "RANKED_FLEX_SR"
               ) ? (
                 <div className="flex flex-col gap-y-2">
-                  <p className="text-[24px]">Ranked Flex</p>
+                  <p className="text-[24px]">{t("riot:rankFlex")}</p>
                   <div className="flex items-center gap-x-3 w-full justify-between">
                     <div className="flex items-center gap-x-3">
                       <Image
@@ -422,11 +425,11 @@ const SummonerProfile = () => {
                   </div>
                 </div>
               ) : (
-                <p>No rank for Ranked Flex</p>
+                <p>{t("riot:noRankFlex")}</p>
               )}
             </div>
             <div className="bg-silver bg-opacity-15 rounded-2xl py-4 px-6 mt-4">
-              <p className="text-[24px]">Champion mastery</p>
+              <p className="text-[24px]">{t("riot:championMastery")}</p>
               <div className="flex gap-x-6 mt-4">
                 {playerData.mastery.map((champion, key) => {
                   return (
@@ -493,14 +496,14 @@ const SummonerProfile = () => {
                 ))}
               </div>
             ) : (
-              <p>No matches found</p>
+              <p>{t("riot:noMatches")}</p>
             )}
 
             <button
               onClick={() => setMatchesShown(matchesShown + 10)}
               className="w-[25%] px-5 py-2 border-[1px] border-white-smoke text-[20px] rounded-3xl mt-6 hover:bg-white-smoke hover:bg-opacity-15 duration-150 transition-all"
             >
-              Show more
+              {t("riot:showMore")}
             </button>
           </div>
         </div>

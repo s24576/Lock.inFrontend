@@ -19,23 +19,9 @@ import Select from "react-select";
 import { customStyles, customStylesDuo } from "@/lib/styles/championNamesList";
 import Image from "next/image";
 import LeaguePosition from "../other/LeaguePosition";
+import { useTranslation } from "react-i18next";
 
 const leaguePositions = ["Fill", "Top", "Jungle", "Mid", "Bot", "Support"];
-
-const languageOptions = [
-  "English",
-  "German",
-  "French",
-  "Spanish",
-  "Polish",
-  "Chinese",
-  "Japanese",
-  "Korean",
-  "Other",
-].map((language) => ({
-  value: language,
-  label: language.charAt(0).toUpperCase() + language.slice(1), // Pierwsza litera wielka
-}));
 
 const rankList = [
   "Unranked",
@@ -70,6 +56,22 @@ const DuoCreation = () => {
 
   const { version } = useContext(SearchContext);
   const { duoSettings } = useContext(UserContext);
+
+  const { t } = useTranslation();
+  const languageOptions = [
+    "English",
+    "German",
+    "French",
+    "Spanish",
+    "Polish",
+    "Chinese",
+    "Japanese",
+    "Korean",
+    "Other",
+  ].map((language) => ({
+    value: language,
+    label: t(`common:${language}`), // Pierwsza litera wielka
+  }));
 
   const [duoBody, setDuoBody] = useState({
     positions: [],
@@ -196,13 +198,13 @@ const DuoCreation = () => {
       <DialogTrigger>
         <div className="flex items-center gap-x-2 cursor-pointer hover:text-amber duration-150 transition-all font-chewy">
           <FaEdit className="text-[28px]" />
-          <p className="text-[20px]">Create duo</p>
+          <p className="text-[20px]">{t("duo:createDuo")}</p>
         </div>
       </DialogTrigger>
       <DialogContent className="bg-night border-[1px] border-amber font-chewy">
         <DialogHeader>
           <DialogTitle>
-            <p className="font-normal">Create duo</p>
+            <p className="font-normal">{t("duo:createDuo")}</p>
           </DialogTitle>
           <DialogClose />
         </DialogHeader>
@@ -235,7 +237,7 @@ const DuoCreation = () => {
                     : duoSettings?.duoAccount.gameName}
                 </p>
               ) : (
-                <p>Summoner</p>
+                <p>{t("duo:summoner")}</p>
               )}
             </div>
             {duoSettings?.duoAccount?.tier === "" ||
@@ -251,16 +253,16 @@ const DuoCreation = () => {
             )}
           </div>
         ) : (
-          <p>No account chosen - select one in duo settings</p>
+          <p>{t("duo:noAccount")}</p>
         )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit();
           }}
-          className=""
+          className="w-full justify-center flex flex-col"
         >
-          <p>I'm looking for:</p>
+          <p>{t("duo:lookingFor")}</p>
           <div className="flex items-center gap-x-2">
             {leaguePositions.map((position, key) => {
               return (
@@ -305,7 +307,7 @@ const DuoCreation = () => {
             })}
           </div>
 
-          <p className="mt-[3%]">I play:</p>
+          <p className="mt-[3%]">{t("duo:iPlay")}</p>
           <div className="flex items-center gap-x-2">
             {leaguePositions.map((position, key) => {
               return (
@@ -345,40 +347,40 @@ const DuoCreation = () => {
               );
             })}
           </div>
-          <p className="mt-[3%] py-1">I'm looking for someone between:</p>
+          <p className="mt-[3%] py-1">{t("duo:lookingBetween")}</p>
           <div className="flex justify-between items-center w-[100%] mt-[1%]">
             <Select
               styles={customStylesDuo}
               options={rankOptions}
               onChange={handleMinRankChange}
-              placeholder="Min rank"
+              placeholder={t("duo:maxRank")}
               className="w-[48%]"
             />
             <Select
               styles={customStylesDuo}
               options={rankOptions}
               onChange={handleMaxRankChange}
-              placeholder="Max rank"
+              placeholder={t("duo:minRank")}
               className="w-[48%]"
             />
           </div>
-          <p className="mt-[3%] py-1">My chmapions:</p>
+          <p className="mt-[3%] py-1">{t("duo:myChampions")}</p>
           <Select
             styles={customStylesDuo}
             options={championOptions}
             onChange={handleSelectChange}
             isMulti
-            placeholder="Choose champions (First 3 will be saved)"
+            placeholder={t("duo:chooseChampions")}
             className="w-[100%]"
           />
 
-          <p className="mt-[3%] py-1">My duo speaks:</p>
+          <p className="mt-[3%] py-1">{t("duo:myDuoSpeaks")}</p>
           <Select
             styles={customStylesDuo}
             options={languageOptions}
             onChange={handleLanguagesChange}
             isMulti
-            placeholder="Choose champions (First 3 will be saved)"
+            placeholder={t("duo:chooseLanguagesAlt")}
             className="w-[100%]"
           />
 
@@ -387,7 +389,7 @@ const DuoCreation = () => {
               type="submit"
               className="w-[100%] px-4 py-2 border-2 border-white-smoke text-[20px] rounded-3xl mt-[8%] hover:bg-silver hover:bg-opacity-15 duration-150 transition-all mx-auto block"
             >
-              Submit
+              {t("common:submit")}
             </button>
           </DialogClose>
         </form>

@@ -218,7 +218,7 @@ const Navbar = () => {
                 href="/login"
                 className="px-8 bg-amber py-1 rounded-3xl text-[24px] text-night hover:bg-silver transition-colors duration-200"
               >
-                Sign In
+                {t("navbar:logIn")}
               </Link>
             </div>
           </div>

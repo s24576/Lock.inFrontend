@@ -2,12 +2,17 @@
   "header": "Dołącz do nas!",
   "username": "Nazwa ",
   "email": "E-mail",
-  "password": "Haslo",
-  "repeatPassword": "Powtorz haslo",
+  "password": "Hasło",
+  "repeatPassword": "Powtórz hasło",
   "loginRedirect": "Masz juz konto?",
-  "loginRedirect2": "Zaloguj sie",
-  "forgotPassword": "Zapomniales hasla?",
-  "register": "Utworz konto",
-  "termsOfService": "Akceptuje",
-  "termsOfService2": "warunki korzystania z serwisu Lock.in"
+  "loginRedirect2": "Zaloguj się",
+  "forgotPassword": "Zapomniales hasła?",
+  "register": "Utwórz konto",
+  "termsOfService": "Akceptuję",
+  "termsOfService2": "warunki korzystania z serwisu Lock.in",
+
+  "confirmRegistrationTitle": "Potwierdzanie konta",
+  "confirmRegistrationText1": "Nie otrzymałeś emaila z linkiem aktywacyjnym? ",
+  "confirmRegistrationText2": "Wyślij ponownie",
+  "confirmRegistrationButton": "Potwierdź konto"
 }

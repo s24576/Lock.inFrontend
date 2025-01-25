@@ -10,6 +10,7 @@ import { FaUser } from "react-icons/fa6";
 import { BiLike, BiDislike } from "react-icons/bi";
 import Link from "next/link";
 import CourseCarousel from "./CourseCarousel";
+import { useTranslation } from "react-i18next";
 
 const Courses = () => {
   const [courseName, setCourseName] = useState("");
@@ -22,6 +23,8 @@ const Courses = () => {
 
   const axiosInstance = useAxios();
   const router = useRouter();
+
+  const { t } = useTranslation();
 
   const {
     refetch: refetchCourses,
@@ -111,13 +114,6 @@ const Courses = () => {
     <div className="h-screen flex justify-between px-[10%] w-full bg-night items-strecht">
       <div className="flex flex-col items-center w-[45%] mt-[10%] font-chewy">
         <p className="font-bangers text-[72px] text-amber">Courses</p>
-        {/* <input
-          type="text"
-          placeholder="Search by name..."
-          value={courseName}
-          onChange={(e) => setCourseName(e.target.value)}
-          className="text-[28px] bg-white-smoke px-6 py-2 w-full rounded-3xl mt-[3%] focus:outline-none text-night"
-        /> */}
         {coursesData?.content && (
           <div className="flex flex-col w-full mt-[6%] gap-y-4">
             {coursesData.content.map((course, key) => {
@@ -142,7 +138,7 @@ const Courses = () => {
                     </div>
                   )}
                   <div className="flex flex-col text-[18px] ml-2 w-[25%]">
-                    <p>by</p>
+                    <p>{t("courses:by")}</p>
                     <Link
                       href={"/profile/" + course?.username}
                       className="hover:underline duration-150 transition-all"
@@ -183,7 +179,7 @@ const Courses = () => {
                     className="cursor-pointer hover:text-amber duration-100 transition-colors"
                     onClick={() => handlePageChange(filterParams.page - 1)}
                   >
-                    Back
+                    {t("common:back")}
                   </p>
                 )}
 
@@ -215,7 +211,7 @@ const Courses = () => {
                     className="cursor-pointer hover:text-amber duration-100 transition-colors"
                     onClick={() => handlePageChange(filterParams.page + 1)}
                   >
-                    Next
+                    {t("common:next")}
                   </p>
                 )}
               </div>

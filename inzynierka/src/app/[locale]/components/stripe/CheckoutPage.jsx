@@ -7,12 +7,14 @@ import {
 } from "@stripe/react-stripe-js";
 import useAxios from "../../hooks/useAxios";
 import { IoCartOutline } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 const CheckoutPage = ({ course }) => {
   const stripe = useStripe();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const axiosInstance = useAxios();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,7 +61,7 @@ const CheckoutPage = ({ course }) => {
         {loading ? (
           <div className="flex items-center justify-between gap-x-2 px-2">
             <IoCartOutline className="text-[32px]" />
-            <p className="text-[20px]">Wait...</p>
+            <p className="text-[20px]">{t("courses:wait")}</p>
           </div>
         ) : (
           <div className="flex items-center justify-between gap-x-2 px-2">

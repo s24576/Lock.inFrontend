@@ -4,6 +4,7 @@ import { useMutation } from "react-query";
 import createCourse from "../../api/courses/createCourse";
 import useAxios from "../../hooks/useAxios";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const CourseCreate = () => {
   const [formValues, setFormValues] = useState({
@@ -14,6 +15,7 @@ const CourseCreate = () => {
   });
   const axiosInstance = useAxios();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const { mutateAsync: handleCreateCourse } = useMutation(
     () => createCourse(axiosInstance, formValues),
@@ -47,9 +49,7 @@ const CourseCreate = () => {
         ) : (
           <div className="flex items-center w-full">
             <MdAddPhotoAlternate className="text-[96px] w-[30%]" />
-            <p className="text-[40px] w-[70%]">
-              Paste URL to see your course preview
-            </p>
+            <p className="text-[40px] w-[70%]">{t("courses:pasteURL")}</p>
           </div>
         )}
       </div>
@@ -58,7 +58,7 @@ const CourseCreate = () => {
           <div className="flex items-center justify-between w-full">
             <input
               className="w-[60%] bg-transparent p-3 text-[20px] border-silver border-[1px] rounded-xl focus:border-amber focus:outline-none placeholder-white-smoke-left"
-              placeholder="Course title"
+              placeholder={t("courses:courseTitle")}
               type="text"
               value={formValues.title}
               onChange={(e) =>
@@ -72,7 +72,7 @@ const CourseCreate = () => {
             />
             <input
               className="w-[30%] bg-transparent p-3 text-[20px] border-silver border-[1px] rounded-xl focus:outline-none  appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:border-amber"
-              placeholder="Price (PLN)"
+              placeholder={t("courses:price")}
               type="number"
               value={formValues.price}
               onChange={(e) =>
@@ -87,7 +87,7 @@ const CourseCreate = () => {
           </div>
           <textarea
             className="mt-[3%] w-full bg-transparent rounded-xl p-4 text-[18px] border-[1px] border-silver focus:outline-none focus:border-amber placeholder-white-smoke-left"
-            placeholder="Course description"
+            placeholder={t("courses:courseDescription")}
             rows={5}
             value={formValues.description}
             onChange={(e) =>
@@ -101,7 +101,7 @@ const CourseCreate = () => {
           ></textarea>
           <input
             type="text"
-            placeholder="Paste image URL"
+            placeholder={t("courses:pasteImageURL")}
             value={formValues.picture}
             onChange={(e) =>
               setFormValues((prev) => {
@@ -113,16 +113,16 @@ const CourseCreate = () => {
             }
             className="mt-[2%] bg-transparent p-3 text-[20px] border-silver border-[1px] rounded-xl focus:outline-none focus:border-amber placeholder-white-smoke-left"
           />
-          <p className="mt-[4%] text-[32px] ml-1">Videos</p>
+          <p className="mt-[4%] text-[32px] ml-1">{t("courses:videos")}</p>
           <p className="mt-[2%] ml-1 text-[20px]">
-            Create course first to add videos
+            {t("courses:createCourseFirst")}
           </p>
 
           <button
             type="submit"
             className="w-[20%] border-white-smoke border-[1px] rounded-xl text-white-smoke mt-[5%] px-6 py-2 text-[20px] mx-auto bg-transparent hover:bg-silver-hover transition-all duration-150"
           >
-            Publish course
+            {t("courses:publishCourse")}
           </button>
         </form>
       </div>

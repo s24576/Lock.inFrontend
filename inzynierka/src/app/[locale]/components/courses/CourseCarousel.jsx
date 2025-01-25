@@ -12,10 +12,12 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutPage from "../stripe/CheckoutPage";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 const CourseCarousel = ({ previews, shortProfiles: shortProfilesData }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const { isLogged } = useContext(UserContext);
+  const { t } = useTranslation();
 
   const handlePrevClick = () => {
     setActiveIndex(activeIndex === 0 ? previews.length - 1 : activeIndex - 1);
@@ -78,7 +80,7 @@ const CourseCarousel = ({ previews, shortProfiles: shortProfilesData }) => {
                     </div>
                   )}
                   <div className="flex flex-col text-[20px] font-chewy">
-                    <p>by</p>
+                    <p>{t("courses:by")}</p>
                     <p>{preview?.data?.username}</p>
                   </div>
                 </div>
@@ -88,7 +90,7 @@ const CourseCarousel = ({ previews, shortProfiles: shortProfilesData }) => {
                     : preview?.data?.description}
                 </p>
                 <div className="flex flex-col gap-y-1 mt-4 p-4  font-chewy rounded-xl">
-                  <p className="text-[18px]">Course content</p>
+                  <p className="text-[18px]">{t("courses:courseContent")}</p>
                   {preview?.data?.films.slice(0, 5).map((film, key) => {
                     return (
                       <div key={key} className="flex gap-x-2 items-center">
@@ -98,10 +100,10 @@ const CourseCarousel = ({ previews, shortProfiles: shortProfilesData }) => {
                     );
                   })}
                   {preview?.data?.films.length > 5 && (
-                    <p className="mt-2">And more...</p>
+                    <p className="mt-2">{t("courses:andMore")}</p>
                   )}
                   {preview?.data?.films.length === 0 && (
-                    <p className="mt-2">No videos added yet</p>
+                    <p className="mt-2">{t("courses:noVideos")}</p>
                   )}
                 </div>
                 <div className="flex justify-between items-center mt-8 font-chewy">
@@ -141,12 +143,12 @@ const CourseCarousel = ({ previews, shortProfiles: shortProfilesData }) => {
                         href={"/courses/" + preview?.data?._id}
                         className="hover:text-amber duration-150 transition-all text-[18px]"
                       >
-                        Go to course
+                        {t("courses:goToCourse")}
                       </Link>
                     )
                   ) : (
                     <p className="text-[20px] text-white">
-                      Log in to buy this course
+                      {t("courses:loginToAccess")}
                     </p>
                   )}
                 </div>

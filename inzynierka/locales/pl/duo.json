@@ -1,0 +1,29 @@
+{
+  "createDuo": "Stwórz duo",
+  "lookingFor": "Szukam:",
+  "ranks": "Rangi",
+  "minRank": "Min ranga",
+  "maxRank": "Max ranga",
+  "championsPlayed": "Grane championy:",
+  "chooseChampion": "Wybierz championa",
+  "myDuoSpeaks": "Moje duo zna:",
+  "chooseLanguages": "Wybierz języki",
+
+  "summoner": "Gracz",
+  "playedPositions": "Grane pozycje",
+  "rank": "Ranga",
+  "searchedPositions": "Szukane pozycje",
+  "searchedRanks": "Szukane rangi",
+  "playedChampions": "Grane championy",
+  "languages": "Języki",
+
+  "iPlay": "Gram:",
+  "lookingBetween": "Szukam kogoś pomiędzy:",
+  "myChampions": "Moje championy",
+  "chooseChampions": "Wybierz championy (Pierwsze 3 zostaną zapisane)",
+  "chooseLanguagesAlt": "Wybierz języki (Pierwsze 3 zostaną zapisane)",
+  "noAccount": "Nie wybrano konta, wybierz w ustawieniach duo",
+
+  "duoInvites": "Moje zaproszenia do duo",
+  "duoInvitesInfo": "Brak zaproszeń do duo"
+}

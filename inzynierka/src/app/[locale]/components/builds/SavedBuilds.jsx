@@ -5,6 +5,7 @@ import { useQuery } from "react-query";
 import getSavedBuilds from "../../api/builds/getSavedBuilds";
 import getShortProfiles from "../../api/profile/getShortProfiles";
 import ShortBuild from "./ShortBuild";
+import { useTranslation } from "react-i18next";
 
 export const SavedBuilds = () => {
   const [filterParams, setFilterParams] = useState({
@@ -62,6 +63,8 @@ export const SavedBuilds = () => {
     await refetchBuilds();
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen flex flex-col items-center relative">
       <div
@@ -84,7 +87,7 @@ export const SavedBuilds = () => {
       ></div>
 
       <p className="mt-[10%] font-bangers text-[96px] text-amber z-20">
-        Saved Builds
+        {t("builds:savedBuilds")}
       </p>
       {buildsData?.content && buildsData.content.length > 0 ? (
         <div className="z-20 bg-night bg-opacity-50 w-full px-[14%] mt-[7%] py-[2%] font-chewy">
@@ -111,7 +114,7 @@ export const SavedBuilds = () => {
                   className="cursor-pointer hover:text-amber duration-100 transition-colors"
                   onClick={() => handlePageChange(filterParams.page - 1)}
                 >
-                  Back
+                  {t("common:back")}
                 </p>
               )}
 
@@ -143,7 +146,7 @@ export const SavedBuilds = () => {
                   className="cursor-pointer hover:text-amber duration-100 transition-colors"
                   onClick={() => handlePageChange(filterParams.page + 1)}
                 >
-                  Next
+                  {t("common:next")}
                 </p>
               )}
             </div>
@@ -152,7 +155,7 @@ export const SavedBuilds = () => {
       ) : (
         <div>
           <p className="z-20 text-[32px] font-chewy text-white-smoke mt-[7%]">
-            Save build to see it here
+            {t("builds:savedBuildsInfo")}
           </p>
         </div>
       )}

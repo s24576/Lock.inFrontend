@@ -1,0 +1,16 @@
+{
+  "profileSettings": "Ustawienia profilu",
+  "noProfilePicture": "Brak zdjęcia profilowego",
+  "enterBio": "Wprowadź swoje bio",
+  "accountSettings": "Ustawienia konta",
+  "oldPassword": "Stare hasło",
+  "newPassword": "Nowe hasło",
+  "confirmPassword": "Potwierdź hasło",
+  "changePassword": "Zmień hasło",
+  "newEmail": "Nowy email",
+  "password": "Hasło",
+  "changeEmail": "Zmień email",
+  "saveChanges": "Zapisz zmiany",
+  "emailChanged": "Email został zmieniony",
+  "passwordChanged": "Hasło zostało zmienione"
+}

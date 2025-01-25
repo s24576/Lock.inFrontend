@@ -16,10 +16,12 @@ import getShortProfiles from "../api/profile/getShortProfiles";
 import Link from "next/link";
 import { BiSolidLock } from "react-icons/bi";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
   const { userData, isLogged } = useContext(UserContext);
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
+  const { t } = useTranslation();
   //profil do wyszukania
   const [profileUsername, setProfileUsername] = useState("");
 
@@ -146,7 +148,7 @@ const Profile = () => {
                     className="flex items-center gap-x-1 text-white-smoke hover:text-amber transition-all cursor-pointer duration-150"
                   >
                     <AiOutlineDelete className="text-[28px]" />
-                    <p className="text-[20px]">Delete friend</p>
+                    <p className="text-[20px]">{t("mainpage:deleteFriend")}</p>
                   </div>
                 ) : (
                   <div
@@ -154,7 +156,7 @@ const Profile = () => {
                     className="flex items-center gap-x-1 text-white-smoke hover:text-amber transition-all cursor-pointer duration-150"
                   >
                     <IoPersonAddSharp className="text-[28px]" />
-                    <p className="text-[20px]">Add friend</p>
+                    <p className="text-[20px]">{t("mainpage:addFriend")}</p>
                   </div>
                 )}
               </div>
@@ -166,7 +168,7 @@ const Profile = () => {
                       : profileData.bio}
                   </p>
                 ) : (
-                  <p>User bio...</p>
+                  <p>{t("mainpage:userBio")}</p>
                 )}
               </div>
             </div>
@@ -179,7 +181,7 @@ const Profile = () => {
               type="text"
               value={profileUsername}
               onChange={(e) => setProfileUsername(e.target.value)}
-              placeholder="Search profile..."
+              placeholder={t("mainpage:searchProfile")}
               className="bg-transparent text-[20px] focus:outline-none text-night"
             />
             <button type="submit">
@@ -188,7 +190,7 @@ const Profile = () => {
           </form>
         </div>
         <div className="mt-[5%] flex flex-col gap-y-4">
-          <p className="text-[40px]">Friends</p>
+          <p className="text-[40px]">{t("mainpage:friends")}</p>
           <div className="flex flex-col gap-y-3">
             {shortProfilesData &&
               Object.entries(shortProfilesData).map(([key, profile]) => (

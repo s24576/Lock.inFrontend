@@ -1,0 +1,16 @@
+{
+  "profileSettings": "Profile Settings",
+  "noProfilePicture": "No profile picture",
+  "enterBio": "Enter your bio",
+  "accountSettings": "Account Settings",
+  "oldPassword": "Old password",
+  "newPassword": "New password",
+  "confirmPassword": "Confirm password",
+  "changePassword": "Change password",
+  "newEmail": "New email",
+  "password": "Password",
+  "changeEmail": "Change email",
+  "saveChanges": "Save changes",
+  "emailChanged": "Email has been changed successfully",
+  "passwordChanged": "Password has been changed successfully"
+}

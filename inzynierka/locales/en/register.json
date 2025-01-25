@@ -9,5 +9,10 @@
   "forgotPassword": "Forgot Password?",
   "register": "Sign Up",
   "termsOfService": "I accept the",
-  "termsOfService2": "terms of Service"
+  "termsOfService2": "terms of Service",
+
+  "confirmRegistrationTitle": "Confirm Registration",
+  "confirmRegistrationText1": "Didn't get an email with confirmation code? ",
+  "confirmRegistrationText2": "Click here",
+  "confirmRegistrationButton": "Confirm Account"
 }

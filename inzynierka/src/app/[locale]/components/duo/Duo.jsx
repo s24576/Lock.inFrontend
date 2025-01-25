@@ -18,23 +18,9 @@ import LeaguePosition from "../other/LeaguePosition";
 import languageTruncator from "@/lib/languageTruncator";
 import getChampionNames from "../../api/ddragon/getChampionNames";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const leaguePositions = ["Top", "Jungle", "Mid", "Bot", "Support", "Fill"];
-
-const languageOptions = [
-  "English",
-  "German",
-  "French",
-  "Spanish",
-  "Polish",
-  "Chinese",
-  "Japanese",
-  "Korean",
-  "Other",
-].map((language) => ({
-  value: language,
-  label: language.charAt(0).toUpperCase() + language.slice(1), // Pierwsza litera wielka
-}));
 
 const rankList = [
   "Unranked",
@@ -73,6 +59,23 @@ const Duo = () => {
   const [maxRank, setMaxRank] = useState("");
   const [championsToFilter, setChampionsToFilter] = useState([]);
   const [languagesToFilter, setLanguagesToFilter] = useState([]);
+
+  const { t } = useTranslation();
+
+  const languageOptions = [
+    "English",
+    "German",
+    "French",
+    "Spanish",
+    "Polish",
+    "Chinese",
+    "Japanese",
+    "Korean",
+    "Other",
+  ].map((language) => ({
+    value: language,
+    label: t(`common:${language}`), // Pierwsza litera wielka
+  }));
 
   //do selecta z championami
   const [championOptions, setChampionOptions] = useState([]);
@@ -230,6 +233,7 @@ const Duo = () => {
     const refetch = async () => {
       await refetchDuos();
     };
+
     refetch();
   }, [filterBody]);
 
@@ -285,7 +289,7 @@ const Duo = () => {
                     : riotProfiles[0].gameName}
                 </p>
               ) : (
-                <p>Summoner</p>
+                <p> {t("duo:summoner")}</p>
               )}
             </div>
             {riotProfiles[0].tier === "" || riotProfiles[0].tier === null ? (
@@ -303,7 +307,7 @@ const Duo = () => {
           <DuoSettings riotProfiles={riotProfiles}></DuoSettings>
         )}
 
-        <p className="text-[20px] mt-[4%]">I'm looking for:</p>
+        <p className="text-[20px] mt-[4%]">{t("duo:lookingFor")}</p>
         <div className="flex flex-wrap items-center gap-2">
           {leaguePositions.map((position, key) => {
             return (
@@ -331,57 +335,67 @@ const Duo = () => {
                 }}
               >
                 <LeaguePosition position={position} height={32} />
-                <p>{position}</p>
+                <p>{t(`common:${position}`)}</p>
               </div>
             );
           })}
         </div>
-        <p className="text-[20px] mt-[4%]">Ranks:</p>
+        <p className="text-[20px] mt-[4%]">{t("duo:ranks")}</p>
         <div className="flex justify-between items-center w-[80%]">
           <Select
             styles={customStylesDuo}
             options={rankOptions}
             onChange={handleMinRankChange}
-            placeholder="Min rank"
+            placeholder={t("duo:minRank")}
             className="w-[48%]"
           />
           <Select
             styles={customStylesDuo}
             options={rankOptions}
             onChange={handleMaxRankChange}
-            placeholder="Max rank"
+            placeholder={t("duo:maxRank")}
             className="w-[48%]"
           />
         </div>
-        <p className="text-[20px] mt-[4%]">Champions played:</p>
+        <p className="text-[20px] mt-[4%]">{t("duo:championsPlayed")}</p>
         <Select
           styles={customStylesDuo}
           options={championOptions}
           onChange={handleSelectChange}
           isMulti
-          placeholder="Choose a champion"
+          placeholder={t("duo:chooseChampion")}
           className="w-[80%]"
         />
-        <p className="text-[20px] mt-[4%]">My duo speaks:</p>
+        <p className="text-[20px] mt-[4%]">{t("duo:myDuoSpeaks")}</p>
         <Select
           styles={customStylesDuo}
           options={languageOptions}
           onChange={handleLanguagesChange}
           isMulti
-          placeholder="Choose languages"
+          placeholder={t("duo:chooseLanguages")}
           className="w-[80%]"
         />
       </div>
       <div className="mt-[9%] w-[75%] flex flex-col gap-y-4 z-20 font-chewy">
         <p className="font-bangers text-[64px] text-amber text-center">Duo</p>
         <div className="flex items-center w-full">
-          <p className="text-silver w-[15%] text-center">Summoner</p>
-          <p className="text-silver w-[20%] text-center">Played positions</p>
-          <p className="text-silver w-[5%] text-center">Rank</p>
-          <p className="text-silver w-[20%] text-center">Searched positions</p>
-          <p className="text-silver w-[10%] text-center">Searched ranks</p>
-          <p className="text-silver w-[15%] text-center">Played Champions</p>
-          <p className="text-silver w-[10%] text-center">Languages</p>
+          <p className="text-silver w-[15%] text-center">{t("duo:summoner")}</p>
+          <p className="text-silver w-[20%] text-center">
+            {t("duo:playedPositions")}
+          </p>
+          <p className="text-silver w-[5%] text-center">{t("duo:rank")}</p>
+          <p className="text-silver w-[20%] text-center">
+            {t("duo:searchedPositions")}
+          </p>
+          <p className="text-silver w-[10%] text-center">
+            {t("duo:searchedRanks")}
+          </p>
+          <p className="text-silver w-[15%] text-center">
+            {t("duo:playedChampions")}
+          </p>
+          <p className="text-silver w-[10%] text-center">
+            {t("duo:languages")}
+          </p>
         </div>
         <div className="flex flex-col gap-y-4 w-full text-opacity-90">
           {duos &&
@@ -548,7 +562,7 @@ const Duo = () => {
                 className="cursor-pointer hover:text-amber duration-100 transition-colors"
                 onClick={() => handlePageChange(filterParams.page - 1)}
               >
-                Back
+                {t("common:back")}
               </p>
             )}
 
@@ -577,7 +591,7 @@ const Duo = () => {
                 className="cursor-pointer hover:text-amber duration-100 transition-colors"
                 onClick={() => handlePageChange(filterParams.page + 1)}
               >
-                Next
+                {t("common:next")}
               </p>
             )}
           </div>

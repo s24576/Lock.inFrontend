@@ -1,11 +1,15 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 import { BiSolidLock } from "react-icons/bi";
 import { FaDiscord, FaRegCopyright } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { MdOutlineEmail } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <div className=" bg-night flex flex-col gap-y-10 pt-[80px]">
       <div className=" mx-[8%] pt-8 border-t-2 border-white-smoke flex justify-center  gap-x-[10%] text-white-smoke">
@@ -25,31 +29,31 @@ const Footer = () => {
               href="/builds"
               className="hover:text-amber transition-colors duration-100 "
             >
-              Builds
+              {t("footer:builds")}
             </Link>
             <Link
               href="/courses"
               className="hover:text-amber transition-colors duration-100 "
             >
-              Courses
+              {t("footer:courses")}
             </Link>
             <Link
               href="/duo"
               className="hover:text-amber transition-colors duration-100 "
             >
-              Team Up
+              {t("footer:team-up")}
             </Link>
             <Link
               href="/login"
               className="hover:text-amber transition-colors duration-100 "
             >
-              Sign In
+              {t("footer:signIn")}
             </Link>
           </div>
         </div>
 
         <div className="flex flex-col gap-y-3">
-          <p className="text-[32px] font-bangers">Apps</p>
+          <p className="text-[32px] font-bangers">{t("footer:apps")}</p>
           <div className="flex flex-col gap-y-1 font-chewy text-[16px]">
             <Link
               href="/builds"
@@ -67,31 +71,31 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col gap-y-3">
-          <p className="text-[32px] font-bangers">Resources</p>
+          <p className="text-[32px] font-bangers">{t("footer:resources")}</p>
           <div className="flex flex-col gap-y-1 font-chewy text-[16px]">
             <Link
               href="/builds"
               className="hover:text-amber transition-colors duration-100 "
             >
-              Privacy Policy
+              {t("footer:privacy-policy")}
             </Link>
             <Link
               href="/courses"
               className="hover:text-amber transition-colors duration-100 "
             >
-              Terms of Service
+              {t("footer:TOS")}
             </Link>
             <Link
               href="/courses"
               className="hover:text-amber transition-colors duration-100 "
             >
-              Riot Games
+              {t("footer:riot")}
             </Link>
           </div>
         </div>
 
         <div className="flex flex-col gap-y-3">
-          <p className="text-[32px] font-bangers">Contact</p>
+          <p className="text-[32px] font-bangers">{t("footer:contact")}</p>
           <div className="flex flex-col gap-y-1 font-chewy text-[16px]">
             <Link
               href="/builds"
@@ -120,18 +124,11 @@ const Footer = () => {
       <div className="flex flex-col items-center justify-center text-center text-white-smoke text-[16px] py-4">
         <div className="flex items-center justify-center gap-x-1 font-chewy">
           <FaRegCopyright className="text-[18px]"></FaRegCopyright>
-          <p className="">
-            2024 Lock.in is not endorsed by Riot Games and does not reflect the
-            views or opinions of Riot Games or anyone officially involve in
-            producing or managing League of Legends.
-          </p>
+          <p className="">{t("footer:clause1")}</p>
         </div>
 
         <div className="flex items-center justify-center gap-x-1 font-chewy">
-          <p className="">
-            League of Legends and Riot Games are trademarks or registered
-            trademarks of Riot Games, Inc. League of Legends
-          </p>
+          <p className="">{t("footer:clause2")}</p>
           <FaRegCopyright className="text-[18px]"></FaRegCopyright>
         </div>
       </div>

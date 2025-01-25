@@ -35,6 +35,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/componentsShad/ui/tooltip";
+import { useTranslation } from "react-i18next";
 
 const BuildDetails = () => {
   const { userData, isLogged } = useContext(UserContext);
@@ -45,6 +46,7 @@ const BuildDetails = () => {
 
   //do dorobienia axios public
   const axiosInstance = useAxios();
+  const { t } = useTranslation();
 
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
@@ -482,7 +484,7 @@ const BuildDetails = () => {
           </div>
         </div>
         <div className="z-20 mt-[14%] w-[30%] bg-night bg-opacity-60 p-5 font-chewy rounded-xl ">
-          <p className="text-[28px]">Build description</p>
+          <p className="text-[28px]">{t("builds:description")}</p>
           <p className="mt-3">{buildData?.description}</p>
         </div>
       </div>

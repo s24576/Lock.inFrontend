@@ -19,48 +19,6 @@ import { RITeamFill, RISwordFill } from "@icongo/ri";
 
 import Footer from "./Footer";
 
-const tiles = [
-  {
-    title: "Looking for duo?",
-    description:
-      "Connect your account and use Lock.in filters to find a perfect partner to play with",
-    icon: <IoGameControllerOutline className="text-[64px]" />,
-  },
-
-  {
-    title: "Let's compete!",
-    description: "Join other squad for Clash or find numbers for your team",
-    icon: <RITeamFill fill="#F5F5F5" className="text-[64px] " />,
-  },
-
-  {
-    title: "Chats",
-    description:
-      "Text with your friends about the game in private or group chats",
-    icon: <FaComment className="text-[64px]" />,
-  },
-
-  {
-    title: "Builds",
-    description: "Browse and create builds and strategies for every champion",
-    icon: <RISwordFill fill="#F5F5F5" className="text-[64px] " />,
-  },
-
-  {
-    title: "Courses",
-    description:
-      "Learn from the best to help you level up your game and climb the ranks",
-    icon: <FaBookOpen className="text-[64px]" />,
-  },
-
-  {
-    title: "Become friends",
-    description:
-      "Add new people you found on Lock.in or connect with your life-long buddies",
-    icon: <IoPeople className="text-[64px]" />,
-  },
-];
-
 const Mainpage = () => {
   const { userData, isLogged, setUserData, setIsLogged } =
     useContext(UserContext);
@@ -73,53 +31,45 @@ const Mainpage = () => {
   const api = useAxios();
   const router = useRouter();
 
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const response = await api.get("/user/getUserData");
-        if (response.status === 200) {
-          setUserData((prevUserData) => ({
-            ...prevUserData,
-            ...response.data, // Poprawne rozpakowanie danych użytkownika do stanu
-          }));
-          console.log(response.data);
-          setIsLogged(true);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        // Możesz dodać tutaj dodatkową obsługę błędów, jeśli jest potrzebna
-      }
-    };
-
-    checkToken();
-  }, []);
-
-  useEffect(() => {
-    const fetchFollowed = async () => {
-      try {
-        const response = await api.get(`/riot/getWatchlistRiotProfiles`);
-        console.log("followed profiles:", response.data);
-        setFollowedProfiles(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchMyAccounts = async () => {
-      try {
-        const response = await api.get(`/riot/getMyRiotProfiles`);
-        console.log("claimed accounts: ", response.data);
-        setMyAccounts(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchFollowed();
-    fetchMyAccounts();
-  }, []);
-
   const { t } = useTranslation();
+
+  const tiles = [
+    {
+      title: t("mainpage:bento1title"),
+      description: t("mainpage:bento1"),
+      icon: <IoGameControllerOutline className="text-[64px]" />,
+    },
+
+    {
+      title: t("mainpage:bento2title"),
+      description: t("mainpage:bento2"),
+      icon: <RITeamFill fill="#F5F5F5" className="text-[64px] " />,
+    },
+
+    {
+      title: t("mainpage:bento3title"),
+      description: t("mainpage:bento3"),
+      icon: <FaComment className="text-[64px]" />,
+    },
+
+    {
+      title: t("mainpage:bento4title"),
+      description: t("mainpage:bento4"),
+      icon: <RISwordFill fill="#F5F5F5" className="text-[64px] " />,
+    },
+
+    {
+      title: t("mainpage:bento5title"),
+      description: t("mainpage:bento5"),
+      icon: <FaBookOpen className="text-[64px]" />,
+    },
+
+    {
+      title: t("mainpage:bento6title"),
+      description: t("mainpage:bento6"),
+      icon: <IoPeople className="text-[64px]" />,
+    },
+  ];
 
   return (
     <div className="flex flex-col font-bangers">
@@ -148,9 +98,7 @@ const Mainpage = () => {
       {/* Second div */}
       <div className="h-screen bg-gradient-to-b from-[#1A0E05] to-night to-80% font-chewy flex items-center justify-center px-[8%] gap-x-[8%]">
         <div className="flex flex-col items-center justify-center gap-y-12 w-[35%] ">
-          <p className="text-[64px] text-center">
-            What are you getting with Lock.in...
-          </p>
+          <p className="text-[64px] text-center">{t("mainpage:header3")}</p>
           <div className="flex items-center gap-x-12">
             <Link
               href="/courses"

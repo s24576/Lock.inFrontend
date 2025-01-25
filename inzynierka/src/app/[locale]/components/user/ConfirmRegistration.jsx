@@ -5,6 +5,7 @@ import confirmRegistration from "../../api/user/confirmRegistration";
 import resendConfirmationToken from "../../api/user/resendConfirmationToken";
 import { useRouter } from "next/navigation";
 import { FaCheck } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 
 const ConfirmRegistration = () => {
   const [confirmationToken, setConfirmationToken] = useState("");
@@ -42,17 +43,21 @@ const ConfirmRegistration = () => {
     await handleConfirmRegistration(confirmationToken);
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className=" flex flex-col w-full h-screen items-center justify-center bg-night text-white-smoke font-chewy">
-      <p className="font-bangers text-[48px]">Confirm registration</p>
+      <p className="font-bangers text-[48px]">
+        {t("register:confirmRegistrationTitle")}
+      </p>
 
       <p>
-        Didn't get an email with confirmation code?{" "}
+        {t("register:confirmRegistrationText1")}
         <span
           className="underline cursor-pointer hover:text-amber duration-150 transition-all"
           onClick={handleResendConfirmationToken}
         >
-          Click here
+          {t("register:confirmRegistrationText2")}
         </span>
       </p>
 
@@ -72,7 +77,9 @@ const ConfirmRegistration = () => {
           className="flex items-center gap-x-1 hover:text-amber transition-all duration-150 cursor-pointer text-white-smoke mt-5 py-2 px-3"
         >
           <FaCheck className="text-[28px]"></FaCheck>
-          <p className="text-[20px] ">Confirm account</p>
+          <p className="text-[20px] ">
+            {t("register:confirmRegistrationButton")}
+          </p>
         </button>
       </form>
     </div>

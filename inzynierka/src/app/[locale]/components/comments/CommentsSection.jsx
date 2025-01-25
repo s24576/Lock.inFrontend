@@ -22,9 +22,11 @@ import { IoMdMore } from "react-icons/io";
 import { FaUser } from "react-icons/fa";
 import { FaExclamation } from "react-icons/fa6";
 import Footer from "../Footer";
+import { useTranslation } from "react-i18next";
 
 const CommentsSection = ({ id: objectId }) => {
   const { userData, isLogged } = useContext(UserContext);
+  const { t } = useTranslation();
 
   const [newComment, setNewComment] = useState("");
 
@@ -284,7 +286,9 @@ const CommentsSection = ({ id: objectId }) => {
     <div className="w-full flex flex-col">
       <div className="w-full px-[10%] flex justify-between  mt-8 font-chewy">
         <div className="flex flex-col w-[40%]">
-          <p className="py-5 text-[32px]  text-center">Leave comment</p>
+          <p className="py-5 text-[32px]  text-center">
+            {t("comments:leaveComment")}
+          </p>
 
           <form
             className="flex flex-col items-center text-black pb-8"
@@ -296,7 +300,7 @@ const CommentsSection = ({ id: objectId }) => {
               cols={30}
               rows={6}
               className="px-3 py-2 w-[75%] h-[200px] bg-transparent border-[1px] border-white-smoke rounded-xl text-[18px] text-white-smoke"
-              placeholder="Add comment..."
+              placeholder={t("comments:addComment")}
               value={newComment}
               onChange={handleCommentChange}
               onFocus={() => setShowReplyInput("")}
@@ -305,13 +309,15 @@ const CommentsSection = ({ id: objectId }) => {
               type="submit"
               className="bg-transparent px-4 py-2 w-[45%] mt-8 rounded-3xl text-white text-[20px] border-[1px] border-white-smoke hover:text-amber duration-150 transition-all hover:border-amber"
             >
-              Comment
+              {t("comments:comment")}
             </button>
           </form>
         </div>
 
         <div className="flex flex-col w-[40%] items-center">
-          <p className="py-5 text-[36px] text-center">Comments</p>
+          <p className="py-5 text-[36px] text-center">
+            {t("comments:comments")}
+          </p>
           <div className="flex flex-col gap-y-8 w-full py-3 ">
             {allCommentsData &&
             Array.isArray(allCommentsData.content) &&
@@ -395,7 +401,7 @@ const CommentsSection = ({ id: objectId }) => {
                                 className="text-[20px] cursor-pointer hover:text-amber duration-150 transition-all"
                                 onClick={() => setShowReplyInput(comment._id)}
                               >
-                                Reply
+                                {t("comments:reply")}
                               </p>
                             </div>
                           </div>
@@ -426,13 +432,13 @@ const CommentsSection = ({ id: objectId }) => {
                             value={newReply}
                             onChange={(e) => setNewReply(e.target.value)}
                             className="border p-2 w-full bg-transparent rounded-md text-white-smoke"
-                            placeholder="Add a comment"
+                            placeholder={t("comments:addComment")}
                           />
                           <button
                             type="submit"
                             className="w-[40%] mt-4 p-2 bg-transparent text-white-smoke rounded-3xl border-[1px] border-white-smoke hover:text-amber duration-150 transition-all hover:border-amber"
                           >
-                            Submit
+                            {t("comments:reply")}
                           </button>
                         </form>
                       )}
@@ -542,7 +548,7 @@ const CommentsSection = ({ id: objectId }) => {
                             }}
                             className="flex items-center mt-5 pl-[76px] py-1 rounded-md hover:text-amber duration-150 transition-all"
                           >
-                            Show replies
+                            {t("comments:showReplies")}
                           </button>
                         ) : (
                           ""
@@ -552,19 +558,19 @@ const CommentsSection = ({ id: objectId }) => {
                   );
               })
             ) : (
-              <p className="mt-5 text-center">Comment first</p>
+              <p className="mt-5 text-center">{t("comments:commentFirst")}</p>
             )}
           </div>
           {allCommentsData.page.totalElements >
             allCommentsData.content.length && (
             <p
-              className="w-[30%] text-center font-semibold mt-3 px-6 py-2 bg-amber text-night rounded-md cursor-pointer"
+              className="w-[50%] text-center font-semibold text-[18px] mt-3 px-6 py-2 bg-transparent text-white-smoke border-[1px] border-white-smoke rounded-xl hover:bg-silver hover:bg-opacity-15 transition-all duration-100 cursor-pointer"
               onClick={() => {
                 console.log("increasing comments");
                 setNumberOfComments(numberOfComments + 5);
               }}
             >
-              Show more comments
+              {t("comments:showMore")}
             </p>
           )}
         </div>

@@ -11,8 +11,11 @@ import getUserData from "../../api/user/getUserData";
 import changeEmail from "../../api/user/changeEmail";
 import changePassword from "../../api/user/changePassword";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
+  const { t } = useTranslation();
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewSrc, setPreviewSrc] = useState(null);
   const [passwordData, setPasswordData] = useState({
@@ -125,12 +128,14 @@ const Profile = () => {
           (t) => (
             <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-chewy flex flex-col">
               <div className="flex items-center justify-between gap-x-2 px-4">
-                <h1 className="px-[10px]">Notification</h1>
-                <button onClick={() => toast.dismiss(t)}>Close</button>
+                <h1 className="px-[10px]">{t("common:notification")}</h1>
+                <button onClick={() => toast.dismiss(t)}>
+                  {t("common:close")}
+                </button>
               </div>
               <div className="flex items-start gap-x-2 px-4 mt-2 w-full">
                 <p className="pl-[10px] text-[16px] min-w-[30%]">
-                  Your password has been changed
+                  {t("common:passwordChanged")}
                 </p>
               </div>
             </div>
@@ -155,12 +160,14 @@ const Profile = () => {
           (t) => (
             <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-chewy flex flex-col">
               <div className="flex items-center justify-between gap-x-2 px-4">
-                <h1 className="px-[10px]">Notification</h1>
-                <button onClick={() => toast.dismiss(t)}>Close</button>
+                <h1 className="px-[10px]">{t("common:notification")}</h1>
+                <button onClick={() => toast.dismiss(t)}>
+                  {t("common:close")}
+                </button>
               </div>
               <div className="flex items-start gap-x-2 px-4 mt-2 w-full">
                 <p className="pl-[10px] text-[16px] min-w-[30%]">
-                  Your email has been changed
+                  {t("common:emailChanged")}
                 </p>
               </div>
             </div>
@@ -226,7 +233,9 @@ const Profile = () => {
   return (
     <div className="flex flex-col h-screen bg-[#131313] text-white-smoke font-chewy px-[10%]">
       <div className="mt-[8%] flex-col flex">
-        <p className="font-bangers text-[64px]">Profile settings</p>
+        <p className="font-bangers text-[64px]">
+          {t("settings:profileSettings")}
+        </p>
         <div className="mt-3 flex items-center gap-x-8">
           <label className="cursor-pointer">
             {previewSrc ? (
@@ -243,7 +252,7 @@ const Profile = () => {
               />
             ) : (
               <div className="w-[200px] h-[200px] rounded-full flex items-center justify-center border border-dashed text-gray-400">
-                No profile picture
+                {t("settings:noProfilePicture")}
               </div>
             )}
             <input
@@ -262,14 +271,14 @@ const Profile = () => {
                 className="flex items-center gap-x-1 hover:text-amber transition-all duration-150 cursor-pointer"
               >
                 <FaSave className="text-[24px]"></FaSave>
-                <p className="text-[18px] ">Save changes</p>
+                <p className="text-[18px] ">{t("settings:saveChanges")}</p>
               </button>
             </div>
             <div className="flex">
               <form onSubmit={handleBioSubmit}>
                 <textarea
                   className="bg-transparent focus:outline-none w-full h-full py-2 rounded-md resize-none"
-                  placeholder={userData.bio || "Enter your bio"}
+                  placeholder={userData.bio || t("settings:enterBio")}
                   rows={3}
                   cols={50}
                   value={bio}
@@ -279,7 +288,9 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <p className="mt-[4%] font-bangers text-[64px]">Account settings</p>
+        <p className="mt-[4%] font-bangers text-[64px]">
+          {t("settings:accountSettings")}
+        </p>
         <div className="flex gap-x-16 w-full">
           <form
             className="mt-3 flex flex-col gap-y-2 text-black w-[30%]"
@@ -288,7 +299,7 @@ const Profile = () => {
             <input
               type="password"
               name="oldPassword"
-              placeholder="Old Password"
+              placeholder={t("settings:oldPassword")}
               value={passwordData.oldPassword}
               onChange={handleInputChange}
               className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
@@ -296,7 +307,7 @@ const Profile = () => {
             <input
               type="password"
               name="newPassword"
-              placeholder="New Password"
+              placeholder={t("settings:newPassword")}
               value={passwordData.newPassword}
               onChange={handleInputChange}
               className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
@@ -304,7 +315,7 @@ const Profile = () => {
             <input
               type="password"
               name="confirmPassword"
-              placeholder="Confirm Password"
+              placeholder={t("settings:confirmPassword")}
               value={passwordData.confirmPassword}
               onChange={handleInputChange}
               className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
@@ -314,7 +325,7 @@ const Profile = () => {
               className="flex items-center gap-x-1 hover:text-amber transition-all duration-150 cursor-pointer pl-3 text-white-smoke mt-3"
             >
               <FaSave className="text-[28px]"></FaSave>
-              <p className="text-[20px] ">Change password</p>
+              <p className="text-[20px] ">{t("settings:changePassword")}</p>
             </button>
           </form>
           <form
@@ -324,7 +335,7 @@ const Profile = () => {
             <input
               type="email"
               name="email"
-              placeholder="New Email"
+              placeholder={t("settings:newEmail")}
               value={emailData.email}
               onChange={handleEmailChange}
               className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
@@ -332,7 +343,7 @@ const Profile = () => {
             <input
               type="password"
               name="password"
-              placeholder="Password"
+              placeholder={t("settings:password")}
               value={emailData.password}
               onChange={handleEmailChange}
               className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
@@ -342,7 +353,7 @@ const Profile = () => {
               className="flex items-center gap-x-1 hover:text-amber transition-all duration-150 cursor-pointer pl-3 text-white-smoke mt-3"
             >
               <FaSave className="text-[28px]"></FaSave>
-              <p className="text-[20px] ">Change email</p>
+              <p className="text-[20px] ">{t("settings:changeEmail")}</p>
             </button>
           </form>
         </div>

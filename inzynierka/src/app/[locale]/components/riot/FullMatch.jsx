@@ -11,9 +11,11 @@ import { getRuneIcon } from "@/lib/getRuneIcon";
 import findByPuuid from "../../api/riot/findByPuuid";
 import { useRouter } from "next/navigation";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
 
 const FullMatch = ({ matchId }) => {
   const { isLogged } = useContext(UserContext);
+  const { t } = useTranslation();
 
   const router = useRouter();
   const axios = useAxios();
@@ -265,25 +267,34 @@ const FullMatch = ({ matchId }) => {
         <div className="w-full min-h-[200px] flex justify-between px-[5%]">
           <div className="w-[20%] flex flex-col gap-y-2 pt-4 text-nowrap">
             <p>
-              Rift heralds:{" "}
+              {t("riot:heralds")}
               {matchData.info.teams[0].objectives.riftHerald.kills}
             </p>
-            <p>Voidgrubs: {matchData.info.teams[0].objectives.horde.kills}</p>
-            <p>Towers: {matchData.info.teams[0].objectives.tower.kills}</p>
             <p>
-              Inhibitors: {matchData.info.teams[0].objectives.inhibitor.kills}
+              {t("riot:viodgrubs")}{" "}
+              {matchData.info.teams[0].objectives.horde.kills}
+            </p>
+            <p>
+              {t("riot:towers")}{" "}
+              {matchData.info.teams[0].objectives.tower.kills}
+            </p>
+            <p>
+              {t("riot:inhibitors")}{" "}
+              {matchData.info.teams[0].objectives.inhibitor.kills}
             </p>
             <p
               className={`font-bangers text-[24px] ${
                 matchData.info.teams[0].win ? "text-amber" : "text-silver"
               }`}
             >
-              {matchData.info.teams[0].win ? "VICTORY" : "DEFEAT"}
+              {matchData.info.teams[0].win
+                ? t("riot:victory")
+                : t("riot:defeat")}
             </p>
           </div>
           <div className="w-[50%] flex flex-col items-center gap-y-2 pt-4">
             <div className="w-full flex-col flex items-center">
-              <p>Total Kills</p>
+              <p>{t("riot:totalKills")}</p>
               <div className="w-full flex">
                 <div
                   className={`h-[24px] flex justify-start ${
@@ -324,7 +335,7 @@ const FullMatch = ({ matchId }) => {
               </div>
             </div>
             <div className="w-full flex-col flex items-center">
-              <p>Barons</p>
+              <p>{t("riot:barons")}</p>
               <div className="w-full flex">
                 <div
                   className={`h-[24px] flex justify-start ${
@@ -373,7 +384,7 @@ const FullMatch = ({ matchId }) => {
               </div>
             </div>
             <div className="w-full flex-col flex items-center">
-              <p>Dragon</p>
+              <p>{t("riot:dragons")}</p>
               <div className="w-full flex">
                 <div
                   className={`h-[24px] flex justify-start ${
@@ -425,20 +436,29 @@ const FullMatch = ({ matchId }) => {
 
           <div className="w-[20%] flex flex-col items-end  gap-y-2 pt-4 text-nowrap">
             <p>
-              Rift heralds:{" "}
+              {t("riot:heralds")}
               {matchData.info.teams[1].objectives.riftHerald.kills}
             </p>
-            <p>Voidgrubs: {matchData.info.teams[1].objectives.horde.kills}</p>
-            <p>Towers: {matchData.info.teams[1].objectives.tower.kills}</p>
             <p>
-              Inhibitors: {matchData.info.teams[1].objectives.inhibitor.kills}
+              {t("riot:voidgrubs")}{" "}
+              {matchData.info.teams[1].objectives.horde.kills}
+            </p>
+            <p>
+              {t("riot:towers")}{" "}
+              {matchData.info.teams[1].objectives.tower.kills}
+            </p>
+            <p>
+              {t("riot:inhibitors")}{" "}
+              {matchData.info.teams[1].objectives.inhibitor.kills}
             </p>
             <p
               className={`font-bangers text-[24px] ${
                 matchData.info.teams[1].win ? "text-amber" : "text-silver"
               }`}
             >
-              {matchData.info.teams[1].win ? "VICTORY" : "DEFEAT"}
+              {matchData.info.teams[1].win
+                ? t("riot:victory")
+                : t("riot:defeat")}
             </p>
           </div>
         </div>

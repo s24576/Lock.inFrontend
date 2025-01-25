@@ -5,5 +5,8 @@
   "registerRedirect1": "Don't have an account?",
   "registerRedirect2": "Sign Up",
   "forgotPassword": "Forgot password?",
-  "signIn": "Sign In"
+  "signIn": "Sign In",
+
+  "forgotPasswordHeader": "Forgot Password",
+  "forgotPasswordButton": "Reset password"
 }

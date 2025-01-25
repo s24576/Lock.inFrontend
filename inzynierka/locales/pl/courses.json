@@ -1,0 +1,19 @@
+{
+  "courseContent": "Zawartość kursu",
+  "noVideos": "Nie dodano jeszcze żadnych filmów",
+  "by": "przez",
+  "andMore": "I więcej...",
+  "goToCourse": "Przejdź do kursu",
+  "loginToAccess": "Zaloguj się, aby kupić ten kurs",
+  "wait": "Czekaj...",
+  "aboutAuthor": "O autorze",
+  "videos": "Filmy",
+
+  "pasteURL": "Wklej URL, aby zobaczyć podgląd kursu",
+  "courseTitle": "Tytuł kursu",
+  "courseDescription": "Opis kursu",
+  "price": "Cena",
+  "pasteImageURL": "Wklej URL obrazu",
+  "createCourseFirst": "Najpierw utwórz swój kurs, aby dodać filmy",
+  "publishCourse": "Opublikuj kurs"
+}

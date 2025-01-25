@@ -27,6 +27,13 @@ const i18nNamespaces = [
   "findPlayer",
   "login",
   "register",
+  "footer",
+  "builds",
+  "duo",
+  "courses",
+  "settings",
+  "comments",
+  "riot",
 ];
 
 // const stripePromise = loadStripe(

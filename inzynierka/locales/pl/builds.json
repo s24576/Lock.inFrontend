@@ -1,0 +1,36 @@
+{
+  "nav1": "Bohater & Pozycja",
+  "nav2": "Runy & Summonery",
+  "nav3": "Przedmioty",
+  "nav4": "Informacje",
+
+  "newBuild": "Nowy build",
+  "newDescription": "Opis buildu...",
+  "searchChampion": "Szukaj bohatera",
+  "searchItem": "Szukaj przedmiotu...",
+  "selectPosition": "Wybierz pozycję:",
+  "selectSumms": "Wybierz summonery:",
+  "filterByTags": "Filtruj według tagów:",
+  "hp": "Życie",
+  "dmg": "Obrażenia",
+  "cdr": "Redukcja cooldownów",
+  "armor": "Pancerz",
+  "mr": "Odporność na magię",
+  "ms": "Prędkość ruchu",
+  "as": "Szybkość ataku",
+  "armorPen": "Przebicie pancerza",
+  "lifesteal": "Kradzież życia",
+  "onHit": "Obrażenia on-hit",
+  "boots": "Buty",
+  "mana": "Mana",
+  "title": "Tytuł",
+  "description": "Opis",
+  "createBuild": "Stwórz build",
+  "nextPage": "Następna strona",
+
+  "myBuilds": "Moje buildy",
+  "myBuildsInfo": "Stwórz build, aby zobaczyć go tutaj",
+
+  "savedBuilds": "Zapisane buildy",
+  "savedBuildsInfo": "Nie masz jeszcze zapisanych buildów"
+}

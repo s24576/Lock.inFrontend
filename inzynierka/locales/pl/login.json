@@ -1,9 +1,12 @@
 {
   "header": "Siema!",
   "username": "Nazwa lub E-mail",
-  "password": "Haslo",
+  "password": "Hasło",
   "registerRedirect1": "Nie masz konta?",
-  "registerRedirect2": "Zarejestruj sie",
-  "forgotPassword": "Zapomniales hasla?",
-  "signIn": "Zaloguj"
+  "registerRedirect2": "Zarejestruj się",
+  "forgotPassword": "Zapomniałeś hasla?",
+  "signIn": "Zaloguj",
+
+  "forgotPasswordHeader": "Resetowanie hasła",
+  "forgotPasswordButton": "Zresetuj hasło"
 }
