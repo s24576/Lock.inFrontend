@@ -176,7 +176,7 @@ const Builds = () => {
           onSubmit={handleFilter}
           className="flex flex-col items-center z-20 w-full"
         >
-          <div className="flex justify-between items-center px-4 py-3 w-[30%] bg-white-smoke rounded-3xl text-[22px] font-chewy ">
+          <div className="flex justify-between items-center px-4 py-3 w-[30%] bg-white-smoke rounded-3xl text-[22px] font-dekko ">
             <input
               type="text"
               className="bg-transparent w-[90%] focus:outline-none text-night"
@@ -191,7 +191,7 @@ const Builds = () => {
             </button>
           </div>
         </form>
-        <div className="z-20 bg-night bg-opacity-50 w-full px-[14%] mt-[3%] font-chewy">
+        <div className="z-20 bg-night bg-opacity-50 w-full px-[14%] mt-[3%] font-dekko">
           <div className="flex gap-x-6 items-center py-8">
             <p className="text-[36px] text-amber pr-6">{t("common:sortBy")}</p>
             <Select

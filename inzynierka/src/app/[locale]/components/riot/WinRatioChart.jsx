@@ -63,14 +63,14 @@ const WinRatioChart = ({ matchesData }) => {
       <div className="flex flex-col gap-y-3">
         <div className="flex items-center gap-x-3">
           <div className="size-8 bg-amber rounded-full"></div>
-          <p className="text-[24px] font-chewy text-amber">
+          <p className="text-[24px] font-dekko text-amber">
             {t("riot:wins")} (
             {matchesData.filter((match) => match.win === true).length})
           </p>
         </div>
         <div className="flex items-center gap-x-3">
           <div className="size-8 bg-silver rounded-full"></div>
-          <p className="text-[24px] font-chewy text-silver">
+          <p className="text-[24px] font-dekko text-silver">
             {t("riot:losses")} (
             {matchesData.filter((match) => match.win === false).length})
           </p>

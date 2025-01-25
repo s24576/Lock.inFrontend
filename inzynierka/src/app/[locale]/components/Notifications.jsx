@@ -66,7 +66,7 @@ const Notifications = () => {
 
             toast.custom(
               (t) => (
-                <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-chewy flex flex-col">
+                <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">
                   <div className="flex items-center justify-between gap-x-2 px-4">
                     <h1 className="px-[10px]">New message</h1>
                     <button onClick={() => toast.dismiss(t)}>Close</button>
@@ -99,7 +99,7 @@ const Notifications = () => {
             console.log("Notification: ", message.body);
             toast.custom(
               (t) => (
-                <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-chewy flex flex-col">
+                <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">
                   <div className="flex items-center justify-between gap-x-2 px-4">
                     <h1 className="px-[10px]">Notification</h1>
                     <button onClick={() => toast.dismiss(t)}>Close</button>
@@ -128,7 +128,7 @@ const Notifications = () => {
           (message) => {
             toast.custom(
               (t) => (
-                <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-chewy flex flex-col">
+                <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">
                   <div className="flex items-center justify-between gap-x-2 px-4">
                     <h1 className="px-[10px]">Messenger</h1>
                     <button onClick={() => toast.dismiss(t)}>Close</button>
@@ -176,7 +176,7 @@ const Notifications = () => {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute right-0 mt-2 w-[400px] bg-night border border-amber rounded-xl shadow-lg font-chewy"
+          className="absolute right-0 mt-2 w-[400px] bg-night border border-amber rounded-xl shadow-lg font-dekko"
         >
           {notificationsData?.content
             ?.sort((a, b) => b.timestamp - a.timestamp)

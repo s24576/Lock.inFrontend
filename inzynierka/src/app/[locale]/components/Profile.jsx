@@ -122,7 +122,7 @@ const Profile = () => {
   if (isLogged === false) {
     router.push("/");
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-dekko">
         <p className="text-amber text-[40px] animate-pulse ">
           {t("common:redirecting")}
         </p>
@@ -132,7 +132,7 @@ const Profile = () => {
 
   if (!profileIsLoading && !shortProfilesIsLoading && isLogged && profileData) {
     return (
-      <div className="pt-[10%] px-[10%] min-h-screen w-full flex flex-col bg-night font-chewy">
+      <div className="pt-[10%] px-[10%] min-h-screen w-full flex flex-col bg-night font-dekko">
         <div className="flex justify-between w-full">
           <div className="flex gap-x-4 w-full">
             {profileData.image ? (

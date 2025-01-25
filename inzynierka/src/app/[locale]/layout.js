@@ -1,6 +1,11 @@
 import { Inter } from "next/font/google";
 import "@fontsource/bangers"; // Import czcionki Bangers
 import "@fontsource/chewy";
+import "@fontsource/rum-raisin"; // dodaj ten import
+import "@fontsource/dekko";
+import "@fontsource/itim";
+import "@fontsource/coiny";
+import "@fontsource/poetsen-one";
 import "./globals.css";
 import ClientLayout from "./clientLayout";
 import { UserContextProvider } from "./context/UserContext";
@@ -45,7 +50,7 @@ export default async function RootLayout({ children, params: { locale } }) {
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className}`}>
         <TranslationsProvider
           resources={resources}
           locale={locale}

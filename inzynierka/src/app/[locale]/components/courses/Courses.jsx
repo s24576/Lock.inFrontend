@@ -127,7 +127,7 @@ const Courses = () => {
   if (!coursesIsLoading && !shortProfilesIsLoading) {
     return (
       <div className="h-screen flex justify-between px-[10%] w-full bg-night items-strecht">
-        <div className="flex flex-col items-center w-[45%] mt-[10%] font-chewy">
+        <div className="flex flex-col items-center w-[45%] mt-[10%] font-dekko">
           <p className="font-bangers text-[72px] text-amber">
             {t("courses:courses")}
           </p>

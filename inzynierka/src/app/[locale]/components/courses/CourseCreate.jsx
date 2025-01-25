@@ -41,7 +41,7 @@ const CourseCreate = () => {
   if (isLogged === false) {
     router.push("/");
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-dekko">
         <p className="text-amber text-[40px] animate-pulse ">
           {t("common:redirecting")}
         </p>
@@ -51,7 +51,7 @@ const CourseCreate = () => {
 
   if (isLogged) {
     return (
-      <div className="w-full min-h-screen bg-night pt-[7%] px-[5%] flex justify-between gap-x-6 font-chewy">
+      <div className="w-full min-h-screen bg-night pt-[7%] px-[5%] flex justify-between gap-x-6 font-dekko">
         <div className="w-[35%] h-[80vh] border-[1px] border-white-smoke rounded-xl overflow-hidden flex items-center justify-center bg-[#131313]">
           {formValues?.picture ? (
             <img

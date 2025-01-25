@@ -88,7 +88,7 @@ const Mainpage = () => {
       </div>
 
       {/* Second div */}
-      <div className="h-screen bg-gradient-to-b from-[#1A0E05] to-night to-80% font-chewy flex items-center justify-center px-[8%] gap-x-[8%]">
+      <div className="h-screen bg-gradient-to-b from-[#1A0E05] to-night to-80% font-dekko flex items-center justify-center px-[8%] gap-x-[8%]">
         <div className="flex flex-col items-center justify-center gap-y-12 w-[35%] ">
           <p className="text-[64px] text-center">{t("mainpage:header3")}</p>
           <div className="flex items-center gap-x-12">
@@ -119,7 +119,7 @@ const Mainpage = () => {
                 {tile.icon}
                 <div className="flex flex-col gap-y-2 w-[60%] text-center">
                   <p>{tile.title}</p>
-                  <p>{tile.description}</p>
+                  <p className="text-[14px]">{tile.description}</p>
                 </div>
               </div>
             );

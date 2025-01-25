@@ -334,7 +334,7 @@ const Messenger = () => {
   if (isLogged === false) {
     router.push("/");
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-dekko">
         <p className="text-amber text-[40px] animate-pulse ">
           {t("common:redirecting")}
         </p>
@@ -344,7 +344,7 @@ const Messenger = () => {
 
   if (isLogged) {
     return (
-      <div className="bg-night min-h-screen w-full flex font-chewy">
+      <div className="bg-night min-h-screen w-full flex font-dekko">
         {/* Kontener z listą czatów */}
         <div className="w-[30%] pt-[5%] flex flex-col items-center gap-y-3 px-6 h-screen overflow-y-auto">
           {chatsData && (
@@ -355,7 +355,7 @@ const Messenger = () => {
                   <DialogTrigger>
                     <FaEdit className="text-[28px]"></FaEdit>
                   </DialogTrigger>
-                  <DialogContent className="bg-night font-chewy">
+                  <DialogContent className="bg-night font-dekko">
                     <p className="text-[24px]">Create a chat</p>
                     <input
                       type="text"

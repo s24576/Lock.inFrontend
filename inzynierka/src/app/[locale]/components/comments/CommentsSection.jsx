@@ -287,7 +287,7 @@ const CommentsSection = ({ id: objectId }) => {
 
   return (
     <div className="w-full flex flex-col">
-      <div className="w-full px-[10%] flex justify-between  mt-8 font-chewy">
+      <div className="w-full px-[10%] flex justify-between  mt-8 font-dekko">
         <div className="flex flex-col w-[40%]">
           <p className="py-5 text-[32px]  text-center">
             {t("comments:leaveComment")}

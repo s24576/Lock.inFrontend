@@ -419,7 +419,7 @@ const CreateBuild = () => {
   if (isLogged === false) {
     router.push("/");
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-dekko">
         <p className="text-amber text-[40px] animate-pulse ">
           {t("common:redirecting")}
         </p>
@@ -434,7 +434,7 @@ const CreateBuild = () => {
     !itemsIsLoading
   ) {
     return (
-      <div className="min-h-screen flex flex-col items-center relative px-[5%] font-chewy">
+      <div className="min-h-screen flex flex-col items-center relative px-[5%] font-dekko">
         <div
           className="absolute inset-0 bg-cover bg-fixed"
           style={{

@@ -299,7 +299,7 @@ const FriendList = () => {
       <SheetTrigger>
         <IoPeople className="text-[30px] text-[#F5B800] hover:text-silver transition-colors duration-150"></IoPeople>
       </SheetTrigger>
-      <SheetContent side={"right"} className="bg-night font-chewy">
+      <SheetContent side={"right"} className="bg-night font-dekko">
         <h1 className="text-white-smoke text-center mt-[5%] font-bangers text-[32px]">
           Friends
         </h1>

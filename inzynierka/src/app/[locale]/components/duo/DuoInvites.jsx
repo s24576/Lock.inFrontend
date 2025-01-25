@@ -70,7 +70,7 @@ const DuoInvites = () => {
   if (isLogged === false) {
     router.push("/");
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-dekko">
         <p className="text-amber text-[40px] animate-pulse ">
           {t("common:redirecting")}
         </p>
@@ -105,7 +105,7 @@ const DuoInvites = () => {
         </p>
 
         {duoInvites?.content && duoInvites.content.length > 0 ? (
-          <div className="z-20 bg-night flex flex-col items-center bg-opacity-50 w-full px-[14%] mt-[7%] py-[2%] font-chewy">
+          <div className="z-20 bg-night flex flex-col items-center bg-opacity-50 w-full px-[14%] mt-[7%] py-[2%] font-dekko">
             <div className="w-[80%] flex flex-wrap items-center gap-x-4">
               {duoInvites?.content &&
                 duoInvites.content.length > 0 &&
@@ -247,7 +247,7 @@ const DuoInvites = () => {
           </div>
         ) : (
           <div>
-            <p className="z-20 text-[32px] font-chewy text-white-smoke mt-[7%]">
+            <p className="z-20 text-[32px] font-dekko text-white-smoke mt-[7%]">
               {t("duo:duoInvitesInfo")}
             </p>
           </div>

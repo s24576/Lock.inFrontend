@@ -35,7 +35,7 @@ const ForgotPassword = () => {
       </p>
 
       <form
-        className="mt-5 flex flex-col items-center font-chewy w-full"
+        className="mt-5 flex flex-col items-center font-dekko w-full"
         onSubmit={handleSubmit}
       >
         <input

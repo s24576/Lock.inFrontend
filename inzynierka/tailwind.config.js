@@ -72,6 +72,8 @@ module.exports = {
       fontFamily: {
         bangers: ["Bangers", "sans-serif"],
         chewy: ["Chewy", "sans-serif"],
+        rr: ["Rum Raisin", "sans-serif"],
+        dekko: ["Poetsen One", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

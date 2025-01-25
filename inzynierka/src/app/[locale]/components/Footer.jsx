@@ -24,7 +24,7 @@ const Footer = () => {
 
         <div className="flex flex-col gap-y-3">
           <p className="text-[32px] font-bangers">Menu</p>
-          <div className="flex flex-col gap-y-1 font-chewy text-[16px]">
+          <div className="flex flex-col gap-y-1 font-dekko text-[16px]">
             <Link
               href="/builds"
               className="hover:text-amber transition-colors duration-100 "
@@ -54,7 +54,7 @@ const Footer = () => {
 
         <div className="flex flex-col gap-y-3">
           <p className="text-[32px] font-bangers">{t("footer:apps")}</p>
-          <div className="flex flex-col gap-y-1 font-chewy text-[16px]">
+          <div className="flex flex-col gap-y-1 font-dekko text-[16px]">
             <Link
               href="/builds"
               className="hover:text-amber transition-colors duration-100 "
@@ -72,7 +72,7 @@ const Footer = () => {
 
         <div className="flex flex-col gap-y-3">
           <p className="text-[32px] font-bangers">{t("footer:resources")}</p>
-          <div className="flex flex-col gap-y-1 font-chewy text-[16px]">
+          <div className="flex flex-col gap-y-1 font-dekko text-[16px]">
             <Link
               href="/builds"
               className="hover:text-amber transition-colors duration-100 "
@@ -96,7 +96,7 @@ const Footer = () => {
 
         <div className="flex flex-col gap-y-3">
           <p className="text-[32px] font-bangers">{t("footer:contact")}</p>
-          <div className="flex flex-col gap-y-1 font-chewy text-[16px]">
+          <div className="flex flex-col gap-y-1 font-dekko text-[16px]">
             <Link
               href="/builds"
               className="flex items-center gap-x-1 hover:text-amber transition-colors duration-100 "
@@ -122,12 +122,12 @@ const Footer = () => {
         </div>
       </div>
       <div className="flex flex-col items-center justify-center text-center text-white-smoke text-[16px] py-4">
-        <div className="flex items-center justify-center gap-x-1 font-chewy">
+        <div className="flex items-center justify-center gap-x-1 font-dekko">
           <FaRegCopyright className="text-[18px]"></FaRegCopyright>
           <p className="">{t("footer:clause1")}</p>
         </div>
 
-        <div className="flex items-center justify-center gap-x-1 font-chewy">
+        <div className="flex items-center justify-center gap-x-1 font-dekko">
           <p className="">{t("footer:clause2")}</p>
           <FaRegCopyright className="text-[18px]"></FaRegCopyright>
         </div>

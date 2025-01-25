@@ -128,7 +128,7 @@ const Profile = () => {
       onSuccess: () => {
         toast.custom(
           (t) => (
-            <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-chewy flex flex-col">
+            <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">
               <div className="flex items-center justify-between gap-x-2 px-4">
                 <h1 className="px-[10px]">{t("common:notification")}</h1>
                 <button onClick={() => toast.dismiss(t)}>
@@ -160,7 +160,7 @@ const Profile = () => {
       onSuccess: () => {
         toast.custom(
           (t) => (
-            <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-chewy flex flex-col">
+            <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">
               <div className="flex items-center justify-between gap-x-2 px-4">
                 <h1 className="px-[10px]">{t("common:notification")}</h1>
                 <button onClick={() => toast.dismiss(t)}>
@@ -253,7 +253,7 @@ const Profile = () => {
 
   if (isLogged) {
     return (
-      <div className="flex flex-col h-screen bg-[#131313] text-white-smoke font-chewy px-[10%]">
+      <div className="flex flex-col h-screen bg-[#131313] text-white-smoke font-dekko px-[10%]">
         <div className="mt-[8%] flex-col flex">
           <p className="font-bangers text-[64px]">
             {t("settings:profileSettings")}

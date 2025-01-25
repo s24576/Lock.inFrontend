@@ -266,7 +266,7 @@ const Duo = () => {
             height: "100vh", // Obraz będzie rozciągał się na wysokość widoku
           }}
         ></div>
-        <div className="mt-[10%] w-[25%] flex flex-col gap-y-2 z-20 font-chewy">
+        <div className="mt-[10%] w-[25%] flex flex-col gap-y-2 z-20 font-dekko">
           {isLogged && <DuoCreation></DuoCreation>}
 
           {riotProfiles?.length === 1 ? (
@@ -385,7 +385,7 @@ const Duo = () => {
             className="w-[80%]"
           />
         </div>
-        <div className="mt-[9%] w-[75%] flex flex-col gap-y-4 z-20 font-chewy">
+        <div className="mt-[9%] w-[75%] flex flex-col gap-y-4 z-20 font-dekko">
           <p className="font-bangers text-[64px] text-amber text-center">Duo</p>
           <div className="flex items-center w-full">
             <p className="text-silver w-[15%] text-center">

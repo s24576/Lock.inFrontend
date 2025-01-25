@@ -81,7 +81,7 @@ export const SavedBuilds = () => {
   if (isLogged === false) {
     router.push("/");
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-dekko">
         <p className="text-amber text-[40px] animate-pulse ">
           {t("common:redirecting")}
         </p>
@@ -115,7 +115,7 @@ export const SavedBuilds = () => {
           {t("builds:savedBuilds")}
         </p>
         {buildsData?.content && buildsData.content.length > 0 ? (
-          <div className="z-20 bg-night bg-opacity-50 w-full px-[14%] mt-[7%] py-[2%] font-chewy">
+          <div className="z-20 bg-night bg-opacity-50 w-full px-[14%] mt-[7%] py-[2%] font-dekko">
             {buildsData?.content && (
               <div className="flex flex-col gap-y-4">
                 {buildsData.content.map((build, key) => {
@@ -179,7 +179,7 @@ export const SavedBuilds = () => {
           </div>
         ) : (
           <div>
-            <p className="z-20 text-[32px] font-chewy text-white-smoke mt-[7%]">
+            <p className="z-20 text-[32px] font-dekko text-white-smoke mt-[7%]">
               {t("builds:savedBuildsInfo")}
             </p>
           </div>

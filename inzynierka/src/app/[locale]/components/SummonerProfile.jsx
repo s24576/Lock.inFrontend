@@ -206,13 +206,13 @@ const SummonerProfile = () => {
                 return (
                   <>
                     {icon}
-                    <p className="font-chewy text-[20px]">{name}</p>
+                    <p className="font-dekko text-[20px]">{name}</p>
                   </>
                 );
               })()}
             </div>
             {isLogged && (
-              <div className="flex items-center gap-x-3 font-chewy py-5 pl-1">
+              <div className="flex items-center gap-x-3 font-dekko py-5 pl-1">
                 {playerData.inWatchlist === true ? (
                   <div
                     className="flex items-center gap-x-2 cursor-pointer hover:text-white-smoke duration-150 transition-all text-amber"
@@ -252,7 +252,7 @@ const SummonerProfile = () => {
           </div>
         </div>
 
-        <div className="mt-[2%] flex justify-between w-full font-chewy">
+        <div className="mt-[2%] flex justify-between w-full font-dekko">
           <div className="flex flex-col w-[40%] ">
             <div className="bg-silver bg-opacity-15 rounded-2xl py-4 px-6">
               {playerData.ranks.find(

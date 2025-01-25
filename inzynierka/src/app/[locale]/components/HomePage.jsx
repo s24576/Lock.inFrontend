@@ -165,7 +165,7 @@ const HomePage = () => {
     isLogged === true
   ) {
     return (
-      <div className="min-h-screen w-full flex justify-between px-[8%] pt-[120px] bg-night font-chewy">
+      <div className="min-h-screen w-full flex justify-between px-[8%] pt-[120px] bg-night font-dekko">
         <div className="flex flex-col">
           {/* czesc profilowa + last matches */}
           <div className="flex gap-x-6 items-center">
@@ -193,7 +193,7 @@ const HomePage = () => {
               {userData.confirmedAccount === false && (
                 <div className=" flex items-center gap-x-2 text-amber">
                   <CiWarning className="text-[28px] "></CiWarning>
-                  <p className=" font-chewy">
+                  <p className=" font-dekko">
                     {t("mainpage:notClaimed")}{" "}
                     <Link
                       href="/login/confirmRegistration"

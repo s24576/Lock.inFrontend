@@ -93,7 +93,7 @@ const OwnedCourses = () => {
   if (isLogged === false) {
     router.push("/");
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-dekko">
         <p className="text-amber text-[40px] animate-pulse ">
           {t("common:redirecting")}
         </p>
@@ -142,7 +142,7 @@ const OwnedCourses = () => {
                   </div>
                   <div className="flex flex-col px-4 mt-[3%]">
                     <p className="font-bangers text-[48px] ">{course.title}</p>
-                    <p className="text-[18px] font-chewy text-white">
+                    <p className="text-[18px] font-dekko text-white">
                       {course.description?.length > 120
                         ? course.description?.slice(0, 120) + "..."
                         : course.description}
@@ -161,12 +161,12 @@ const OwnedCourses = () => {
                             <FaUser className="text-silver text-[32px]"></FaUser>
                           </div>
                         )}
-                        <div className="flex flex-col text-[18px] font-chewy">
+                        <div className="flex flex-col text-[18px] font-dekko">
                           <p>by</p>
                           <p>{course.username}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-x-4 font-chewy">
+                      <div className="flex items-center gap-x-4 font-dekko">
                         <div
                           className={
                             course.reaction === true &&
@@ -196,13 +196,13 @@ const OwnedCourses = () => {
               );
             })}
           {coursesData?.content.length === 0 && (
-            <div className="text-white-smoke text-[24px] font-chewy flex justify-center w-full">
+            <div className="text-white-smoke text-[24px] font-dekko flex justify-center w-full">
               <p>{t("courses:noCourses")}</p>
             </div>
           )}
         </div>
         {coursesData && (
-          <div className="flex justify-center items-center gap-x-4 mt-6 py-6 text-[20px] font-chewy">
+          <div className="flex justify-center items-center gap-x-4 mt-6 py-6 text-[20px] font-dekko">
             {/* Jeśli strona jest większa niż 1, wyświetl przycisk "Back" */}
             {filterParams.page > 0 && (
               <p

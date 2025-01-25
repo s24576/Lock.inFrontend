@@ -53,7 +53,7 @@ const ConfirmRegistration = () => {
 
   if (isLogged) {
     return (
-      <div className=" flex flex-col w-full h-screen items-center justify-center bg-night text-white-smoke font-chewy">
+      <div className=" flex flex-col w-full h-screen items-center justify-center bg-night text-white-smoke font-dekko">
         <p className="font-bangers text-[48px]">
           {t("register:confirmRegistrationTitle")}
         </p>

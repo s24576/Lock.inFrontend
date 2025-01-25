@@ -79,17 +79,17 @@ const CourseCarousel = ({ previews, shortProfiles: shortProfilesData }) => {
                       <FaUser className="text-silver text-[32px]"></FaUser>
                     </div>
                   )}
-                  <div className="flex flex-col text-[20px] font-chewy">
+                  <div className="flex flex-col text-[20px] font-dekko">
                     <p>{t("courses:by")}</p>
                     <p>{preview?.data?.username}</p>
                   </div>
                 </div>
-                <p className="text-[24px] mt-3 font-chewy text-white">
+                <p className="text-[24px] mt-3 font-dekko text-white">
                   {preview?.data?.description?.length > 150
                     ? preview?.data?.description?.slice(0, 150) + "..."
                     : preview?.data?.description}
                 </p>
-                <div className="flex flex-col gap-y-1 mt-4 p-4  font-chewy rounded-xl">
+                <div className="flex flex-col gap-y-1 mt-4 p-4  font-dekko rounded-xl">
                   <p className="text-[18px]">{t("courses:courseContent")}</p>
                   {preview?.data?.films.slice(0, 5).map((film, key) => {
                     return (
@@ -106,7 +106,7 @@ const CourseCarousel = ({ previews, shortProfiles: shortProfilesData }) => {
                     <p className="mt-2">{t("courses:noVideos")}</p>
                   )}
                 </div>
-                <div className="flex justify-between items-center mt-8 font-chewy">
+                <div className="flex justify-between items-center mt-8 font-dekko">
                   <div className="flex items-center gap-x-4 ml-1">
                     <div
                       className={

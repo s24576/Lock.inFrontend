@@ -196,12 +196,12 @@ const DuoCreation = () => {
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="flex items-center gap-x-2 cursor-pointer hover:text-amber duration-150 transition-all font-chewy">
+        <div className="flex items-center gap-x-2 cursor-pointer hover:text-amber duration-150 transition-all font-dekko">
           <FaEdit className="text-[28px]" />
           <p className="text-[20px]">{t("duo:createDuo")}</p>
         </div>
       </DialogTrigger>
-      <DialogContent className="bg-night border-[1px] border-amber font-chewy">
+      <DialogContent className="bg-night border-[1px] border-amber font-dekko">
         <DialogHeader>
           <DialogTitle>
             <p className="font-normal">{t("duo:createDuo")}</p>

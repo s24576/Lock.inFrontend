@@ -173,7 +173,7 @@ const BuildDetails = () => {
           }}
         ></div>
         <div className="flex w-full px-[10%] justify-between items-strech">
-          <div className="z-20 mt-[14%] w-[60%] flex flex-col font-chewy ">
+          <div className="z-20 mt-[14%] w-[60%] flex flex-col font-dekko ">
             <div className="w-full bg-night bg-opacity-70 rounded-xl py-4 flex items-center justify-between">
               <div className="flex items-center px-4">
                 <Image
@@ -505,7 +505,7 @@ const BuildDetails = () => {
               </div>
             </div>
           </div>
-          <div className="z-20 mt-[14%] w-[30%] bg-night bg-opacity-60 p-5 font-chewy rounded-xl ">
+          <div className="z-20 mt-[14%] w-[30%] bg-night bg-opacity-60 p-5 font-dekko rounded-xl ">
             <p className="text-[28px]">{t("builds:description")}</p>
             <p className="mt-3">{buildData?.description}</p>
           </div>

@@ -127,7 +127,7 @@ const Login = () => {
         </p>
         <form
           onSubmit={handleSubmit}
-          className="font-chewy w-full flex flex-col items-center gap-y-4"
+          className="font-dekko w-full flex flex-col items-center gap-y-4"
         >
           <input
             type="text"
@@ -155,7 +155,7 @@ const Login = () => {
             <p>{t("login:signIn")}</p>
           </button>
         </form>
-        <div className="flex items-center font-chewy mt-6 gap-x-1 text-[18px]">
+        <div className="flex items-center font-dekko mt-6 gap-x-1 text-[18px]">
           <p>{t("login:registerRedirect1")}</p>
           <Link
             href={"/register"}

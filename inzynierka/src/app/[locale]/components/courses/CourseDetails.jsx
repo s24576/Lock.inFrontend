@@ -140,7 +140,7 @@ const CourseDetails = () => {
   if (isLogged === false) {
     router.push("/");
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-dekko">
         <p className="text-amber text-[40px] animate-pulse ">
           {t("common:redirecting")}
         </p>
@@ -165,7 +165,7 @@ const CourseDetails = () => {
                 </div> // tło czarne, jeśli brak obrazu
               )}
             </div>
-            <div className="mt-[5%] w-full flex flex-col items-center px-4 py-2 border-[1px] border-white-smoke rounded-xl font-chewy">
+            <div className="mt-[5%] w-full flex flex-col items-center px-4 py-2 border-[1px] border-white-smoke rounded-xl font-dekko">
               <p className="text-[20px]">{t("courses:aboutAuthor")}</p>
               <Link
                 href={"/profile/" + authorProfileData?.username}
@@ -195,7 +195,7 @@ const CourseDetails = () => {
                 </p>
                 <div className="flex flex-col justify-center gap-y-2">
                   <div className="flex items-center gap-x-2">
-                    <div className="flex items-center gap-x-3 font-chewy">
+                    <div className="flex items-center gap-x-3 font-dekko">
                       <div
                         className={
                           course.reaction === true && course.canReact === false
@@ -237,13 +237,13 @@ const CourseDetails = () => {
                 </div>
               </div>
               <div className="mt-[1.5%]">
-                <p className="text-[24px] font-chewy text-white">
+                <p className="text-[24px] font-dekko text-white">
                   {course.description?.length > 240
                     ? course.description?.slice(0, 240) + "..."
                     : course.description}
                 </p>
               </div>
-              <p className="mt-[4%] text-[32px] ml-1 font-chewy">
+              <p className="mt-[4%] text-[32px] ml-1 font-dekko">
                 {t("courses:videos")}
               </p>
 
@@ -256,7 +256,7 @@ const CourseDetails = () => {
                         setVideoToShow(videoToShow === key ? null : key)
                       }
                       className={
-                        "w-full border-[1px] rounded-xl px-6 py-2 font-chewy cursor-pointer " +
+                        "w-full border-[1px] rounded-xl px-6 py-2 font-dekko cursor-pointer " +
                         (videoToShow === key
                           ? "border-amber"
                           : "border-white-smoke hover:border-amber hover:text-amber transition-all duration-150")
@@ -289,7 +289,7 @@ const CourseDetails = () => {
                   );
                 })}
                 {course.films?.length === 0 && (
-                  <p className="font-chewy text-[18px]">
+                  <p className="font-dekko text-[18px]">
                     {t("courses:noVideos")}
                   </p>
                 )}
@@ -300,7 +300,7 @@ const CourseDetails = () => {
                       <div
                         className={`flex items-center gap-x-2 ${
                           course?.videos?.length > 0 ? "mt-3" : "mt-0"
-                        } hover:text-amber duration-150 transition-all font-chewy`}
+                        } hover:text-amber duration-150 transition-all font-dekko`}
                       >
                         <IoMdAdd className="text-[24px]"></IoMdAdd>
                         <p className="text-[20px]">Add video</p>
@@ -327,7 +327,7 @@ const CourseDetails = () => {
                               };
                             })
                           }
-                          className="w-[80%] border-amber border-[1px] rounded-xl bg-transparent px-3 py-2 text-[18px] text-white-smoke z-20 font-chewy focus:outline-none "
+                          className="w-[80%] border-amber border-[1px] rounded-xl bg-transparent px-3 py-2 text-[18px] text-white-smoke z-20 font-dekko focus:outline-none "
                           placeholder="Video title"
                         />
 
@@ -340,13 +340,13 @@ const CourseDetails = () => {
                               link: e.target.value, // Ustawia pełny link, tak jak wpisuje użytkownik
                             }))
                           }
-                          className="w-[80%] border-amber border-[1px] rounded-xl bg-transparent px-3 py-2 text-[18px] text-white-smoke z-20 font-chewy focus:outline-none"
+                          className="w-[80%] border-amber border-[1px] rounded-xl bg-transparent px-3 py-2 text-[18px] text-white-smoke z-20 font-dekko focus:outline-none"
                           placeholder="Video link"
                         />
 
                         <button
                           type="submit"
-                          className="w-[30%] mt-6 border-amber border-[1px] rounded-3xl bg-transparent px-4 py-2 text-[18px] text-white-smoke z-20 font-chewy hover:bg-silver-hover transition-all duration-150 "
+                          className="w-[30%] mt-6 border-amber border-[1px] rounded-3xl bg-transparent px-4 py-2 text-[18px] text-white-smoke z-20 font-dekko hover:bg-silver-hover transition-all duration-150 "
                         >
                           Add video
                         </button>

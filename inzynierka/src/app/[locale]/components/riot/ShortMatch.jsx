@@ -223,7 +223,7 @@ const ShortMatch = ({ match }) => {
       </div>
       <div className="flex flex-col justify-center items-center ml-4 text-[16px] w-[20%]">
         <p>{gamemode(match.queueType)}</p>
-        <p className="text-nowrap">
+        <p className="text-nowrap text-[14px]">
           {formatDistanceToNow(new Date(match.timestamp), { addSuffix: true })}
         </p>
 
