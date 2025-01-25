@@ -36,6 +36,7 @@ import {
   TooltipTrigger,
 } from "@/componentsShad/ui/tooltip";
 import { useTranslation } from "react-i18next";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const BuildDetails = () => {
   const { userData, isLogged } = useContext(UserContext);
@@ -44,8 +45,9 @@ const BuildDetails = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  //do dorobienia axios public
-  const axiosInstance = useAxios();
+  const axios = useAxios();
+  const axiosPublic = useAxiosPublic();
+  const axiosInstance = isLogged ? axios : axiosPublic;
   const { t } = useTranslation();
 
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);

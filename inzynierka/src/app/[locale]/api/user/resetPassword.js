@@ -1,10 +1,8 @@
-import axios from "axios";
-
-const resetPassword = async (email) => {
+const resetPassword = async (axiosInstance, email) => {
   console.log("resetting password: ", email);
 
   try {
-    const response = await axios.put(
+    const response = await axiosInstance.put(
       `http://localhost:8080/user/resetPassword`,
       {
         email,

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState, useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 import { useQuery, useMutation, useQueries } from "react-query";
 import { useRouter } from "next/navigation";
 import useAxios from "../../hooks/useAxios";
@@ -11,6 +12,7 @@ import { BiLike, BiDislike } from "react-icons/bi";
 import Link from "next/link";
 import CourseCarousel from "./CourseCarousel";
 import { useTranslation } from "react-i18next";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Courses = () => {
   const [courseName, setCourseName] = useState("");
@@ -20,8 +22,11 @@ const Courses = () => {
     page: 0,
   });
   const [activeIndex, setActiveIndex] = useState(0);
+  const { isLogged } = useContext(UserContext);
 
-  const axiosInstance = useAxios();
+  const axios = useAxios();
+  const axiosPublic = useAxiosPublic();
+  const axiosInstance = isLogged ? axios : axiosPublic;
   const router = useRouter();
 
   const { t } = useTranslation();
@@ -113,7 +118,9 @@ const Courses = () => {
   return (
     <div className="h-screen flex justify-between px-[10%] w-full bg-night items-strecht">
       <div className="flex flex-col items-center w-[45%] mt-[10%] font-chewy">
-        <p className="font-bangers text-[72px] text-amber">Courses</p>
+        <p className="font-bangers text-[72px] text-amber">
+          {t("courses:courses")}
+        </p>
         {coursesData?.content && (
           <div className="flex flex-col w-full mt-[6%] gap-y-4">
             {coursesData.content.map((course, key) => {

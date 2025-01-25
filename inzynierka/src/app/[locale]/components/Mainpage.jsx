@@ -22,14 +22,6 @@ import Footer from "./Footer";
 const Mainpage = () => {
   const { userData, isLogged, setUserData, setIsLogged } =
     useContext(UserContext);
-  const { version } = useContext(SearchContext);
-
-  const [followedProfiles, setFollowedProfiles] = useState([]);
-
-  const [myAccounts, setMyAccounts] = useState([]);
-
-  const api = useAxios();
-  const router = useRouter();
 
   const { t } = useTranslation();
 

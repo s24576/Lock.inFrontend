@@ -403,123 +403,115 @@ const CreateBuild = () => {
     },
   ];
 
-  return (
-    <div className="min-h-screen flex flex-col items-center relative px-[5%] font-chewy">
-      <div
-        className="absolute inset-0 bg-cover bg-fixed"
-        style={{
-          backgroundImage: `url('/background-images/createbuild.webp')`,
-          opacity: "0.3",
-          backgroundSize: "cover", // Nie powiększa obrazu
-          backgroundPosition: "center", // Ustawienie środka obrazu
-          backgroundRepeat: "no-repeat", // Zapobiega powtarzaniu
-          width: "100%",
-          height: "100vh", // Obraz będzie rozciągał się na wysokość widoku
-        }}
-      ></div>
-      <div className="mt-[7%] flex items-center gap-x-1 z-20 text-[20px]">
-        <p
-          onClick={() => setNavigation(0)}
-          className={
-            navigation === 0
-              ? "text-amber"
-              : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
-          }
-        >
-          {t("builds:nav1")}
-        </p>
-        <IoChevronForward />
-        <p
-          onClick={() => setNavigation(1)}
-          className={
-            navigation === 1
-              ? "text-amber"
-              : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
-          }
-        >
-          {t("builds:nav2")}
-        </p>
-        <IoChevronForward />
-        <p
-          onClick={() => setNavigation(2)}
-          className={
-            navigation === 2
-              ? "text-amber"
-              : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
-          }
-        >
-          {t("builds:nav3")}
-        </p>
-        <IoChevronForward />
-        <p
-          onClick={() => setNavigation(3)}
-          className={
-            navigation === 3
-              ? "text-amber"
-              : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
-          }
-        >
-          {t("builds:nav4")}
-        </p>
+  if (isLogged === undefined) {
+    return (
+      <div className="h-screen w-full flex justify-center items-center">
+        Loading...
       </div>
-      <div className="mt-[1%] w-full flex items-center gap-x-8 z-20 bg-night bg-opacity-70 py-4 px-[5%] rounded-xl h-[10vh]">
-        <div className="flex flex-col items-center w-[20%] text-amber">
-          <p className="text-[24px]">{formValues?.title}</p>
-          <p>
-            {formValues?.description.length > 50
-              ? formValues?.description.slice(0, 50) + "..."
-              : formValues?.description}
+    );
+  }
+
+  if (!isLogged) {
+    router.push("/login");
+  }
+
+  if (isLogged) {
+    return (
+      <div className="min-h-screen flex flex-col items-center relative px-[5%] font-chewy">
+        <div
+          className="absolute inset-0 bg-cover bg-fixed"
+          style={{
+            backgroundImage: `url('/background-images/createbuild.webp')`,
+            opacity: "0.3",
+            backgroundSize: "cover", // Nie powiększa obrazu
+            backgroundPosition: "center", // Ustawienie środka obrazu
+            backgroundRepeat: "no-repeat", // Zapobiega powtarzaniu
+            width: "100%",
+            height: "100vh", // Obraz będzie rozciągał się na wysokość widoku
+          }}
+        ></div>
+        <div className="mt-[7%] flex items-center gap-x-1 z-20 text-[20px]">
+          <p
+            onClick={() => setNavigation(0)}
+            className={
+              navigation === 0
+                ? "text-amber"
+                : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
+            }
+          >
+            {t("builds:nav1")}
+          </p>
+          <IoChevronForward />
+          <p
+            onClick={() => setNavigation(1)}
+            className={
+              navigation === 1
+                ? "text-amber"
+                : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
+            }
+          >
+            {t("builds:nav2")}
+          </p>
+          <IoChevronForward />
+          <p
+            onClick={() => setNavigation(2)}
+            className={
+              navigation === 2
+                ? "text-amber"
+                : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
+            }
+          >
+            {t("builds:nav3")}
+          </p>
+          <IoChevronForward />
+          <p
+            onClick={() => setNavigation(3)}
+            className={
+              navigation === 3
+                ? "text-amber"
+                : "text-white-smoke hover:text-silver duration-150 transition-all cursor-pointer"
+            }
+          >
+            {t("builds:nav4")}
           </p>
         </div>
-        <div className="flex items-center gap-x-4 ml-8">
-          {formValues.championKey && (
-            <Image
-              src={`https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${formValues.championKey}.png`}
-              alt={formValues.championKey}
-              width={56} // Adjust the width as needed
-              height={56} // Adjust the height as needed
-              key={formValues.championKey}
-              className="border-[1px] border-white-smoke rounded-full hover:opacity-70 cursor-pointer transition-all duration-150"
-              onClick={() =>
-                setFormValues({
-                  ...formValues,
-                  champion: "",
-                  championKey: "",
-                })
-              }
-            />
-          )}
-          {formValues.position && (
-            <LeaguePosition height={48} position={formValues.position} />
-          )}
-        </div>
-        {/* runy */}
-
-        <div className="flex items-center gap-x-2">
-          <div className="flex items-center gap-x-2">
-            {primaryRunes &&
-              primaryRunes.map((rune, key) => {
-                // Sprawdzamy, czy pole `icon` ma zawartość przed renderowaniem
-                if (!rune.icon) {
-                  return null; // Jeśli nie ma `icon`, nie renderujemy tej runy
-                }
-
-                return (
-                  <Image
-                    src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
-                    height={48}
-                    width={48}
-                    key={key}
-                    className="border-[1px] border-white-smoke rounded-full"
-                  />
-                );
-              })}
+        <div className="mt-[1%] w-full flex items-center gap-x-8 z-20 bg-night bg-opacity-70 py-4 px-[5%] rounded-xl h-[10vh]">
+          <div className="flex flex-col items-center w-[20%] text-amber">
+            <p className="text-[24px]">{formValues?.title}</p>
+            <p>
+              {formValues?.description.length > 50
+                ? formValues?.description.slice(0, 50) + "..."
+                : formValues?.description}
+            </p>
           </div>
+          <div className="flex items-center gap-x-4 ml-8">
+            {formValues.championKey && (
+              <Image
+                src={`https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${formValues.championKey}.png`}
+                alt={formValues.championKey}
+                width={56} // Adjust the width as needed
+                height={56} // Adjust the height as needed
+                key={formValues.championKey}
+                className="border-[1px] border-white-smoke rounded-full hover:opacity-70 cursor-pointer transition-all duration-150"
+                onClick={() =>
+                  setFormValues({
+                    ...formValues,
+                    champion: "",
+                    championKey: "",
+                  })
+                }
+              />
+            )}
+            {formValues.position && (
+              <LeaguePosition height={48} position={formValues.position} />
+            )}
+          </div>
+          {/* runy */}
 
-          <div className="flex flex-col items-center gap-y-2">
-            <div className="flex gap-x-2 items-center">
-              {secondaryRunes &&
-                secondaryRunes.map((rune, key) => {
+          <div className="flex items-center gap-x-2">
+            <div className="flex items-center gap-x-2">
+              {primaryRunes &&
+                primaryRunes.map((rune, key) => {
                   // Sprawdzamy, czy pole `icon` ma zawartość przed renderowaniem
                   if (!rune.icon) {
                     return null; // Jeśli nie ma `icon`, nie renderujemy tej runy
@@ -528,8 +520,8 @@ const CreateBuild = () => {
                   return (
                     <Image
                       src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
-                      height={40}
-                      width={40}
+                      height={48}
+                      width={48}
                       key={key}
                       className="border-[1px] border-white-smoke rounded-full"
                     />
@@ -537,330 +529,280 @@ const CreateBuild = () => {
                 })}
             </div>
 
-            <div className="flex gap-x-2 items-center">
-              {selectedShards &&
-                selectedShards.map((shard, key) => {
-                  if (!shard) {
-                    return null; // Jeśli nie ma sharda, nie renderujemy
-                  }
+            <div className="flex flex-col items-center gap-y-2">
+              <div className="flex gap-x-2 items-center">
+                {secondaryRunes &&
+                  secondaryRunes.map((rune, key) => {
+                    // Sprawdzamy, czy pole `icon` ma zawartość przed renderowaniem
+                    if (!rune.icon) {
+                      return null; // Jeśli nie ma `icon`, nie renderujemy tej runy
+                    }
 
-                  return (
-                    <Image
-                      src={`/rune-shards/${shard}.webp`}
-                      height={24}
-                      width={24}
-                      key={key}
-                    />
-                  );
-                })}
-            </div>
-          </div>
-        </div>
+                    return (
+                      <Image
+                        src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
+                        height={40}
+                        width={40}
+                        key={key}
+                        className="border-[1px] border-white-smoke rounded-full"
+                      />
+                    );
+                  })}
+              </div>
 
-        <div className="flex items-center gap-x-2">
-          {formValues.summoner1Name && (
-            <div className="hover:opacity-50 transition-opacity duration-150 cursor-pointer">
-              <Image
-                src={"/league-summoners/" + formValues.summoner1Name + ".webp"}
-                width={48}
-                height={48}
-                alt={formValues.summoner1Name}
-                className="object-cover"
-                onClick={() => handleSummonerRemove(formValues.summoner1Name)}
-              />
-            </div>
-          )}
-          {formValues.summoner2Name && (
-            <div className="hover:opacity-50 transition-opacity duration-150 cursor-pointer">
-              <Image
-                src={"/league-summoners/" + formValues.summoner2Name + ".webp"}
-                width={48}
-                height={48}
-                alt={formValues.summoner2Name}
-                className="object-cover"
-                onClick={() => handleSummonerRemove(formValues.summoner2Name)}
-              />
-            </div>
-          )}
-        </div>
+              <div className="flex gap-x-2 items-center">
+                {selectedShards &&
+                  selectedShards.map((shard, key) => {
+                    if (!shard) {
+                      return null; // Jeśli nie ma sharda, nie renderujemy
+                    }
 
-        {/* itemy */}
-        <div className="flex items-center gap-x-2">
-          {chosenItems?.length > 0 &&
-            chosenItems.map((item, key) => {
-              // Sprawdzenie, czy item nie jest pustym stringiem
-              if (item.trim() === "") return null;
-
-              return (
-                <Image
-                  key={key}
-                  src={
-                    "https://ddragon.leagueoflegends.com/cdn/" +
-                    "14.11.1" +
-                    "/img/item/" +
-                    item +
-                    ".png"
-                  }
-                  onClick={() => handleDeleteItem(key)}
-                  alt={item}
-                  width={40}
-                  height={40}
-                  className="object-cover w-full h-full cursor-pointer hover:opacity-70 transition-opacity duration-150 border-[1px] border-white-smoke"
-                />
-              );
-            })}
-        </div>
-      </div>
-      {navigation === 0 && (
-        <div className="w-full flex justify-between mt-[3%] z-20">
-          <div className="w-[30%] flex flex-col justify-between">
-            <input
-              type="text"
-              placeholder={t("builds:searchChampion")}
-              value={searchChampion}
-              onChange={handleChampionSearch}
-              className="w-full bg-night bg-opacity-70 rounded-xl p-4 text-[16px] focus:outline-none"
-            />
-            <div className="w-full flex flex-col gap-y-2 pb-[20%]">
-              <p className="text-[28px]">{t("builds:selectPosition")}</p>
-              <div className="flex flex-wrap gap-4">
-                {/* toplane */}
-                <div
-                  className={`flex gap-x-4 items-center bg-night bg-opacity-80 px-6 py-3 rounded-xl cursor-pointer hover:bg-silver-hover transition-all duration-100 ${
-                    formValues.position === "Top"
-                      ? "outline outline-[1px] outline-white-smoke"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    setFormValues({ ...formValues, position: "Top" })
-                  }
-                >
-                  <LeaguePosition height={32} position={"Top"} />
-                  <p className="text-[20px]">{t("common:top")}</p>
-                </div>
-                {/* jungle */}
-                <div
-                  className={`flex gap-x-4 items-center bg-night bg-opacity-80 px-6 py-3 rounded-xl cursor-pointer hover:bg-silver-hover transition-all duration-100 ${
-                    formValues.position === "Jungle"
-                      ? "outline outline-[1px] outline-white-smoke"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    setFormValues({ ...formValues, position: "Jungle" })
-                  }
-                >
-                  <LeaguePosition height={32} position={"Jungle"} />
-                  <p className="text-[20px]">{t("common:jungle")}</p>
-                </div>
-                {/* midlane */}
-                <div
-                  className={`flex gap-x-4 items-center bg-night bg-opacity-80 px-6 py-3 rounded-xl cursor-pointer hover:bg-silver-hover transition-all duration-100 ${
-                    formValues.position === "Mid"
-                      ? "outline outline-[1px] outline-white-smoke"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    setFormValues({ ...formValues, position: "Mid" })
-                  }
-                >
-                  <LeaguePosition height={32} position={"Mid"} />
-                  <p className="text-[20px]">{t("common:mid")}</p>
-                </div>
-                {/* bottom */}
-                <div
-                  className={`flex gap-x-4 items-center bg-night bg-opacity-80 px-6 py-3 rounded-xl cursor-pointer hover:bg-silver-hover transition-all duration-100 ${
-                    formValues.position === "Bottom"
-                      ? "outline outline-[1px] outline-white-smoke"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    setFormValues({ ...formValues, position: "Bottom" })
-                  }
-                >
-                  <LeaguePosition height={32} position={"Bottom"} />
-                  <p className="text-[20px]">{t("common:bot")}</p>
-                </div>
-                {/* support */}
-                <div
-                  className={`flex gap-x-4 items-center bg-night bg-opacity-80 px-6 py-3 rounded-xl cursor-pointer hover:bg-silver-hover transition-all duration-100 ${
-                    formValues.position === "Support"
-                      ? "outline outline-[1px] outline-white-smoke"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    setFormValues({ ...formValues, position: "Support" })
-                  }
-                >
-                  <LeaguePosition height={32} position={"Support"} />
-                  <p className="text-[20px]">{t("common:support")}</p>
-                </div>
+                    return (
+                      <Image
+                        src={`/rune-shards/${shard}.webp`}
+                        height={24}
+                        width={24}
+                        key={key}
+                      />
+                    );
+                  })}
               </div>
             </div>
-            <div
-              className="flex items-center hover:text-amber duration-150 transition-all cursor-pointer pb-[5%]"
-              onClick={() => setNavigation(1)}
-            >
-              <p className="text-[28px]">{t("builds:nextPage")}</p>
-              <IoChevronForward className="text-[28px]" />
-            </div>
           </div>
-          <div className="w-[65%] flex flex-wrap gap-2">
-            {championNamesData &&
-              filteredChampionOptions.map(([championKey, championValue]) => {
+
+          <div className="flex items-center gap-x-2">
+            {formValues.summoner1Name && (
+              <div className="hover:opacity-50 transition-opacity duration-150 cursor-pointer">
+                <Image
+                  src={
+                    "/league-summoners/" + formValues.summoner1Name + ".webp"
+                  }
+                  width={48}
+                  height={48}
+                  alt={formValues.summoner1Name}
+                  className="object-cover"
+                  onClick={() => handleSummonerRemove(formValues.summoner1Name)}
+                />
+              </div>
+            )}
+            {formValues.summoner2Name && (
+              <div className="hover:opacity-50 transition-opacity duration-150 cursor-pointer">
+                <Image
+                  src={
+                    "/league-summoners/" + formValues.summoner2Name + ".webp"
+                  }
+                  width={48}
+                  height={48}
+                  alt={formValues.summoner2Name}
+                  className="object-cover"
+                  onClick={() => handleSummonerRemove(formValues.summoner2Name)}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* itemy */}
+          <div className="flex items-center gap-x-2">
+            {chosenItems?.length > 0 &&
+              chosenItems.map((item, key) => {
+                // Sprawdzenie, czy item nie jest pustym stringiem
+                if (item.trim() === "") return null;
+
                 return (
-                  <div
-                    key={championKey}
-                    className={`w-[50px] h-[50px] border-[1px] border-white-smoke hover:opacity-100 cursor-pointer transition-all duration-150 flex items-center justify-center ${
-                      formValues.championKey
-                        ? formValues.championKey === championKey
-                          ? "opacity-100"
-                          : "opacity-50"
-                        : "opacity-100"
-                    }`}
-                    onClick={() =>
-                      setFormValues({
-                        ...formValues,
-                        champion: championValue,
-                        championKey,
-                      })
+                  <Image
+                    key={key}
+                    src={
+                      "https://ddragon.leagueoflegends.com/cdn/" +
+                      "14.11.1" +
+                      "/img/item/" +
+                      item +
+                      ".png"
                     }
-                  >
-                    <Image
-                      src={`https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${championKey}.png`}
-                      alt={championValue}
-                      width={50}
-                      height={50}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
+                    onClick={() => handleDeleteItem(key)}
+                    alt={item}
+                    width={40}
+                    height={40}
+                    className="object-cover w-full h-full cursor-pointer hover:opacity-70 transition-opacity duration-150 border-[1px] border-white-smoke"
+                  />
                 );
               })}
           </div>
         </div>
-      )}
-      {navigation === 1 && (
-        <div className="w-full flex justify-between mt-[3%] z-20">
-          <div className="w-[30%] flex flex-col justify-between">
-            <div className="flex flex-col gap-y-2 w-full">
-              <p className="text-[28px]">{t("builds:selectSumms")}</p>
-              <div className="flex flex-wrap gap-4">
-                {summoners.map((summoner) => {
+        {navigation === 0 && (
+          <div className="w-full flex justify-between mt-[3%] z-20">
+            <div className="w-[30%] flex flex-col justify-between">
+              <input
+                type="text"
+                placeholder={t("builds:searchChampion")}
+                value={searchChampion}
+                onChange={handleChampionSearch}
+                className="w-full bg-night bg-opacity-70 rounded-xl p-4 text-[16px] focus:outline-none"
+              />
+              <div className="w-full flex flex-col gap-y-2 pb-[20%]">
+                <p className="text-[28px]">{t("builds:selectPosition")}</p>
+                <div className="flex flex-wrap gap-4">
+                  {/* toplane */}
+                  <div
+                    className={`flex gap-x-4 items-center bg-night bg-opacity-80 px-6 py-3 rounded-xl cursor-pointer hover:bg-silver-hover transition-all duration-100 ${
+                      formValues.position === "Top"
+                        ? "outline outline-[1px] outline-white-smoke"
+                        : ""
+                    }`}
+                    onClick={() =>
+                      setFormValues({ ...formValues, position: "Top" })
+                    }
+                  >
+                    <LeaguePosition height={32} position={"Top"} />
+                    <p className="text-[20px]">{t("common:top")}</p>
+                  </div>
+                  {/* jungle */}
+                  <div
+                    className={`flex gap-x-4 items-center bg-night bg-opacity-80 px-6 py-3 rounded-xl cursor-pointer hover:bg-silver-hover transition-all duration-100 ${
+                      formValues.position === "Jungle"
+                        ? "outline outline-[1px] outline-white-smoke"
+                        : ""
+                    }`}
+                    onClick={() =>
+                      setFormValues({ ...formValues, position: "Jungle" })
+                    }
+                  >
+                    <LeaguePosition height={32} position={"Jungle"} />
+                    <p className="text-[20px]">{t("common:jungle")}</p>
+                  </div>
+                  {/* midlane */}
+                  <div
+                    className={`flex gap-x-4 items-center bg-night bg-opacity-80 px-6 py-3 rounded-xl cursor-pointer hover:bg-silver-hover transition-all duration-100 ${
+                      formValues.position === "Mid"
+                        ? "outline outline-[1px] outline-white-smoke"
+                        : ""
+                    }`}
+                    onClick={() =>
+                      setFormValues({ ...formValues, position: "Mid" })
+                    }
+                  >
+                    <LeaguePosition height={32} position={"Mid"} />
+                    <p className="text-[20px]">{t("common:mid")}</p>
+                  </div>
+                  {/* bottom */}
+                  <div
+                    className={`flex gap-x-4 items-center bg-night bg-opacity-80 px-6 py-3 rounded-xl cursor-pointer hover:bg-silver-hover transition-all duration-100 ${
+                      formValues.position === "Bottom"
+                        ? "outline outline-[1px] outline-white-smoke"
+                        : ""
+                    }`}
+                    onClick={() =>
+                      setFormValues({ ...formValues, position: "Bottom" })
+                    }
+                  >
+                    <LeaguePosition height={32} position={"Bottom"} />
+                    <p className="text-[20px]">{t("common:bot")}</p>
+                  </div>
+                  {/* support */}
+                  <div
+                    className={`flex gap-x-4 items-center bg-night bg-opacity-80 px-6 py-3 rounded-xl cursor-pointer hover:bg-silver-hover transition-all duration-100 ${
+                      formValues.position === "Support"
+                        ? "outline outline-[1px] outline-white-smoke"
+                        : ""
+                    }`}
+                    onClick={() =>
+                      setFormValues({ ...formValues, position: "Support" })
+                    }
+                  >
+                    <LeaguePosition height={32} position={"Support"} />
+                    <p className="text-[20px]">{t("common:support")}</p>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex items-center hover:text-amber duration-150 transition-all cursor-pointer pb-[5%]"
+                onClick={() => setNavigation(1)}
+              >
+                <p className="text-[28px]">{t("builds:nextPage")}</p>
+                <IoChevronForward className="text-[28px]" />
+              </div>
+            </div>
+            <div className="w-[65%] flex flex-wrap gap-2">
+              {championNamesData &&
+                filteredChampionOptions.map(([championKey, championValue]) => {
                   return (
                     <div
-                      key={summoner}
-                      className={`transition-opacity duration-150 cursor-pointer ${
-                        formValues.summoner1Name === summoner ||
-                        formValues.summoner2Name === summoner
-                          ? "outline-[1px] outline-white-smoke"
-                          : "hover:opacity-50"
+                      key={championKey}
+                      className={`w-[50px] h-[50px] border-[1px] border-white-smoke hover:opacity-100 cursor-pointer transition-all duration-150 flex items-center justify-center ${
+                        formValues.championKey
+                          ? formValues.championKey === championKey
+                            ? "opacity-100"
+                            : "opacity-50"
+                          : "opacity-100"
                       }`}
-                      onClick={() => handleSummonerClick(summoner)}
+                      onClick={() =>
+                        setFormValues({
+                          ...formValues,
+                          champion: championValue,
+                          championKey,
+                        })
+                      }
                     >
                       <Image
-                        src={"/league-summoners/" + summoner + ".webp"}
-                        width={56}
-                        height={56}
-                        alt={summoner}
-                        className="object-cover"
+                        src={`https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${championKey}.png`}
+                        alt={championValue}
+                        width={50}
+                        height={50}
+                        className="object-cover w-full h-full"
                       />
                     </div>
                   );
                 })}
-              </div>
-            </div>
-            <div
-              className="flex items-center hover:text-amber duration-150 transition-all cursor-pointer pb-[5%]"
-              onClick={() => setNavigation(2)}
-            >
-              <p className="text-[28px]">{t("builds:nextPage")}</p>
-              <IoChevronForward className="text-[28px]" />
             </div>
           </div>
-          <div className="w-[65%] flex gap-2">
-            {runesData && (
-              <div className="w-[50%] flex flex-col gap-x-2">
-                <div className="flex gap-x-2 items-center">
-                  {runesData.map((rune, key) => (
-                    <div
-                      key={key}
-                      className={`bg-night bg-opacity-80 rounded-full border-[1px] border-white-smoke p-[10px] cursor-pointer hover:bg-silver hover:bg-opacity-35 transition-all duration-150 
-                      ${runeTree === key ? "bg-silver bg-opacity-35" : ""}`}
-                      onClick={() => handleSetRuneTree(key)}
-                    >
-                      <Image
-                        src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
-                        alt={rune.name} // You can use rune.name instead of a static "test"
-                        width={48}
-                        height={48}
-                        className=""
-                      />
-                    </div>
-                  ))}
+        )}
+        {navigation === 1 && (
+          <div className="w-full flex justify-between mt-[3%] z-20">
+            <div className="w-[30%] flex flex-col justify-between">
+              <div className="flex flex-col gap-y-2 w-full">
+                <p className="text-[28px]">{t("builds:selectSumms")}</p>
+                <div className="flex flex-wrap gap-4">
+                  {summoners.map((summoner) => {
+                    return (
+                      <div
+                        key={summoner}
+                        className={`transition-opacity duration-150 cursor-pointer ${
+                          formValues.summoner1Name === summoner ||
+                          formValues.summoner2Name === summoner
+                            ? "outline-[1px] outline-white-smoke"
+                            : "hover:opacity-50"
+                        }`}
+                        onClick={() => handleSummonerClick(summoner)}
+                      >
+                        <Image
+                          src={"/league-summoners/" + summoner + ".webp"}
+                          width={56}
+                          height={56}
+                          alt={summoner}
+                          className="object-cover"
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
-                {/* Handle different rune trees */}
-                {runesData.map((rune, key) => {
-                  return runeTree === key ? (
-                    <div className="mt-[8%] flex flex-col gap-y-2" key={key}>
-                      {rune.slots.map((slot, slotIndex) => (
-                        <div key={slotIndex} className="flex gap-x-2">
-                          {slot.runes.map((rune, runeIndex) => (
-                            <div
-                              key={runeIndex}
-                              className={`bg-night bg-opacity-80 rounded-full border-[1px] border-white-smoke cursor-pointer hover:bg-silver hover:bg-opacity-35 transition-all duration-150
-                              ${slotIndex === 0 ? "p-[5px]" : ""}`}
-                              onClick={() =>
-                                handleSetPrimaryRunes(
-                                  rune.id,
-                                  rune.icon,
-                                  slotIndex
-                                )
-                              }
-                            >
-                              <Image
-                                src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
-                                alt={rune.name}
-                                width={slotIndex === 0 ? 48 + 10 : 48 + 20} // Adjust size based on slotIndex
-                                height={slotIndex === 0 ? 48 + 10 : 48 + 20} // Adjust size based on slotIndex
-                                className={
-                                  primaryRunes.some((r) => r.id === rune.id)
-                                    ? "opacity-100"
-                                    : "opacity-50"
-                                }
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  ) : null;
-                })}
               </div>
-            )}
-
-            <div className="w-[50%] flex flex-col">
+              <div
+                className="flex items-center hover:text-amber duration-150 transition-all cursor-pointer pb-[5%]"
+                onClick={() => setNavigation(2)}
+              >
+                <p className="text-[28px]">{t("builds:nextPage")}</p>
+                <IoChevronForward className="text-[28px]" />
+              </div>
+            </div>
+            <div className="w-[65%] flex gap-2">
               {runesData && (
-                <div className="w-full flex flex-col gap-x-2">
+                <div className="w-[50%] flex flex-col gap-x-2">
                   <div className="flex gap-x-2 items-center">
                     {runesData.map((rune, key) => (
                       <div
                         key={key}
                         className={`bg-night bg-opacity-80 rounded-full border-[1px] border-white-smoke p-[10px] cursor-pointer hover:bg-silver hover:bg-opacity-35 transition-all duration-150 
-                      ${
-                        runeTreeSecondary === key
-                          ? "bg-silver bg-opacity-35"
-                          : ""
-                      }
-                      ${
-                        runeTree === key
-                          ? "cursor-auto opacity-50 hover:bg-night hover:bg-opacity-80"
-                          : ""
-                      }`} // Dodanie logiki blokującej dla tego samego drzewa
-                        onClick={() => {
-                          if (runeTree !== key) {
-                            // Tylko wtedy, gdy runeTree nie jest równe key
-                            handleSetRuneTreeSecondary(key);
-                          }
-                        }}
+                        ${runeTree === key ? "bg-silver bg-opacity-35" : ""}`}
+                        onClick={() => handleSetRuneTree(key)}
                       >
                         <Image
                           src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
@@ -874,203 +816,291 @@ const CreateBuild = () => {
                   </div>
                   {/* Handle different rune trees */}
                   {runesData.map((rune, key) => {
-                    return runeTreeSecondary === key ? (
+                    return runeTree === key ? (
                       <div className="mt-[8%] flex flex-col gap-y-2" key={key}>
-                        {rune.slots
-                          .filter((_, slotIndex) => slotIndex !== 0)
-                          .map((slot, slotIndex) => (
-                            <div key={slotIndex} className="flex gap-x-2">
-                              {slot.runes.map((rune, runeIndex) => (
-                                <div
-                                  key={runeIndex}
-                                  className={`bg-night bg-opacity-80 rounded-full border-[1px] border-white-smoke cursor-pointer hover:bg-silver hover:bg-opacity-35 transition-all duration-150
-                              ${slotIndex === 0 ? "p-[5px]" : ""}`}
-                                  onClick={() =>
-                                    handleSetSecondaryRunes(
-                                      rune.id,
-                                      rune.icon,
-                                      slotIndex
-                                    )
+                        {rune.slots.map((slot, slotIndex) => (
+                          <div key={slotIndex} className="flex gap-x-2">
+                            {slot.runes.map((rune, runeIndex) => (
+                              <div
+                                key={runeIndex}
+                                className={`bg-night bg-opacity-80 rounded-full border-[1px] border-white-smoke cursor-pointer hover:bg-silver hover:bg-opacity-35 transition-all duration-150
+                                ${slotIndex === 0 ? "p-[5px]" : ""}`}
+                                onClick={() =>
+                                  handleSetPrimaryRunes(
+                                    rune.id,
+                                    rune.icon,
+                                    slotIndex
+                                  )
+                                }
+                              >
+                                <Image
+                                  src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
+                                  alt={rune.name}
+                                  width={slotIndex === 0 ? 48 + 10 : 48 + 20} // Adjust size based on slotIndex
+                                  height={slotIndex === 0 ? 48 + 10 : 48 + 20} // Adjust size based on slotIndex
+                                  className={
+                                    primaryRunes.some((r) => r.id === rune.id)
+                                      ? "opacity-100"
+                                      : "opacity-50"
                                   }
-                                >
-                                  <Image
-                                    src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
-                                    alt={rune.name}
-                                    width={slotIndex === 0 ? 48 + 10 : 48 + 20} // Adjust size based on slotIndex
-                                    height={slotIndex === 0 ? 48 + 10 : 48 + 20} // Adjust size based on slotIndex
-                                    className={
-                                      secondaryRunes.some(
-                                        (r) => r.id === rune.id
-                                      )
-                                        ? "opacity-100"
-                                        : "opacity-50"
-                                    }
-                                  />
-                                </div>
-                              ))}
-                            </div>
-                          ))}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        ))}
                       </div>
                     ) : null;
                   })}
-                  <div className="mt-[3%] flex flex-col"></div>
                 </div>
               )}
 
-              <div className="mt-[3%] grid grid-cols-3 gap-1 w-[30%] ml-[18px]">
-                {runeShards.map((shard, key) => {
-                  const row = Math.floor(key / 3); // Określenie wiersza
-                  const isSelected = selectedShards[row] === shard; // Sprawdzanie, czy shard jest wybrany w danym wierszu
+              <div className="w-[50%] flex flex-col">
+                {runesData && (
+                  <div className="w-full flex flex-col gap-x-2">
+                    <div className="flex gap-x-2 items-center">
+                      {runesData.map((rune, key) => (
+                        <div
+                          key={key}
+                          className={`bg-night bg-opacity-80 rounded-full border-[1px] border-white-smoke p-[10px] cursor-pointer hover:bg-silver hover:bg-opacity-35 transition-all duration-150 
+                        ${
+                          runeTreeSecondary === key
+                            ? "bg-silver bg-opacity-35"
+                            : ""
+                        }
+                        ${
+                          runeTree === key
+                            ? "cursor-auto opacity-50 hover:bg-night hover:bg-opacity-80"
+                            : ""
+                        }`} // Dodanie logiki blokującej dla tego samego drzewa
+                          onClick={() => {
+                            if (runeTree !== key) {
+                              // Tylko wtedy, gdy runeTree nie jest równe key
+                              handleSetRuneTreeSecondary(key);
+                            }
+                          }}
+                        >
+                          <Image
+                            src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
+                            alt={rune.name} // You can use rune.name instead of a static "test"
+                            width={48}
+                            height={48}
+                            className=""
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    {/* Handle different rune trees */}
+                    {runesData.map((rune, key) => {
+                      return runeTreeSecondary === key ? (
+                        <div
+                          className="mt-[8%] flex flex-col gap-y-2"
+                          key={key}
+                        >
+                          {rune.slots
+                            .filter((_, slotIndex) => slotIndex !== 0)
+                            .map((slot, slotIndex) => (
+                              <div key={slotIndex} className="flex gap-x-2">
+                                {slot.runes.map((rune, runeIndex) => (
+                                  <div
+                                    key={runeIndex}
+                                    className={`bg-night bg-opacity-80 rounded-full border-[1px] border-white-smoke cursor-pointer hover:bg-silver hover:bg-opacity-35 transition-all duration-150
+                                ${slotIndex === 0 ? "p-[5px]" : ""}`}
+                                    onClick={() =>
+                                      handleSetSecondaryRunes(
+                                        rune.id,
+                                        rune.icon,
+                                        slotIndex
+                                      )
+                                    }
+                                  >
+                                    <Image
+                                      src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
+                                      alt={rune.name}
+                                      width={
+                                        slotIndex === 0 ? 48 + 10 : 48 + 20
+                                      } // Adjust size based on slotIndex
+                                      height={
+                                        slotIndex === 0 ? 48 + 10 : 48 + 20
+                                      } // Adjust size based on slotIndex
+                                      className={
+                                        secondaryRunes.some(
+                                          (r) => r.id === rune.id
+                                        )
+                                          ? "opacity-100"
+                                          : "opacity-50"
+                                      }
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            ))}
+                        </div>
+                      ) : null;
+                    })}
+                    <div className="mt-[3%] flex flex-col"></div>
+                  </div>
+                )}
 
+                <div className="mt-[3%] grid grid-cols-3 gap-1 w-[30%] ml-[18px]">
+                  {runeShards.map((shard, key) => {
+                    const row = Math.floor(key / 3); // Określenie wiersza
+                    const isSelected = selectedShards[row] === shard; // Sprawdzanie, czy shard jest wybrany w danym wierszu
+
+                    return (
+                      <div
+                        key={key}
+                        onClick={() => handleShardSelection(row, shard)} // Obsługuje kliknięcie na shard
+                        className={`cursor-pointer ${
+                          isSelected ? "opacity-100" : "opacity-60"
+                        }`}
+                      >
+                        <Image
+                          src={`/rune-shards/${shard}.webp`} // Zakładając, że masz odpowiednią ścieżkę do obrazków
+                          alt={shard}
+                          width={32}
+                          height={32}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {navigation === 2 && (
+          <div className="w-full flex justify-between mt-[3%] z-20">
+            <div className="w-[30%] flex flex-col justify-between">
+              <input
+                type="text"
+                placeholder={t("builds:searchItem")}
+                value={itemSearch}
+                onChange={(e) => setItemSearch(e.target.value)}
+                className="w-full bg-night bg-opacity-70 rounded-xl p-4 text-[16px] focus:outline-none"
+              />
+              <p className="text-[28px] mt-[7%]">{t("builds:filterByTags")}</p>
+              <div className="flex flex-wrap gap-4 mt-[3%]">
+                {itemTags.map((item, key) => {
                   return (
                     <div
                       key={key}
-                      onClick={() => handleShardSelection(row, shard)} // Obsługuje kliknięcie na shard
-                      className={`cursor-pointer ${
-                        isSelected ? "opacity-100" : "opacity-60"
+                      onClick={() => handleSetSelectedTags(item.tag)}
+                      className={`bg-night bg-opacity-70 text-[18px] text-opacity-80 px-7 py-2 rounded-xl hover:bg-silver hover:bg-opacity-30 transition-all duration-150 cursor-pointer
+                      ${
+                        selectedTags.includes(item.tag)
+                          ? "outline outline-1 outline-white-smoke"
+                          : ""
                       }`}
                     >
-                      <Image
-                        src={`/rune-shards/${shard}.webp`} // Zakładając, że masz odpowiednią ścieżkę do obrazków
-                        alt={shard}
-                        width={32}
-                        height={32}
-                      />
+                      <p>{item.name}</p>
                     </div>
                   );
                 })}
               </div>
+              <div
+                className="flex items-center hover:text-amber duration-150 transition-all cursor-pointer mt-[8%]"
+                onClick={() => setNavigation(3)}
+              >
+                <p className="text-[28px]">Next page</p>
+                <IoChevronForward className="text-[28px]" />
+              </div>
+            </div>
+
+            <div className="w-[65%] flex flex-wrap items-start gap-2 max-h-[20vh]">
+              {itemsData &&
+                itemsData
+                  .filter((item) => {
+                    const matchesSearch =
+                      itemSearch === "" ||
+                      item.name
+                        .toLowerCase()
+                        .includes(itemSearch.toLowerCase());
+                    const matchesTags =
+                      selectedTags.length === 0 ||
+                      item.tags.some((tag) => selectedTags.includes(tag));
+                    return matchesSearch && matchesTags; // Przedmiot musi spełniać oba warunki
+                  })
+                  .map((item, key) => {
+                    // Sprawdzamy, czy wszystkie elementy w chosenItems są pełne (nie są pustymi ciągami)
+                    const isFull =
+                      chosenItems.filter((id) => id !== "").length === 6;
+                    const isItemChosen = chosenItems.includes(item.id);
+
+                    // Określamy opacity na podstawie warunków
+                    let itemOpacity = "opacity-80 "; // Domyślna opacity 80% dla nieklikniętych i niewybranych przedmiotów
+
+                    if (isItemChosen) {
+                      itemOpacity = "opacity-100 border-amber border-[1.5px]"; // Zawsze opacity 100% dla klikniętego przedmiotu
+                    } else if (isFull) {
+                      itemOpacity = "opacity-30 "; // Opacity 50% dla nieklikniętych, gdy wszystkie przedmioty zostały wybrane
+                    }
+
+                    return (
+                      <div
+                        key={key}
+                        className={`w-[50px] h-[50px] flex-shrink-0  cursor-pointer transition-all duration-150 flex items-center justify-center ${itemOpacity}`}
+                        onClick={() => handleAddItem(item.id)}
+                      >
+                        <Image
+                          src={
+                            "https://ddragon.leagueoflegends.com/cdn/" +
+                            "14.11.1" +
+                            "/img/item/" +
+                            item.id +
+                            ".png"
+                          }
+                          alt={item.name}
+                          width={50}
+                          height={50}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                    );
+                  })}
             </div>
           </div>
-        </div>
-      )}
-      {navigation === 2 && (
-        <div className="w-full flex justify-between mt-[3%] z-20">
-          <div className="w-[30%] flex flex-col justify-between">
+        )}
+        {navigation === 3 && (
+          <div className="w-full flex flex-col items-center gap-y-4 z-20">
             <input
               type="text"
-              placeholder={t("builds:searchItem")}
-              value={itemSearch}
-              onChange={(e) => setItemSearch(e.target.value)}
-              className="w-full bg-night bg-opacity-70 rounded-xl p-4 text-[16px] focus:outline-none"
+              value={titlePlaceholder}
+              onChange={(e) => {
+                const value = e.target.value;
+                setTitlePlaceholder(value);
+                setFormValues((prevValues) => ({
+                  ...prevValues,
+                  title: value,
+                }));
+              }}
+              placeholder={t("builds:title")}
+              className="w-[30%] bg-night bg-opacity-70 rounded-xl text-[24px] px-6 py-3 mt-[4%] focus:outline-none"
             />
-            <p className="text-[28px] mt-[7%]">{t("builds:filterByTags")}</p>
-            <div className="flex flex-wrap gap-4 mt-[3%]">
-              {itemTags.map((item, key) => {
-                return (
-                  <div
-                    key={key}
-                    onClick={() => handleSetSelectedTags(item.tag)}
-                    className={`bg-night bg-opacity-70 text-[18px] text-opacity-80 px-7 py-2 rounded-xl hover:bg-silver hover:bg-opacity-30 transition-all duration-150 cursor-pointer
-                    ${
-                      selectedTags.includes(item.tag)
-                        ? "outline outline-1 outline-white-smoke"
-                        : ""
-                    }`}
-                  >
-                    <p>{item.name}</p>
-                  </div>
-                );
-              })}
-            </div>
-            <div
-              className="flex items-center hover:text-amber duration-150 transition-all cursor-pointer mt-[8%]"
-              onClick={() => setNavigation(3)}
+            <textarea
+              rows={6}
+              value={descriptionPlaceholder}
+              onChange={(e) => {
+                const value = e.target.value;
+                setDescriptionPlaceholder(value);
+                setFormValues((prevValues) => ({
+                  ...prevValues,
+                  description: value,
+                }));
+              }}
+              className="w-[30%] bg-night bg-opacity-70 rounded-xl text-[24px] px-6 py-3 mt-[1%] focus:outline-none"
+              placeholder={t("builds:description")}
+            ></textarea>
+            <button
+              onClick={() => handleSubmit()}
+              className="w-[15%] text-[20px] bg-night bg-opacity-70 py-2 border-[1px] border-white-smoke rounded-3xl hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
             >
-              <p className="text-[28px]">Next page</p>
-              <IoChevronForward className="text-[28px]" />
-            </div>
+              {t("builds:createBuild")}
+            </button>
           </div>
-
-          <div className="w-[65%] flex flex-wrap items-start gap-2 max-h-[20vh]">
-            {itemsData &&
-              itemsData
-                .filter((item) => {
-                  const matchesSearch =
-                    itemSearch === "" ||
-                    item.name.toLowerCase().includes(itemSearch.toLowerCase());
-                  const matchesTags =
-                    selectedTags.length === 0 ||
-                    item.tags.some((tag) => selectedTags.includes(tag));
-                  return matchesSearch && matchesTags; // Przedmiot musi spełniać oba warunki
-                })
-                .map((item, key) => {
-                  // Sprawdzamy, czy wszystkie elementy w chosenItems są pełne (nie są pustymi ciągami)
-                  const isFull =
-                    chosenItems.filter((id) => id !== "").length === 6;
-                  const isItemChosen = chosenItems.includes(item.id);
-
-                  // Określamy opacity na podstawie warunków
-                  let itemOpacity = "opacity-80 "; // Domyślna opacity 80% dla nieklikniętych i niewybranych przedmiotów
-
-                  if (isItemChosen) {
-                    itemOpacity = "opacity-100 border-amber border-[1.5px]"; // Zawsze opacity 100% dla klikniętego przedmiotu
-                  } else if (isFull) {
-                    itemOpacity = "opacity-30 "; // Opacity 50% dla nieklikniętych, gdy wszystkie przedmioty zostały wybrane
-                  }
-
-                  return (
-                    <div
-                      key={key}
-                      className={`w-[50px] h-[50px] flex-shrink-0  cursor-pointer transition-all duration-150 flex items-center justify-center ${itemOpacity}`}
-                      onClick={() => handleAddItem(item.id)}
-                    >
-                      <Image
-                        src={
-                          "https://ddragon.leagueoflegends.com/cdn/" +
-                          "14.11.1" +
-                          "/img/item/" +
-                          item.id +
-                          ".png"
-                        }
-                        alt={item.name}
-                        width={50}
-                        height={50}
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  );
-                })}
-          </div>
-        </div>
-      )}
-      {navigation === 3 && (
-        <div className="w-full flex flex-col items-center gap-y-4 z-20">
-          <input
-            type="text"
-            value={titlePlaceholder}
-            onChange={(e) => {
-              const value = e.target.value;
-              setTitlePlaceholder(value);
-              setFormValues((prevValues) => ({ ...prevValues, title: value }));
-            }}
-            placeholder={t("builds:title")}
-            className="w-[30%] bg-night bg-opacity-70 rounded-xl text-[24px] px-6 py-3 mt-[4%] focus:outline-none"
-          />
-          <textarea
-            rows={6}
-            value={descriptionPlaceholder}
-            onChange={(e) => {
-              const value = e.target.value;
-              setDescriptionPlaceholder(value);
-              setFormValues((prevValues) => ({
-                ...prevValues,
-                description: value,
-              }));
-            }}
-            className="w-[30%] bg-night bg-opacity-70 rounded-xl text-[24px] px-6 py-3 mt-[1%] focus:outline-none"
-            placeholder={t("builds:description")}
-          ></textarea>
-          <button
-            onClick={() => handleSubmit()}
-            className="w-[15%] text-[20px] bg-night bg-opacity-70 py-2 border-[1px] border-white-smoke rounded-3xl hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
-          >
-            {t("builds:createBuild")}
-          </button>
-        </div>
-      )}
-    </div>
-  );
+        )}
+      </div>
+    );
+  }
 };
 
 export default CreateBuild;

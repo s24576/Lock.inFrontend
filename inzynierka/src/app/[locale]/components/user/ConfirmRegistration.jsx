@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 import { useQuery, useMutation } from "react-query";
 import useAxios from "../../hooks/useAxios";
 import confirmRegistration from "../../api/user/confirmRegistration";
@@ -11,6 +12,7 @@ const ConfirmRegistration = () => {
   const [confirmationToken, setConfirmationToken] = useState("");
   const axiosInstance = useAxios();
   const router = useRouter();
+  const { isLogged } = useContext(UserContext);
 
   const { mutateAsync: handleConfirmRegistration } = useMutation(
     (confirmationToken) =>
@@ -45,45 +47,51 @@ const ConfirmRegistration = () => {
 
   const { t } = useTranslation();
 
-  return (
-    <div className=" flex flex-col w-full h-screen items-center justify-center bg-night text-white-smoke font-chewy">
-      <p className="font-bangers text-[48px]">
-        {t("register:confirmRegistrationTitle")}
-      </p>
+  if (!isLogged) {
+    router.push("/login");
+  }
 
-      <p>
-        {t("register:confirmRegistrationText1")}
-        <span
-          className="underline cursor-pointer hover:text-amber duration-150 transition-all"
-          onClick={handleResendConfirmationToken}
-        >
-          {t("register:confirmRegistrationText2")}
-        </span>
-      </p>
+  if (isLogged) {
+    return (
+      <div className=" flex flex-col w-full h-screen items-center justify-center bg-night text-white-smoke font-chewy">
+        <p className="font-bangers text-[48px]">
+          {t("register:confirmRegistrationTitle")}
+        </p>
 
-      <form
-        className="mt-5 flex flex-col items-center w-full"
-        onSubmit={handleSubmit}
-      >
-        <input
-          type="text"
-          placeholder="Code"
-          value={confirmationToken}
-          onChange={(e) => setConfirmationToken(e.target.value)}
-          className="w-[25%] px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
-        />
-        <button
-          type="submit"
-          className="flex items-center gap-x-1 hover:text-amber transition-all duration-150 cursor-pointer text-white-smoke mt-5 py-2 px-3"
+        <p>
+          {t("register:confirmRegistrationText1")}
+          <span
+            className="underline cursor-pointer hover:text-amber duration-150 transition-all"
+            onClick={handleResendConfirmationToken}
+          >
+            {t("register:confirmRegistrationText2")}
+          </span>
+        </p>
+
+        <form
+          className="mt-5 flex flex-col items-center w-full"
+          onSubmit={handleSubmit}
         >
-          <FaCheck className="text-[28px]"></FaCheck>
-          <p className="text-[20px] ">
-            {t("register:confirmRegistrationButton")}
-          </p>
-        </button>
-      </form>
-    </div>
-  );
+          <input
+            type="text"
+            placeholder="Code"
+            value={confirmationToken}
+            onChange={(e) => setConfirmationToken(e.target.value)}
+            className="w-[25%] px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
+          />
+          <button
+            type="submit"
+            className="flex items-center gap-x-1 hover:text-amber transition-all duration-150 cursor-pointer text-white-smoke mt-5 py-2 px-3"
+          >
+            <FaCheck className="text-[28px]"></FaCheck>
+            <p className="text-[20px] ">
+              {t("register:confirmRegistrationButton")}
+            </p>
+          </button>
+        </form>
+      </div>
+    );
+  }
 };
 
 export default ConfirmRegistration;

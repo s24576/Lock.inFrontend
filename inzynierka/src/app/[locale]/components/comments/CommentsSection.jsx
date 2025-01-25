@@ -23,6 +23,7 @@ import { FaUser } from "react-icons/fa";
 import { FaExclamation } from "react-icons/fa6";
 import Footer from "../Footer";
 import { useTranslation } from "react-i18next";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const CommentsSection = ({ id: objectId }) => {
   const { userData, isLogged } = useContext(UserContext);
@@ -54,7 +55,9 @@ const CommentsSection = ({ id: objectId }) => {
 
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
 
-  const axiosInstance = useAxios();
+  const axios = useAxios();
+  const axiosPublic = useAxiosPublic();
+  const axiosInstance = isLogged ? axios : axiosPublic;
   const router = useRouter();
 
   const {

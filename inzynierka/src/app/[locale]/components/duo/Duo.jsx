@@ -19,6 +19,7 @@ import languageTruncator from "@/lib/languageTruncator";
 import getChampionNames from "../../api/ddragon/getChampionNames";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const leaguePositions = ["Top", "Jungle", "Mid", "Bot", "Support", "Fill"];
 
@@ -51,8 +52,12 @@ const rankOptions = rankList.map((rank) => ({
 }));
 
 const Duo = () => {
-  const axiosInstance = useAxios();
-  const { duoSettings, setDuoSettings, userData } = useContext(UserContext);
+  const { duoSettings, setDuoSettings, userData, isLogged } =
+    useContext(UserContext);
+
+  const axios = useAxios();
+  const axiosPublic = useAxiosPublic();
+  const axiosInstance = isLogged ? axios : axiosPublic;
 
   const [searchedPositions, setSearchedPositions] = useState([]);
   const [minRank, setMinRank] = useState("");
@@ -259,7 +264,8 @@ const Duo = () => {
         }}
       ></div>
       <div className="mt-[10%] w-[25%] flex flex-col gap-y-2 z-20 font-chewy">
-        <DuoCreation></DuoCreation>
+        {isLogged && <DuoCreation></DuoCreation>}
+
         {riotProfiles?.length === 1 ? (
           <div className="mt-[2%] flex gap-x-2 justify-between items-center bg-silver bg-opacity-15 rounded-xl px-4 py-2 text-[20px] w-[80%]">
             <div className="flex gap-x-3 items-center">
@@ -304,7 +310,7 @@ const Duo = () => {
             )}
           </div>
         ) : (
-          <DuoSettings riotProfiles={riotProfiles}></DuoSettings>
+          isLogged && <DuoSettings riotProfiles={riotProfiles}></DuoSettings>
         )}
 
         <p className="text-[20px] mt-[4%]">{t("duo:lookingFor")}</p>
@@ -536,20 +542,22 @@ const Duo = () => {
                       );
                     })}
                   </div>
-                  <div className="w-[3%] flex items-center justify-center">
-                    {duo.author !== userData?.username && (
-                      <BiSolidLock
-                        onClick={() => {
-                          console.log("dodawanie duo");
-                          answerDuoMutation({
-                            puuid: riotProfiles[0].puuid,
-                            duoId: duo._id,
-                          });
-                        }}
-                        className="text-[32px] hover:text-amber duration-150 transition-all cursor-pointer"
-                      />
-                    )}
-                  </div>
+                  {isLogged && (
+                    <div className="w-[3%] flex items-center justify-center">
+                      {duo.author !== userData?.username && (
+                        <BiSolidLock
+                          onClick={() => {
+                            console.log("dodawanie duo");
+                            answerDuoMutation({
+                              puuid: riotProfiles[0].puuid,
+                              duoId: duo._id,
+                            });
+                          }}
+                          className="text-[32px] hover:text-amber duration-150 transition-all cursor-pointer"
+                        />
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })}

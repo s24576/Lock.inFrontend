@@ -3,12 +3,14 @@ import { useMutation } from "react-query";
 import resetPassword from "../../api/user/resetPassword";
 import { IoRefreshOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const axiosInstance = useAxiosPublic();
 
   const { mutateAsync: sendEmail } = useMutation(
-    (email) => resetPassword(email),
+    (email) => resetPassword(axiosInstance, email),
     {
       onSuccess: () => {
         console.log("Reset password email sent successfully");
