@@ -5,7 +5,7 @@ import addBio from "../../api/profile/addBio";
 import useAxios from "../../hooks/useAxios";
 import Image from "next/image";
 import { UserContext } from "../../context/UserContext";
-import { BiLock } from "react-icons/bi";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaSave } from "react-icons/fa";
 import getUserData from "../../api/user/getUserData";
 import changeEmail from "../../api/user/changeEmail";
@@ -232,8 +232,23 @@ const Profile = () => {
     return null;
   };
 
-  if (!isLogged) {
-    router.push("/login");
+  if (userInfoLoading || isLogged === null) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night">
+        <AiOutlineLoading3Quarters className="text-[48px] animate-spin text-amber"></AiOutlineLoading3Quarters>
+      </div>
+    );
+  }
+
+  if (isLogged === false) {
+    router.push("/");
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night">
+        <p className="text-amber text-[48px] animate-pulse">
+          {t("common:redirecting")}
+        </p>
+      </div>
+    );
   }
 
   if (isLogged) {

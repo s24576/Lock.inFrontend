@@ -16,5 +16,9 @@
   "price": "Cena",
   "pasteImageURL": "Wklej URL obrazu",
   "createCourseFirst": "Najpierw utwórz swój kurs, aby dodać filmy",
-  "publishCourse": "Opublikuj kurs"
+  "publishCourse": "Opublikuj kurs",
+
+  "myCourses": "Moje kursy",
+  "ownedCourses": "Posiadane kursy",
+  "noCourses": "Nie masz jeszcze żadnych kursów"
 }

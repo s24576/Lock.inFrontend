@@ -8,6 +8,7 @@ import getShortProfiles from "../../api/profile/getShortProfiles";
 import ShortBuild from "./ShortBuild";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export const MyBuilds = () => {
   const [filterParams, setFilterParams] = useState({
@@ -69,19 +70,26 @@ export const MyBuilds = () => {
     await refetchBuilds();
   };
 
-  if (isLogged !== false && isLogged !== true) {
+  if (buildsIsLoading || shortProfilesIsLoading || isLogged === null) {
     return (
-      <div className="h-screen w-full flex justify-center items-center">
-        Loading...
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night">
+        <AiOutlineLoading3Quarters className="text-[48px] animate-spin text-amber"></AiOutlineLoading3Quarters>
       </div>
     );
   }
 
-  if (!isLogged) {
-    router.push("/login");
+  if (isLogged === false) {
+    router.push("/");
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+        <p className="text-amber text-[40px] animate-pulse ">
+          {t("common:redirecting")}
+        </p>
+      </div>
+    );
   }
 
-  if (isLogged) {
+  if (isLogged && !buildsIsLoading && !shortProfilesIsLoading) {
     return (
       <div className="min-h-screen flex flex-col items-center relative">
         <div

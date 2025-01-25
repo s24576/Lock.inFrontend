@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import getChampionNames from "../../api/ddragon/getChampionNames";
 import LeaguePosition from "../other/LeaguePosition";
-import { usePathname } from "next/navigation";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useQuery, useMutation } from "react-query";
 import getRunes from "../../api/ddragon/getRunes";
 import { IoChevronForward } from "react-icons/io5";
@@ -403,19 +403,36 @@ const CreateBuild = () => {
     },
   ];
 
-  if (isLogged === undefined) {
+  if (
+    championNamesIsLoading ||
+    runesIsLoading ||
+    itemsIsLoading ||
+    isLogged === null
+  ) {
     return (
-      <div className="h-screen w-full flex justify-center items-center">
-        Loading...
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night">
+        <AiOutlineLoading3Quarters className="text-[48px] animate-spin text-amber"></AiOutlineLoading3Quarters>
       </div>
     );
   }
 
-  if (!isLogged) {
-    router.push("/login");
+  if (isLogged === false) {
+    router.push("/");
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+        <p className="text-amber text-[40px] animate-pulse ">
+          {t("common:redirecting")}
+        </p>
+      </div>
+    );
   }
 
-  if (isLogged) {
+  if (
+    isLogged &&
+    !championNamesIsLoading &&
+    !runesIsLoading &&
+    !itemsIsLoading
+  ) {
     return (
       <div className="min-h-screen flex flex-col items-center relative px-[5%] font-chewy">
         <div

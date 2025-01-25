@@ -85,6 +85,7 @@ const Navbar = () => {
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
+        setIsLogged(false);
       } finally {
         setLoading(false);
       }
@@ -96,7 +97,12 @@ const Navbar = () => {
   const { t } = useTranslation();
 
   if (loading) {
-    return <div className="w-full bg-transparent"></div>;
+    return (
+      <div className="w-full bg-night h-[72px] flex justify-center items-center gap-x-1 font-bangers text-amber z-50">
+        <BiSolidLock className="text-[40px]"></BiSolidLock>
+        <p className="text-[32px] pt-[1px]">Lock.in</p>
+      </div>
+    );
   }
 
   return (

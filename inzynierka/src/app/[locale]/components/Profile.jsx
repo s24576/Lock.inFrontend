@@ -10,7 +10,7 @@ import useAxios from "../hooks/useAxios";
 import findProfile from "../api/profile/findProfile";
 import { FaUser } from "react-icons/fa6";
 import { IoPersonAddSharp } from "react-icons/io5";
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineLoading3Quarters } from "react-icons/ai";
 import sendFriendRequest from "../api/profile/sendFriendRequest";
 import getShortProfiles from "../api/profile/getShortProfiles";
 import Link from "next/link";
@@ -48,6 +48,9 @@ const Profile = () => {
 
         // Przypisz do odpowiedniej zmiennej lub użyj setUsernamesToFollow
         setUsernamesToFetch(usernames);
+      },
+      onError: () => {
+        router.push("/home");
       },
     }
   );
@@ -108,15 +111,26 @@ const Profile = () => {
     return null;
   };
 
-  if (profileIsLoading) {
+  if (profileIsLoading || shortProfilesIsLoading || isLogged === null) {
     return (
-      <div className="h-screen w-full flex flex-col items-center justify-center">
-        <p>Loading</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night">
+        <AiOutlineLoading3Quarters className="text-[48px] animate-spin text-amber"></AiOutlineLoading3Quarters>
       </div>
     );
   }
 
-  if (!profileIsLoading && profileData)
+  if (isLogged === false) {
+    router.push("/");
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+        <p className="text-amber text-[40px] animate-pulse ">
+          {t("common:redirecting")}
+        </p>
+      </div>
+    );
+  }
+
+  if (!profileIsLoading && !shortProfilesIsLoading && isLogged && profileData) {
     return (
       <div className="pt-[10%] px-[10%] min-h-screen w-full flex flex-col bg-night font-chewy">
         <div className="flex justify-between w-full">
@@ -217,6 +231,7 @@ const Profile = () => {
         </div>
       </div>
     );
+  }
 };
 
 export default Profile;

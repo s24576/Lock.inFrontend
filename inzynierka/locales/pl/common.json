@@ -21,6 +21,7 @@
   "back": "Poprzednia",
   "notification": "Powiadomienie",
   "close": "Zamknij",
+  "redirecting": "Przekierowywanie do strony głównej...",
 
   "English": "Angielski",
   "German": "Niemiecki",
@@ -30,5 +31,7 @@
   "Chinese": "Chiński",
   "Japanese": "Japoński",
   "Korean": "Koreański",
-  "Other": "Inny"
+  "Other": "Inny",
+  "pageNotFound": "Strona nie została znaleziona",
+  "returnHome": "Wróć do strony głównej"
 }

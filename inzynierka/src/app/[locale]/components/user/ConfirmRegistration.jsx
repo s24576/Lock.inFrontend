@@ -47,7 +47,7 @@ const ConfirmRegistration = () => {
 
   const { t } = useTranslation();
 
-  if (!isLogged) {
+  if (isLogged === false) {
     router.push("/login");
   }
 

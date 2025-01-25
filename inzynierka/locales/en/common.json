@@ -21,6 +21,7 @@
   "back": "Back",
   "notification": "Notification",
   "close": "Close",
+  "redirecting": "Redirecting to the mainpage...",
 
   "English": "English",
   "German": "German",
@@ -30,5 +31,7 @@
   "Chinese": "Chinese",
   "Japanese": "Japanese",
   "Korean": "Korean",
-  "Other": "Other"
+  "Other": "Other",
+  "pageNotFound": "Page not found",
+  "returnHome": "Return to home page"
 }

@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaCheck, FaHandMiddleFinger, FaUser } from "react-icons/fa6";
 import { BiSolidLock } from "react-icons/bi";
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useTranslation } from "react-i18next";
 
 const DuoInvites = () => {
@@ -59,11 +59,26 @@ const DuoInvites = () => {
     await duoInvitesRefetch();
   };
 
-  if (!isLogged) {
-    router.push("/login");
+  if (duoInvitesIsLoading || isLogged === null) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night">
+        <AiOutlineLoading3Quarters className="text-[48px] animate-spin text-amber"></AiOutlineLoading3Quarters>
+      </div>
+    );
   }
 
-  if (isLogged) {
+  if (isLogged === false) {
+    router.push("/");
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+        <p className="text-amber text-[40px] animate-pulse ">
+          {t("common:redirecting")}
+        </p>
+      </div>
+    );
+  }
+
+  if (isLogged && !duoInvitesIsLoading) {
     return (
       <div className="min-h-screen flex flex-col items-center relative">
         <div

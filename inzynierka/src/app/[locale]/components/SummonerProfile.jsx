@@ -4,6 +4,7 @@ import { SearchContext } from "@/app/[locale]/context/SearchContext";
 import axios from "axios";
 import useAxios from "../hooks/useAxios";
 import useAxiosPublic from "../hooks/useAxiosPublic";
+import { useRouter } from "next/navigation";
 import { useParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import { UserContext } from "@/app/[locale]/context/UserContext";
@@ -21,6 +22,7 @@ import {
   FaCheck,
   FaHeart,
 } from "react-icons/fa6";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BiLock } from "react-icons/bi";
 import ShortMatch from "./riot/ShortMatch";
 import WinRatioChart from "./riot/WinRatioChart";
@@ -95,6 +97,7 @@ const SummonerProfile = () => {
   const [queue, setQueue] = useState("");
 
   const { t } = useTranslation();
+  const router = useRouter();
 
   const [showFullMatch, setShowFullMatch] = useState(null);
 
@@ -113,6 +116,9 @@ const SummonerProfile = () => {
     () => findPlayer(axiosInstance, params.server, params.username, params.tag),
     {
       refetchOnWindowFocus: false,
+      onError: () => {
+        router.push("/");
+      },
     }
   );
 
@@ -165,15 +171,15 @@ const SummonerProfile = () => {
     setShowFullMatch(showFullMatch === matchId ? null : matchId);
   };
 
-  if (playerIsLoading || !playerData || matchesIsLoading || !matchesData) {
+  if (playerIsLoading || matchesIsLoading || !playerData) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
-        Loading...
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night">
+        <AiOutlineLoading3Quarters className="text-[48px] animate-spin text-amber"></AiOutlineLoading3Quarters>
       </div>
     );
   }
 
-  if (!playerIsLoading && playerData && !matchesIsLoading && matchesData) {
+  if (!playerIsLoading && !matchesIsLoading && playerData) {
     return (
       <div className="min-h-screen w-full bg-night flex flex-col px-[10%]">
         <div className="mt-[10%] w-full flex items-center gap-x-4">

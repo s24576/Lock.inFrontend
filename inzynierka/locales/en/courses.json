@@ -16,5 +16,9 @@
   "price": "Price",
   "pasteImageURL": "Paste image URL",
   "createCourseFirst": "Create your course first to add videos",
-  "publishCourse": "Publish course"
+  "publishCourse": "Publish course",
+
+  "myCourses": "My courses",
+  "ownedCourses": "Owned courses",
+  "noCourses": "You don't have any courses yet"
 }

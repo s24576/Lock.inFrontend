@@ -6,7 +6,7 @@ import useAxios from "../hooks/useAxios";
 export const UserContext = createContext();
 
 export function UserContextProvider({ children }) {
-  const [isLogged, setIsLogged] = useState(false);
+  const [isLogged, setIsLogged] = useState(null);
   const [userData, setUserData] = useState({});
 
   //db czy local storage?

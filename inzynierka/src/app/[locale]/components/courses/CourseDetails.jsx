@@ -10,7 +10,7 @@ import react from "../../api/comments/react";
 import { MdPhoto } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { BiLike, BiDislike, BiEditAlt } from "react-icons/bi";
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { IoMdAdd } from "react-icons/io";
 import Link from "next/link";
@@ -48,6 +48,9 @@ const CourseDetails = () => {
     () => getCourseById(axiosInstance, params.courseId),
     {
       refetchOnWindowFocus: false,
+      onError: () => {
+        router.push("/courses");
+      },
     }
   );
 
@@ -126,11 +129,26 @@ const CourseDetails = () => {
     return null;
   };
 
-  if (!isLogged) {
-    router.push("/login");
+  if (courseIsLoading || authorProfileIsLoading || isLogged === null) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night">
+        <AiOutlineLoading3Quarters className="text-[48px] animate-spin text-amber"></AiOutlineLoading3Quarters>
+      </div>
+    );
   }
 
-  if (isLogged) {
+  if (isLogged === false) {
+    router.push("/");
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+        <p className="text-amber text-[40px] animate-pulse ">
+          {t("common:redirecting")}
+        </p>
+      </div>
+    );
+  }
+
+  if (isLogged && !courseIsLoading && !authorProfileIsLoading && course) {
     return (
       <div className="w-full flex flex-col">
         <div className="min-h-screen w-full bg-night flex justify-between px-[5%] pt-[6%]">

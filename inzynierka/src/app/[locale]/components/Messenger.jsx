@@ -18,7 +18,7 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { FaEdit, FaReply } from "react-icons/fa";
 import { FaUser, FaPlus, FaDoorOpen } from "react-icons/fa6";
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoIosSend } from "react-icons/io";
 import { MdPersonAdd } from "react-icons/md";
 import getChats from "../api/messenger/getChats";
@@ -30,10 +30,12 @@ import sendMessage from "../api/messenger/sendMessage";
 import createChat from "../api/messenger/createChat";
 import leaveChat from "../api/messenger/leaveChat";
 import addChatter from "../api/messenger/addChatter";
+import { useTranslation } from "react-i18next";
 
 const Messenger = () => {
   const { userData, isLogged } = useContext(UserContext);
   const router = useRouter();
+  const { t } = useTranslation();
 
   //metadane z konkretnego wybranego chatu, np members
   const [chatData, setChatData] = useState();
@@ -315,17 +317,36 @@ const Messenger = () => {
     }
   }, [messagesData]);
 
-  if (!isLogged) {
-    router.push("/login");
+  if (
+    chatsIsLoading ||
+    chatByIdIsLoading ||
+    messagesIsLoading ||
+    shortProfilesIsLoading ||
+    isLogged === null
+  ) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night">
+        <AiOutlineLoading3Quarters className="text-[48px] animate-spin text-amber"></AiOutlineLoading3Quarters>
+      </div>
+    );
   }
 
-  if (!isLogged) {
+  if (isLogged === false) {
+    router.push("/");
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+        <p className="text-amber text-[40px] animate-pulse ">
+          {t("common:redirecting")}
+        </p>
+      </div>
+    );
+  }
+
+  if (isLogged) {
     return (
       <div className="bg-night min-h-screen w-full flex font-chewy">
         {/* Kontener z listą czatów */}
         <div className="w-[30%] pt-[5%] flex flex-col items-center gap-y-3 px-6 h-screen overflow-y-auto">
-          {chatsIsLoading && <div>Loading...</div>}
-
           {chatsData && (
             <div className="flex flex-col items-center gap-y-4 w-full">
               <div className="flex justify-between items-center pb-[2%] w-full">

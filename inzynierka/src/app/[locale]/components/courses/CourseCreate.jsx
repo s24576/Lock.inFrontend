@@ -38,8 +38,15 @@ const CourseCreate = () => {
     await handleCreateCourse();
   };
 
-  if (!isLogged) {
-    router.push("/login");
+  if (isLogged === false) {
+    router.push("/");
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+        <p className="text-amber text-[40px] animate-pulse ">
+          {t("common:redirecting")}
+        </p>
+      </div>
+    );
   }
 
   if (isLogged) {

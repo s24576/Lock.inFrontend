@@ -7,8 +7,10 @@ import getShortProfiles from "../../api/profile/getShortProfiles";
 import { MdPhoto } from "react-icons/md";
 import { FaUser } from "react-icons/fa6";
 import { BiLike, BiDislike } from "react-icons/bi";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const OwnedCourses = () => {
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
@@ -19,6 +21,7 @@ const OwnedCourses = () => {
   const axiosInstance = useAxios();
   const { isLogged } = useContext(UserContext);
   const router = useRouter();
+  const { t } = useTranslation();
 
   const {
     refetch: refetchCourses,
@@ -79,16 +82,31 @@ const OwnedCourses = () => {
     return null;
   };
 
-  if (!isLogged) {
-    router.push("/login");
+  if (coursesIsLoading || shortProfilesIsLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night">
+        <AiOutlineLoading3Quarters className="text-[48px] animate-spin text-amber"></AiOutlineLoading3Quarters>
+      </div>
+    );
   }
 
-  if (isLogged) {
+  if (isLogged === false) {
+    router.push("/");
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-night font-chewy">
+        <p className="text-amber text-[40px] animate-pulse ">
+          {t("common:redirecting")}
+        </p>
+      </div>
+    );
+  }
+
+  if (isLogged && !coursesIsLoading && !shortProfilesIsLoading) {
     //zdjac slice jak bedzie naprawiona funkcja i zmienic size w getOwnedCourses na 3
     return (
       <div className="h-screen w-full flex flex-col items-center  bg-night px-[5%] ">
         <p className="text-[64px] mt-[8%] font-bangers text-amber">
-          Owned courses
+          {t("courses:ownedCourses")}
         </p>
         <div className="flex items-center w-full gap-x-[5%] mt-[3%]">
           {coursesData?.content &&
@@ -177,6 +195,11 @@ const OwnedCourses = () => {
                 </Link>
               );
             })}
+          {coursesData?.content.length === 0 && (
+            <div className="text-white-smoke text-[24px] font-chewy flex justify-center w-full">
+              <p>{t("courses:noCourses")}</p>
+            </div>
+          )}
         </div>
         {coursesData && (
           <div className="flex justify-center items-center gap-x-4 mt-6 py-6 text-[20px] font-chewy">
@@ -186,7 +209,7 @@ const OwnedCourses = () => {
                 className="cursor-pointer hover:text-amber duration-100 transition-colors"
                 onClick={() => handlePageChange(filterParams.page - 1)}
               >
-                Back
+                {t("common:back")}
               </p>
             )}
 
@@ -215,7 +238,7 @@ const OwnedCourses = () => {
                 className="cursor-pointer hover:text-amber duration-100 transition-colors"
                 onClick={() => handlePageChange(filterParams.page + 1)}
               >
-                Next
+                {t("common:next")}
               </p>
             )}
           </div>
