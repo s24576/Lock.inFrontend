@@ -38,5 +38,20 @@
   "refresh": "Odśwież",
 
   "somethingWentWrong": "Coś poszło nie tak. Spróbuj ponownie",
-  "usernameRequired": "Nazwa użytkownika jest wymagana"
+  "usernameRequired": "Nazwa użytkownika jest wymagana",
+
+  "messenger": {
+    "createChat": "Utwórz czat",
+    "chatName": "Nazwa czatu",
+    "pickedFriends": "Wybrani znajomi",
+    "add": "Dodaj",
+    "loadMoreChats": "Załaduj więcej czatów",
+    "loading": "Ładowanie...",
+    "addMember": "Dodaj członka",
+    "addNewMembers": "Dodaj nowych członków",
+    "leaveChat": "Opuść czat",
+    "noFriends": "Nie masz jeszcze znajomych",
+    "typeMessage": "Aa",
+    "noMessages": "Brak wiadomości"
+  }
 }

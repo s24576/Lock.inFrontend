@@ -73,6 +73,8 @@ const Messenger = () => {
   const [replyTo, setReplyTo] = useState(null);
   const [replyMessage, setReplyMessage] = useState("");
 
+  const [localLastMessage, setLocalLastMessage] = useState(null);
+
   const axiosInstance = useAxios();
 
   const {
@@ -160,6 +162,11 @@ const Messenger = () => {
     {
       onSuccess: (data) => {
         console.log("Success adding msg:", data);
+        setLocalLastMessage({
+          message: newMessage,
+          timestamp: Math.floor(Date.now() / 1000),
+          userId: userData.username,
+        });
         setNewMessage("");
         chatsRefetch();
         messagesRefetch();
@@ -308,11 +315,10 @@ const Messenger = () => {
   const messagesEndRef = useRef(null); // Ref dla końca kontenera wiadomości
 
   useEffect(() => {
-    // Sprawdzamy, czy ref jest dostępny, i przewijamy na dół
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({
-        // behavior: "smooth", // Używamy płynnego przewijania
-        block: "end", // Ustalamy, by przewinęło na sam dół
+        behavior: "smooth",
+        block: "end",
       });
     }
   }, [messagesData]);
@@ -350,16 +356,20 @@ const Messenger = () => {
           {chatsData && (
             <div className="flex flex-col items-center gap-y-4 w-full">
               <div className="flex justify-between items-center pb-[2%] w-full">
-                <p className="text-[24px]">Create chat</p>
+                <p className="text-[24px]">
+                  {t("common:messenger.createChat")}
+                </p>
                 <Dialog>
                   <DialogTrigger>
                     <FaEdit className="text-[28px]"></FaEdit>
                   </DialogTrigger>
                   <DialogContent className="bg-night font-dekko">
-                    <p className="text-[24px]">Create a chat</p>
+                    <p className="text-[24px]">
+                      {t("common:messenger.createChat")}
+                    </p>
                     <input
                       type="text"
-                      placeholder="Chat name"
+                      placeholder={t("common:messenger.chatName")}
                       className="px-4 py-2 text-white-smoke bg-transparent border-[1px] border-white-smoke rounded-lg focus:outline-none"
                       value={newChatName}
                       onChange={(e) => setNewChatName(e.target.value)}
@@ -378,13 +388,13 @@ const Messenger = () => {
                                   : friend.username2}
                               </p>
                               <button onClick={() => selectFriend(friend)}>
-                                Add
+                                {t("common:messenger.add")}
                               </button>
                             </div>
                           );
                         })}
                     </div>
-                    <p>Picked friends:</p>
+                    <p>{t("common:messenger.pickedFriends")}:</p>
                     <div className="flex gap-x-5">
                       {selectedFriends.length > 0 &&
                         selectedFriends.map((friend) => {
@@ -421,6 +431,13 @@ const Messenger = () => {
                 const otherMember = chat.members.find(
                   (member) => member.username !== userData.username
                 );
+
+                // Używamy lokalnej wiadomości jeśli jest dostępna i dotyczy aktualnego chatu
+                const lastMessage =
+                  chat._id === activeChat && localLastMessage
+                    ? localLastMessage
+                    : chat.lastMessage;
+
                 return (
                   <div
                     key={key}
@@ -454,18 +471,18 @@ const Messenger = () => {
                             : chat.name}
                         </p>
                         <p className="flex items-center gap-x-1">
-                          {chat.lastMessage.userId
-                            ? chat.lastMessage.userId === userData.username
+                          {lastMessage.userId
+                            ? lastMessage.userId === userData.username
                               ? "You: "
-                              : chat.lastMessage.userId + ": "
+                              : lastMessage.userId + ": "
                             : ""}
-                          {chat.lastMessage?.message.length > 80
-                            ? chat.lastMessage.message.slice(0, 80) + "..."
-                            : chat.lastMessage?.message}
+                          {lastMessage?.message.length > 80
+                            ? lastMessage.message.slice(0, 80) + "..."
+                            : lastMessage?.message}
                         </p>
                       </div>
-                      {chat.lastMessage?.timestamp !== null ? (
-                        <p>{formatTimeAgo(chat.lastMessage.timestamp)}</p>
+                      {lastMessage?.timestamp !== null ? (
+                        <p>{formatTimeAgo(lastMessage.timestamp)}</p>
                       ) : (
                         ""
                       )}
@@ -480,13 +497,15 @@ const Messenger = () => {
             onClick={() => setSize(size + 5)}
             className="w-[45%] border-[1px] border-white-smoke px-5 py-2 text-[20px] text-center rounded-full hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
           >
-            Load more chats
+            {t("common:messenger.loadMoreChats")}
           </button>
         </div>
 
         {/* Kontener z wiadomościami */}
         <div className="w-[70%] pt-[5%] h-screen overflow-y-auto z-10">
-          {chatByIdIsLoading && messagesIsLoading && <div>Loading...</div>}
+          {chatByIdIsLoading && messagesIsLoading && (
+            <div>{t("common:messenger.loading")}</div>
+          )}
           {chatByIdData && messagesData && (
             <div className="w-full h-full flex flex-col gap-y-2">
               <div className="flex justify-between items-center w-full px-[3%]">
@@ -503,12 +522,14 @@ const Messenger = () => {
                       <DialogTrigger className="">
                         <div className="flex items-center gap-x-2 hover:text-amber transition-all duration-150 cursor-pointer">
                           <MdPersonAdd className="cursor-pointer"></MdPersonAdd>
-                          <p className="text-[20px]">Add member</p>
+                          <p className="text-[20px]">
+                            {t("common:messenger.addMember")}
+                          </p>
                         </div>
                       </DialogTrigger>
                       <DialogContent className="bg-oxford-blue">
                         <DialogTitle className="font-semibold">
-                          Add new members
+                          {t("common:messenger.addNewMembers")}
                         </DialogTitle>
                         <div>
                           {userData.friends && userData.friends.length > 0 ? (
@@ -562,7 +583,7 @@ const Messenger = () => {
                               <p>No friends to add</p>
                             )
                           ) : (
-                            <p>Add some friends to start chatting</p>
+                            <p>{t("common:messenger.noFriends")}</p>
                           )}
                         </div>
                       </DialogContent>
@@ -572,8 +593,10 @@ const Messenger = () => {
                       className="flex items-center gap-x-2 hover:text-amber transition-all duration-150 cursor-pointer"
                       onClick={() => handleLeaveChat()}
                     >
-                      <FaDoorOpen className=""></FaDoorOpen>
-                      <p className="text-[20px]">Leave chat</p>
+                      <FaDoorOpen></FaDoorOpen>
+                      <p className="text-[20px]">
+                        {t("common:messenger.leaveChat")}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -652,11 +675,10 @@ const Messenger = () => {
                   })}
                 {/* Dodajemy ref do kontenera wiadomości, by przewinąć na dół */}
                 <form
-                  ref={messagesEndRef}
                   className="w-[64%] flex justify-between items-center absolute bottom-0 px-[1%] z-30 border-t-[1px] border-white-smoke bg-night"
                   onSubmit={handleMessageForm}
                 >
-                  <div className="flex flex-col gap-y-1">
+                  <div className="flex flex-col gap-y-1" ref={messagesEndRef}>
                     {replyMessage && (
                       <div className="flex gap-x-2 items-center pt-2">
                         <p>{replyMessage}</p>
@@ -675,7 +697,7 @@ const Messenger = () => {
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       className="w-[90%] bg-night  px-3 py-2 text-[18px] focus:outline-none h-[7vh]"
-                      placeholder="Aa"
+                      placeholder={t("common:messenger.typeMessage")}
                     />
                   </div>
                   <button type="submit" className="bg-night">
@@ -686,37 +708,7 @@ const Messenger = () => {
             </div>
           )}
           {chatByIdData && !messagesData && (
-            <div className="w-full h-full flex flex-col items-center gap-y-2">
-              <div className="flex justify-between items-center w-full px-[3%]">
-                <p className="text-[32px]">
-                  {chatByIdData.members[0].username === userData.username
-                    ? chatByIdData.members[1].username
-                    : chatByIdData.members[0].username}
-                </p>
-              </div>
-
-              <div className="px-[3%] mt-[5%] w-full text-center">
-                <p className="text-[24px]">Send a message to start chatting!</p>
-              </div>
-              <form
-                ref={messagesEndRef}
-                className="w-[64%] flex justify-between items-center absolute bottom-0 px-[1%] z-30 border-t-[1px] border-white-smoke bg-night"
-                onSubmit={handleMessageForm}
-              >
-                <div className="flex flex-col gap-y-1">
-                  <input
-                    type="text"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    className="w-[90%] bg-night  px-3 py-2 text-[18px] focus:outline-none h-[7vh]"
-                    placeholder="Aa"
-                  />
-                </div>
-                <button type="submit" className="bg-night">
-                  <IoIosSend className="text-[32px] hover:text-amber cursor-pointer duration-150 transition-all z-30"></IoIosSend>
-                </button>
-              </form>
-            </div>
+            <div>{t("common:messenger.noMessages")}</div>
           )}
         </div>
       </div>

@@ -37,5 +37,19 @@
   "refresh": "Refresh",
   "error": "Error",
   "somethingWentWrong": "Something went wrong. Please try again",
-  "usernameRequired": "Username is required"
+  "usernameRequired": "Username is required",
+  "messenger": {
+    "createChat": "Create chat",
+    "chatName": "Chat name",
+    "pickedFriends": "Picked friends",
+    "add": "Add",
+    "loadMoreChats": "Load more chats",
+    "loading": "Loading...",
+    "addMember": "Add member",
+    "addNewMembers": "Add new members",
+    "leaveChat": "Leave chat",
+    "noFriends": "You don't have any friends yet",
+    "typeMessage": "Aa",
+    "noMessages": "No messages"
+  }
 }
