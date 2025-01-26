@@ -1,84 +1,83 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Link from "next/link";
-import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@/componentsShad/ui/checkbox";
+import { useMutation } from "react-query";
+import register from "../api/user/register";
+import useAxiosPublic from "../hooks/useAxiosPublic";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const Register = () => {
   const { t } = useTranslation();
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const router = useRouter();
-  const pathname = usePathname();
+  const axiosPublic = useAxiosPublic();
 
-  const langRegex = /^\/([a-z]{2})\//;
-  const langMatch = pathname.match(langRegex);
-  const language = langMatch ? langMatch[1] : "en";
+  const { mutate: registerMutation, isLoading: registerIsLoading } =
+    useMutation(
+      () =>
+        register(axiosPublic, {
+          username,
+          email,
+          password,
+        }),
+      {
+        onSuccess: () => {
+          setErrorMessage("");
+          setIsRedirecting(true);
+          router.push("/login");
+        },
+        onError: (error) => {
+          if (error.response) {
+            console.error("Error response:", error.response);
+            setErrorMessage(error.response.data);
+          } else {
+            console.error("Error message:", error.message);
+            setErrorMessage("An error occurred. Please try again later.");
+          }
+        },
+      }
+    );
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setErrorMessage("");
 
-    try {
-      if (password !== repeatPassword) {
-        setErrorMessage("Passwords are different");
-        throw Error("Passwords are different");
-      }
-
-      const registerForm = {
-        username: username,
-        email: email,
-        password: password,
-      };
-
-      console.log(registerForm);
-
-      console.log("przed axios", language);
-      const response = await axios.post(
-        "http://localhost:8080/user/register",
-        registerForm,
-        {
-          headers: {
-            "Accept-Language": language,
-          },
-        }
-      );
-
-      setIsRegistered(true);
-
-      console.log("dodano do db");
-
-      // Tutaj możesz dodać kod obsługujący poprawną odpowiedź z serwera, na przykład przekierowanie użytkownika do innej strony
-    } catch (error) {
-      if (error.response) {
-        // Serwer zwrócił odpowiedź inną niż 2xx
-        setErrorMessage(error.response.data);
-      } else {
-        // Wystąpił błąd podczas wysyłania żądania
-        setErrorMessage(
-          "Wystąpił błąd podczas logowania. Spróbuj ponownie później."
-        );
-      }
+    if (!validateEmail(email)) {
+      setErrorMessage(t("register:invalidEmail"));
+      return;
     }
+
+    if (password !== repeatPassword) {
+      setErrorMessage(t("register:passwordsDifferent"));
+      return;
+    }
+
+    if (!termsAccepted) {
+      setErrorMessage(t("register:acceptTermsError"));
+      return;
+    }
+
+    setErrorMessage("");
+    registerMutation();
   };
 
-  useEffect(() => {
-    if (isRegistered) {
-      router.push("/login");
-    }
-  }, [isRegistered, router]);
-
   return (
-    <div className="h-screen w-full flex ">
+    <div className="h-screen w-full flex">
       <div className="w-[50%] bg-night flex flex-col items-center justify-center">
         <p className="text-[96px] font-bangers text-amber">
           {t("register:header")}
@@ -115,23 +114,37 @@ const Register = () => {
             className="w-[50%] border-2 border-amber bg-transparent rounded-xl py-3 px-4 text-white-smoke text-[24px] focus:outline-none focus:border-amber placeholder-white"
             placeholder={t("register:repeatPassword")}
           />
-          <div className="w-[50%] flex items-center justify-start ml-2">
-            {/* accept terms */}
+          <div className="w-[50%] flex items-center gap-x-2">
             <Checkbox
-              className="w-5 h-5 border-[2px] border-amber bg-transparent rounded-sm text-amber focus:ring-amber focus:ring-offset-amber checked:bg-amber checked:border-amber hover:bg-silver hover:bg-opacity-10  transform-colors duration-100"
+              id="terms"
               checked={termsAccepted}
-              onCheckedChange={(checked) => setTermsAccepted(checked)}
+              onCheckedChange={setTermsAccepted}
+              className="border-2 border-amber data-[state=checked]:bg-amber data-[state=checked]:text-night"
             />
-            <p className="pl-2">{t("register:termsOfService")}</p>
-            <Link
-              href={"/messenger"}
-              className="pl-1 underline hover:text-silver transorm-colors duration-100"
+            <label
+              htmlFor="terms"
+              className="text-[18px] font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              {t("register:termsOfService2")}
-            </Link>
+              {t("register:acceptTerms")}
+            </label>
           </div>
-          <button className="bg-amber w-[50%] py-1 rounded-3xl text-night text-[36px] hover:bg-silver transform-colors duration-150">
-            <p>{t("register:register")}</p>
+          {errorMessage && <p className="text-amber">{errorMessage}</p>}
+          <button
+            className={`h-[56px] flex justify-center items-center bg-amber w-[50%] py-1 rounded-3xl text-night text-[36px] ${
+              (registerIsLoading && !errorMessage) || isRedirecting
+                ? "bg-silver cursor-not-allowed"
+                : "hover:bg-silver transform-colors duration-150"
+            }`}
+            disabled={(registerIsLoading && !errorMessage) || isRedirecting}
+            type="submit"
+          >
+            {registerIsLoading && !errorMessage ? (
+              <AiOutlineLoading3Quarters className="animate-spin" />
+            ) : isRedirecting ? (
+              <p className="text-[30px]">{t("common:redirecting")}</p>
+            ) : (
+              t("register:register")
+            )}
           </button>
         </form>
         <div className="flex items-center font-dekko mt-6 gap-x-1 text-[18px]">
@@ -150,6 +163,7 @@ const Register = () => {
           width={400}
           height={400}
           className="w-full h-screen object-cover opacity-80"
+          alt="register background"
         />
       </div>
     </div>

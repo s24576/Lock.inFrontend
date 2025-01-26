@@ -14,5 +14,10 @@
   "confirmRegistrationTitle": "Confirm Registration",
   "confirmRegistrationText1": "Didn't get an email with confirmation code? ",
   "confirmRegistrationText2": "Click here",
-  "confirmRegistrationButton": "Confirm Account"
+  "confirmRegistrationButton": "Confirm Account",
+
+  "passwordsDifferent": "Passwords are different",
+  "acceptTerms": "I accept the terms of Service of Lock.in",
+  "acceptTermsError": "Please accept the terms of Service of Lock.in!",
+  "invalidEmail": "Invalid email address!"
 }

@@ -14,5 +14,10 @@
   "confirmRegistrationTitle": "Potwierdzanie konta",
   "confirmRegistrationText1": "Nie otrzymałeś emaila z linkiem aktywacyjnym? ",
   "confirmRegistrationText2": "Wyślij ponownie",
-  "confirmRegistrationButton": "Potwierdź konto"
+  "confirmRegistrationButton": "Potwierdź konto",
+
+  "passwordsDifferent": "Hasła są różne",
+  "acceptTerms": "Akceptuję warunki korzystania z serwisu Lock.in",
+  "acceptTermsError": "Zaakceptuj warunki korzystania z serwisu Lock.in!",
+  "invalidEmail": "Nieprawidłowy adres email!"
 }
