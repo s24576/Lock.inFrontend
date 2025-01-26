@@ -30,6 +30,7 @@ const rankList = [
   "Silver",
   "Gold",
   "Platinum",
+  "Emerald",
   "Diamond",
   "Master",
   "Grandmaster",
@@ -93,29 +94,27 @@ const DuoCreation = () => {
 
   //champions
   const handleSelectChange = (selectedOption) => {
-    const selectedChampions = selectedOption.map((option) => option.value);
-
-    if (selectedChampions.length > 3) {
-      return; // Nie dodawaj więcej, jeśli liczba championów przekracza 3
-    }
+    // Bierzemy tylko pierwsze 3 opcje
+    const selectedChampions = selectedOption
+      .slice(0, 3)
+      .map((option) => option.value);
 
     setDuoBody({
       ...duoBody,
-      championIds: selectedChampions, // Aktualizujemy champions w filterBody
+      championIds: selectedChampions,
     });
   };
 
   //languages
   const handleLanguagesChange = (selectedOption) => {
-    const selectedLanguages = selectedOption.map((option) => option.value);
-
-    if (selectedLanguages.length > 3) {
-      return; // Nie dodawaj więcej, jeśli liczba języków przekracza 3
-    }
+    // Bierzemy tylko pierwsze 3 opcje lub ustawiamy "Other" jeśli nic nie wybrano
+    const selectedLanguages = selectedOption && selectedOption.length > 0
+      ? selectedOption.slice(0, 3).map((option) => option.value)
+      : ["Other"];
 
     setDuoBody({
       ...duoBody,
-      languages: selectedLanguages, // Aktualizujemy languages w filterBody
+      languages: selectedLanguages,
     });
   };
 
@@ -153,6 +152,8 @@ const DuoCreation = () => {
       }))
     : [];
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const { mutateAsync } = useMutation(
     (formData) => createDuo(axiosInstance, formData),
     {
@@ -166,42 +167,77 @@ const DuoCreation = () => {
           languages: [],
           championIds: [],
         });
+        setIsOpen(false);
       },
       onError: (error) => {
         console.error("Error creating duo:", error);
+        setValidationError(t("duo:submitError"));
       },
     }
   );
 
-  const handleSubmit = async () => {
-    console.log(duoBody);
-    console.log(duoSettings.duoAccount);
+  const [validationError, setValidationError] = useState("");
 
-    // Nadpisanie pola puuid wartością z duoSettings
+  const handleSubmit = async () => {
+    setValidationError("");
+
+    // Walidacja formularza
+    if (!duoSettings.duoAccount) {
+      setValidationError(t("duo:noAccountError"));
+      return;
+    }
+
+    if (duoBody.positions.length === 0) {
+      setValidationError(t("duo:positionsRequired"));
+      return;
+    }
+
+    if (duoBody.lookedPositions.length === 0) {
+      setValidationError(t("duo:lookedPositionsRequired"));
+      return;
+    }
+
+    if (!duoBody.minRank || !duoBody.maxRank) {
+      setValidationError(t("duo:ranksRequired"));
+      return;
+    }
+
+    // Sprawdzanie czy minRank nie jest wyższy niż maxRank
+    const rankOrder =
+      rankList.indexOf(duoBody.minRank) > rankList.indexOf(duoBody.maxRank);
+    if (rankOrder) {
+      setValidationError(t("duo:invalidRankRange"));
+      return;
+    }
+
     const updatedFormData = {
       ...duoBody,
       puuid:
         duoSettings?.duoAccount?.server + "_" + duoSettings?.duoAccount?.puuid,
     };
 
-    console.log(updatedFormData);
-
     try {
       await mutateAsync(updatedFormData);
     } catch (error) {
       console.error(error);
+      setValidationError(t("duo:submitError"));
     }
   };
 
   return (
-    <Dialog>
-      <DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
         <div className="flex items-center gap-x-2 cursor-pointer hover:text-amber duration-150 transition-all font-dekko">
           <FaEdit className="text-[28px]" />
           <p className="text-[20px]">{t("duo:createDuo")}</p>
         </div>
       </DialogTrigger>
-      <DialogContent className="bg-night border-[1px] border-amber font-dekko">
+      <DialogContent 
+        className="bg-night border-[1px] border-amber font-dekko fixed top-[5vh] translate-y-0"
+        style={{ 
+          transform: 'translate(-50%, 0)'
+        }}
+      >
         <DialogHeader>
           <DialogTitle>
             <p className="font-normal">{t("duo:createDuo")}</p>
@@ -256,9 +292,9 @@ const DuoCreation = () => {
           <p>{t("duo:noAccount")}</p>
         )}
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            handleSubmit();
+            await handleSubmit();
           }}
           className="w-full justify-center flex flex-col"
         >
@@ -384,14 +420,15 @@ const DuoCreation = () => {
             className="w-[100%]"
           />
 
-          <DialogClose>
-            <button
-              type="submit"
-              className="w-[100%] px-4 py-2 border-2 border-white-smoke text-[20px] rounded-3xl mt-[8%] hover:bg-silver hover:bg-opacity-15 duration-150 transition-all mx-auto block"
-            >
-              {t("common:submit")}
-            </button>
-          </DialogClose>
+          {validationError && (
+            <p className="text-amber text-center mt-2">{validationError}</p>
+          )}
+          <button
+            type="submit"
+            className="w-[100%] px-4 py-2 border-2 border-white-smoke text-[20px] rounded-3xl mt-[8%] hover:bg-silver hover:bg-opacity-15 duration-150 transition-all mx-auto block"
+          >
+            {t("common:submit")}
+          </button>
         </form>
       </DialogContent>
     </Dialog>

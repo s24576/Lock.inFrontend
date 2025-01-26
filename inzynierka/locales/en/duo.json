@@ -25,5 +25,15 @@
   "noAccount": "No account chosen, select one in duo settings",
 
   "duoInvites": "My duo invites",
-  "duoInvitesInfo": "No duo invites yet"
+  "duoInvitesInfo": "No duo invites yet",
+
+  "noAccountError": "Please select a League of Legends account",
+  "positionsRequired": "Please select your positions",
+  "lookedPositionsRequired": "Please select positions you're looking for",
+  "ranksRequired": "Please select both minimum and maximum rank",
+  "invalidRankRange": "Minimum rank cannot be higher than maximum rank",
+  "submitError": "Error creating duo request. Please try again",
+
+  "selectProfile": "Select a profile",
+  "noProfilesAvailable": "No profiles available"
 }

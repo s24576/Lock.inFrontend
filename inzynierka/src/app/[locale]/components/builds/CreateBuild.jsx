@@ -285,7 +285,7 @@ const CreateBuild = () => {
     });
   };
 
-  const { mutateAsync: handleCreateBuild } = useMutation(
+  const { mutateAsync: handleCreateBuild, isLoading: isCreatingBuild } = useMutation(
     (requestBody) => createBuild(axiosInstance, requestBody),
     {
       onSuccess: (data) => {
@@ -298,19 +298,58 @@ const CreateBuild = () => {
     }
   );
 
+  const [validationError, setValidationError] = useState("");
+
   const handleSubmit = async () => {
-    // Wyciągamy wartości z formValues
-    const { title, description, position, summoner1Name, summoner2Name } =
-      formValues;
+    setValidationError("");
 
-    // Rozpakowujemy items z chosenItems
+    // Sprawdzamy czy tytuł nie jest pusty i nie jest domyślną wartością
+    if (!formValues.title || formValues.title === t("builds:newBuild")) {
+      setValidationError(t("builds:titleRequired"));
+      return;
+    }
+
+    // Sprawdzamy czy opis nie jest pusty i nie jest domyślną wartością
+    if (
+      !formValues.description ||
+      formValues.description === t("builds:newDescription")
+    ) {
+      setValidationError(t("builds:descriptionRequired"));
+      return;
+    }
+
+    if (!formValues.championKey) {
+      setValidationError(t("builds:championRequired"));
+      return;
+    }
+    if (!formValues.position) {
+      setValidationError(t("builds:positionRequired"));
+      return;
+    }
+    if (!formValues.summoner1Name || !formValues.summoner2Name) {
+      setValidationError(t("builds:summonersRequired"));
+      return;
+    }
+    if (chosenItems.some((item) => item === "")) {
+      setValidationError(t("builds:itemsRequired"));
+      return;
+    }
+    if (
+      primaryRunes.some((rune) => !rune.id) ||
+      secondaryRunes.some((rune) => !rune.id)
+    ) {
+      setValidationError(t("builds:runesRequired"));
+      return;
+    }
+    if (selectedShards.some((shard) => !shard)) {
+      setValidationError(t("builds:shardsRequired"));
+      return;
+    }
+
+    // Jeśli walidacja przeszła, kontynuujemy z wysyłaniem
     const [item1, item2, item3, item4, item5, item6] = chosenItems;
-
-    // Ekstrakcja ID run z primaryRunes i secondaryRunes
     const runes1 = primaryRunes.map((rune) => rune.id);
     const runes2 = secondaryRunes.map((rune) => rune.id);
-
-    // Ekstrakcja selectedShards
     const statShards = selectedShards;
 
     const keystoneIds = [
@@ -324,16 +363,15 @@ const CreateBuild = () => {
     const keyStone1Id = keystoneIds[runeTree].id;
     const keyStone2Id = keystoneIds[runeTreeSecondary].id;
 
-    // Tworzymy obiekt
     const requestBody = {
-      championId: formValues.championKey, // używamy championKey z formValues
+      championId: formValues.championKey,
       item1,
       item2,
       item3,
       item4,
       item5,
       item6,
-      position,
+      position: formValues.position,
       runes: {
         keyStone1Id,
         runes1,
@@ -341,14 +379,12 @@ const CreateBuild = () => {
         runes2,
         statShards,
       },
-      summoner1Name,
-      summoner2Name,
-      title,
-      description,
+      summoner1Name: formValues.summoner1Name,
+      summoner2Name: formValues.summoner2Name,
+      title: formValues.title,
+      description: formValues.description,
     };
 
-    // Wysyłamy request do API
-    console.log(requestBody);
     await handleCreateBuild(requestBody);
   };
 
@@ -1107,11 +1143,21 @@ const CreateBuild = () => {
               className="w-[30%] bg-night bg-opacity-70 rounded-xl text-[24px] px-6 py-3 mt-[1%] focus:outline-none"
               placeholder={t("builds:description")}
             ></textarea>
+            {validationError && (
+              <p className="text-amber text-[24px] text-center">
+                {validationError}
+              </p>
+            )}
             <button
-              onClick={() => handleSubmit()}
-              className="w-[15%] text-[20px] bg-night bg-opacity-70 py-2 border-[1px] border-white-smoke rounded-3xl hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
+              onClick={handleSubmit}
+              disabled={isCreatingBuild}
+              className="w-[15%] text-[20px] bg-night bg-opacity-70 py-2 border-[1px] border-white-smoke rounded-3xl hover:bg-silver hover:bg-opacity-15 transition-all duration-150 flex items-center justify-center gap-x-2"
             >
-              {t("builds:createBuild")}
+              {isCreatingBuild ? (
+                <AiOutlineLoading3Quarters className="animate-spin text-[24px]" />
+              ) : (
+                t("builds:createBuild")
+              )}
             </button>
           </div>
         )}

@@ -104,8 +104,10 @@ const Duo = () => {
     data: riotProfiles,
     error,
     isLoading,
+    refetch: refetchRiotProfiles,
   } = useQuery("myRiotProfiles", () => getMyRiotProfiles(axiosInstance), {
     refetchOnWindowFocus: false,
+    enabled: isLogged === true,
     onSuccess: (data) => {
       console.log(data);
       if (data && data.length === 1) {
@@ -444,7 +446,7 @@ const Duo = () => {
 
                       {shortProfile?.gameName ? (
                         <Link
-                          className="hover:text-amber transition-all duration-150"
+                          className="hover:text-amber transition-all duration-150 text-[18px] text-nowrap"
                           href={
                             "/summoner/" +
                             shortProfile.server +
@@ -454,12 +456,12 @@ const Duo = () => {
                             shortProfile.gameName
                           }
                         >
-                          {shortProfile.gameName.length > 12
-                            ? `${shortProfile.gameName.slice(0, 12)}...`
+                          {shortProfile.gameName.length > 15
+                            ? `${shortProfile.gameName.slice(0, 15)}...`
                             : shortProfile.gameName}
                         </Link>
                       ) : (
-                        <p>Summoner</p>
+                        <p className="text-[18px]">Summoner</p>
                       )}
                     </div>
                     <div className="w-[20%] flex items-center justify-center gap-x-2">

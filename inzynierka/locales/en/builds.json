@@ -32,5 +32,14 @@
   "myBuildsInfo": "Create a build to see it here",
 
   "savedBuilds": "Saved builds",
-  "savedBuildsInfo": "You have no saved builds yet"
+  "savedBuildsInfo": "You have no saved builds yet",
+
+  "titleRequired": "Title is required",
+  "descriptionRequired": "Description is required",
+  "championRequired": "Champion is required",
+  "positionRequired": "Position is required",
+  "summonersRequired": "Both summoner spells are required",
+  "itemsRequired": "All item slots must be filled",
+  "runesRequired": "All rune slots must be selected",
+  "shardsRequired": "All stat shards must be selected"
 }

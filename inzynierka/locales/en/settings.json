@@ -12,5 +12,11 @@
   "changeEmail": "Change email",
   "saveChanges": "Save changes",
   "emailChanged": "Email has been changed successfully",
-  "passwordChanged": "Password has been changed successfully"
+  "passwordChanged": "Password has been changed successfully",
+  "oldPasswordRequired": "Old password is required",
+  "newPasswordRequired": "New password is required",
+  "confirmPasswordRequired": "Password confirmation is required",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "passwordTooShort": "Password must be at least 6 characters long",
+  "unknownError": "An unknown error occurred. Please try again"
 }

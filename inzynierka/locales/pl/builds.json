@@ -32,5 +32,14 @@
   "myBuildsInfo": "Stwórz build, aby zobaczyć go tutaj",
 
   "savedBuilds": "Zapisane buildy",
-  "savedBuildsInfo": "Nie masz jeszcze zapisanych buildów"
+  "savedBuildsInfo": "Nie masz jeszcze zapisanych buildów",
+
+  "titleRequired": "Tytuł jest wymagany",
+  "descriptionRequired": "Opis jest wymagany",
+  "championRequired": "Wybierz bohatera",
+  "positionRequired": "Wybierz pozycję",
+  "summonersRequired": "Wybierz oba czary przywoływacza",
+  "itemsRequired": "Wszystkie sloty przedmiotów muszą być wypełnione",
+  "runesRequired": "Wszystkie runy muszą być wybrane",
+  "shardsRequired": "Wszystkie odłamki statystyk muszą być wybrane"
 }

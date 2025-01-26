@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { SearchContext } from "../../context/SearchContext";
 import { FaUser } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 
 import Image from "next/image";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -9,6 +10,7 @@ import Select, { components } from "react-select";
 import { customStyles, customStylesDuo } from "@/lib/styles/championNamesList";
 
 const DuoSettings = ({ riotProfiles }) => {
+  const { t } = useTranslation();
   const { duoSettings, setDuoSettings } = useContext(UserContext);
   const { version } = useContext(SearchContext);
 
@@ -107,7 +109,7 @@ const DuoSettings = ({ riotProfiles }) => {
         <Select
           options={profileOptions}
           styles={customStylesDuo}
-          placeholder="Select a profile"
+          placeholder={t("duo:selectProfile")}
           onChange={handleSelectChange}
           components={{ SingleValue: CustomSingleValue }}
           isSearchable={false}
@@ -120,7 +122,7 @@ const DuoSettings = ({ riotProfiles }) => {
           }
         />
       ) : (
-        <p>No profiles available</p>
+        <p>{t("duo:noProfilesAvailable")}</p>
       )}
     </div>
   );

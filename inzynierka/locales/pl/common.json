@@ -20,6 +20,7 @@
   "next": "Następna",
   "back": "Poprzednia",
   "notification": "Powiadomienie",
+  "error": "Błąd",
   "close": "Zamknij",
   "redirecting": "Przekierowywanie...",
 
@@ -33,5 +34,9 @@
   "Korean": "Koreański",
   "Other": "Inny",
   "pageNotFound": "Strona nie została znaleziona",
-  "returnHome": "Wróć do strony głównej"
+  "returnHome": "Wróć do strony głównej",
+  "refresh": "Odśwież",
+
+  "somethingWentWrong": "Coś poszło nie tak. Spróbuj ponownie",
+  "usernameRequired": "Nazwa użytkownika jest wymagana"
 }

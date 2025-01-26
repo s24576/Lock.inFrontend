@@ -9,11 +9,15 @@ const changeEmail = async (axiosInstance, password, email) => {
   console.log(formData);
 
   try {
-    const response = await axiosInstance.put(`/user/changeEmail`, formData);
+    const response = await axiosInstance.put("/user/changeEmail", {
+      password,
+      email,
+    });
     console.log("email changed: ", response.data);
-    return response.data; // Zwracamy dane
+    return response;
   } catch (error) {
-    console.log("Error changing email:", error);
+    throw error;
   }
 };
+
 export default changeEmail;

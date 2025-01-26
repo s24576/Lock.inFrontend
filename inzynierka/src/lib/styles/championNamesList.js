@@ -80,38 +80,38 @@ export const customStyles = {
 export const customStylesDuo = {
   control: (provided, state) => ({
     ...provided,
-    backgroundColor: "rgba(175, 175, 175, 0.15)", // Ustawienie tła z #131313 i 70% opacity
-    border: "none", // Usunięcie obramowania
+    backgroundColor: "rgba(175, 175, 175, 0.15)",
+    border: "none",
     color: "#f5f5f5",
-    fontSize: "20px",
+    fontSize: "14px",
     cursor: "pointer",
     transition: "all 150ms ease",
-    boxShadow: "none", // Usuń cień focus
+    boxShadow: "none",
     "&:hover": {
-      backgroundColor: "rgba(217,217,217,0.15)", // Opcjonalna zmiana na hover
+      backgroundColor: "rgba(217,217,217,0.15)",
     },
   }),
-
+  option: (base, state) => ({
+    ...base,
+    fontSize: "14px",
+    backgroundColor: state.isSelected ? "#131313" : "#131313", // Ustawienie tła opcji
+    color: "#f5f5f5",
+    "&:hover": {
+      backgroundColor: "#696969",
+    },
+  }),
+  singleValue: (base) => ({
+    ...base,
+    fontSize: "14px",
+  }),
+  menu: (base) => ({
+    ...base,
+    maxHeight: 150,
+    backgroundColor: "transparent", // Dodane przeźroczyste tło
+  }),
   placeholder: (provided) => ({
     ...provided,
     color: "#f5f5f5", // Setting placeholder color
-  }),
-  menu: (provided) => ({
-    ...provided,
-    backgroundColor: "transparent",
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected ? "#131313" : "#131313", // Color of selected and non-selected options
-    color: "#f5f5f5", // Text color of options
-    "&:hover": {
-      backgroundColor: "#696969",
-      // Background color on hover
-    },
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    color: "#fff", // Color of the selected option text
   }),
   indicatorSeparator: (provided) => ({
     ...provided,
@@ -141,15 +141,16 @@ export const customStylesDuo = {
   // Custom scrollbar styles
   menuList: (provided) => ({
     ...provided,
+    backgroundColor: "#131313", // Dodane tło dla listy menu
     "&::-webkit-scrollbar": {
-      width: "8px", // Width of the scrollbar
+      width: "8px",
     },
     "&::-webkit-scrollbar-thumb": {
-      backgroundColor: "#f5f5f5", // Scrollbar thumb color
-      borderRadius: "4px", // Round edges of the thumb
+      backgroundColor: "#f5f5f5",
+      borderRadius: "4px",
     },
     "&::-webkit-scrollbar-track": {
-      backgroundColor: "#131313", // Track color (remove white background)
+      backgroundColor: "#131313",
     },
   }),
 };

@@ -20,5 +20,16 @@
 
   "myCourses": "Moje kursy",
   "ownedCourses": "Posiadane kursy",
-  "noCourses": "Nie masz jeszcze żadnych kursów"
+  "noCourses": "Nie masz jeszcze żadnych kursów",
+
+  "titleRequired": "Tytuł jest wymagany",
+  "titleTooShort": "Tytuł musi mieć co najmniej 3 znaki",
+  "titleTooLong": "Tytuł nie może być dłuższy niż 50 znaków",
+  "descriptionRequired": "Opis jest wymagany",
+  "descriptionTooShort": "Opis musi mieć co najmniej 10 znaków",
+  "descriptionTooLong": "Opis nie może być dłuższy niż 500 znaków",
+  "invalidPrice": "Cena nie może być ujemna",
+  "pictureRequired": "URL obrazka jest wymagany",
+  "invalidImageUrl": "Nieprawidłowy URL obrazka. Musi zawierać rozszerzenie .png, .jpg, .jpeg, .gif lub .webp",
+  "submitError": "Błąd podczas tworzenia kursu. Spróbuj ponownie"
 }

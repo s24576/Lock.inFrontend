@@ -35,6 +35,7 @@ const Profile = () => {
   const router = useRouter();
 
   const [bio, setBio] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const {
     data: userInfo,
@@ -123,21 +124,27 @@ const Profile = () => {
 
   const { mutateAsync: handleChangePassword } = useMutation(
     ({ oldPassword, newPassword, confirmPassword }) =>
-      changePassword(axiosInstance, oldPassword, newPassword, confirmPassword),
+      changePassword(axiosInstance, oldPassword, newPassword, confirmPassword)
+        .then(response => {
+          if (response.status !== 200) {
+            throw new Error('Password change failed');
+          }
+          return response;
+        }),
     {
       onSuccess: () => {
         toast.custom(
-          (t) => (
+          (toastId) => (
             <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">
               <div className="flex items-center justify-between gap-x-2 px-4">
                 <h1 className="px-[10px]">{t("common:notification")}</h1>
-                <button onClick={() => toast.dismiss(t)}>
+                <button onClick={() => toast.dismiss(toastId)}>
                   {t("common:close")}
                 </button>
               </div>
               <div className="flex items-start gap-x-2 px-4 mt-2 w-full">
                 <p className="pl-[10px] text-[16px] min-w-[30%]">
-                  {t("common:passwordChanged")}
+                  {t("settings:passwordChanged")}
                 </p>
               </div>
             </div>
@@ -147,29 +154,62 @@ const Profile = () => {
             position: "top-right",
           }
         );
+        setPasswordData({
+          oldPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
       },
-      onError: () => {
-        console.error("Error changing password");
+      onError: (error) => {
+        console.error("Error changing password:", error);
+        toast.custom(
+          (toastId) => (
+            <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">
+              <div className="flex items-center justify-between gap-x-2 px-4">
+                <h1 className="px-[10px]">{t("common:error")}</h1>
+                <button onClick={() => toast.dismiss(toastId)}>
+                  {t("common:close")}
+                </button>
+              </div>
+              <div className="flex items-start gap-x-2 px-4 mt-2 w-full">
+                <p className="pl-[10px] text-[16px] min-w-[30%]">
+                  {error.response?.data || t("settings:unknownError")}
+                </p>
+              </div>
+            </div>
+          ),
+          {
+            duration: 6000,
+            position: "top-right",
+          }
+        );
       },
     }
   );
 
   const { mutateAsync: handleChangeEmail } = useMutation(
-    ({ password, email }) => changeEmail(axiosInstance, password, email),
+    ({ password, email }) => 
+      changeEmail(axiosInstance, password, email)
+        .then(response => {
+          if (response.status !== 200) {
+            throw new Error('Email change failed');
+          }
+          return response;
+        }),
     {
       onSuccess: () => {
         toast.custom(
-          (t) => (
+          (toastId) => (
             <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">
               <div className="flex items-center justify-between gap-x-2 px-4">
                 <h1 className="px-[10px]">{t("common:notification")}</h1>
-                <button onClick={() => toast.dismiss(t)}>
+                <button onClick={() => toast.dismiss(toastId)}>
                   {t("common:close")}
                 </button>
               </div>
               <div className="flex items-start gap-x-2 px-4 mt-2 w-full">
                 <p className="pl-[10px] text-[16px] min-w-[30%]">
-                  {t("common:emailChanged")}
+                  {t("settings:emailChanged")}
                 </p>
               </div>
             </div>
@@ -179,9 +219,34 @@ const Profile = () => {
             position: "top-right",
           }
         );
+        setEmailData({
+          email: "",
+          password: "",
+        });
       },
-      onError: () => {
-        console.error("Error changing email");
+      onError: (error) => {
+        console.error("Error changing email:", error);
+        toast.custom(
+          (toastId) => (
+            <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">
+              <div className="flex items-center justify-between gap-x-2 px-4">
+                <h1 className="px-[10px]">{t("common:error")}</h1>
+                <button onClick={() => toast.dismiss(toastId)}>
+                  {t("common:close")}
+                </button>
+              </div>
+              <div className="flex items-start gap-x-2 px-4 mt-2 w-full">
+                <p className="pl-[10px] text-[16px] min-w-[30%]">
+                  {error.response?.data || t("settings:unknownError")}
+                </p>
+              </div>
+            </div>
+          ),
+          {
+            duration: 6000,
+            position: "top-right",
+          }
+        );
       },
     }
   );
@@ -202,27 +267,36 @@ const Profile = () => {
     }));
   };
 
+  const validatePasswordForm = () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setPasswordError(t("settings:passwordsDoNotMatch"));
+      return false;
+    }
+    return true;
+  };
+
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
-    console.log("Form data:", passwordData);
-    await handleChangePassword(passwordData);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    setPasswordData({
-      oldPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    });
+    setPasswordError("");
+    
+    if (!validatePasswordForm()) {
+      return;
+    }
+
+    try {
+      await handleChangePassword(passwordData);
+    } catch (error) {
+      console.error("Error submitting password change:", error);
+    }
   };
 
   const handleEmailSubmit = async (event) => {
     event.preventDefault();
-    console.log("Email data:", emailData);
-    await handleChangeEmail(emailData);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    setEmailData({
-      email: "",
-      password: "",
-    });
+    try {
+      await handleChangeEmail(emailData);
+    } catch (error) {
+      console.error("Error submitting email change:", error);
+    }
   };
 
   const getImageSrc = (image) => {
@@ -342,6 +416,9 @@ const Profile = () => {
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
               />
+              {passwordError && (
+                <p className="text-amber text-[14px] text-center">{passwordError}</p>
+              )}
               <button
                 type="submit"
                 className="flex items-center gap-x-1 hover:text-amber transition-all duration-150 cursor-pointer pl-3 text-white-smoke mt-3"

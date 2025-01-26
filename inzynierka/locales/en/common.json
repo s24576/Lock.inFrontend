@@ -33,5 +33,9 @@
   "Korean": "Korean",
   "Other": "Other",
   "pageNotFound": "Page not found",
-  "returnHome": "Return to home page"
+  "returnHome": "Return to home page",
+  "refresh": "Refresh",
+  "error": "Error",
+  "somethingWentWrong": "Something went wrong. Please try again",
+  "usernameRequired": "Username is required"
 }

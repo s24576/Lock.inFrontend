@@ -15,11 +15,12 @@ const changePassword = async (
   console.log(formData);
 
   try {
-    const response = await axiosInstance.put(`/user/changePassword`, formData);
+    const response = await axiosInstance.put("/user/changePassword", formData);
     console.log("password changed: ", response.data);
-    return response.data; // Zwracamy dane
+    return response;
   } catch (error) {
-    console.log("Error changing password:", error);
+    throw error;
   }
 };
+
 export default changePassword;

@@ -20,5 +20,16 @@
 
   "myCourses": "My courses",
   "ownedCourses": "Owned courses",
-  "noCourses": "You don't have any courses yet"
+  "noCourses": "You don't have any courses yet",
+
+  "titleRequired": "Title is required",
+  "titleTooShort": "Title must be at least 3 characters long",
+  "titleTooLong": "Title must be less than 50 characters",
+  "descriptionRequired": "Description is required",
+  "descriptionTooShort": "Description must be at least 10 characters long",
+  "descriptionTooLong": "Description must be less than 500 characters",
+  "invalidPrice": "Price cannot be negative",
+  "pictureRequired": "Picture URL is required",
+  "invalidImageUrl": "Invalid image URL. Must contain .png, .jpg, .jpeg, .gif or .webp extension",
+  "submitError": "Error creating course. Please try again"
 }

@@ -25,5 +25,13 @@
   "noAccount": "Nie wybrano konta, wybierz w ustawieniach duo",
 
   "duoInvites": "Moje zaproszenia do duo",
-  "duoInvitesInfo": "Brak zaproszeń do duo"
+  "duoInvitesInfo": "Brak zaproszeń do duo",
+  "noAccountError": "Wybierz konto League of Legends",
+  "positionsRequired": "Wybierz swoje pozycje",
+  "lookedPositionsRequired": "Wybierz pozycje, których szukasz",
+  "ranksRequired": "Wybierz minimalną i maksymalną rangę",
+  "invalidRankRange": "Minimalna ranga nie może być wyższa niż maksymalna",
+  "submitError": "Błąd podczas tworzenia ogłoszenia duo. Spróbuj ponownie",
+  "selectProfile": "Wybierz profil",
+  "noProfilesAvailable": "Brak dostępnych profili"
 }

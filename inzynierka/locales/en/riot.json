@@ -20,5 +20,6 @@
   "followProfile": "Follow profile",
   "myAccount": "My account",
   "claimAccount": "Claim account",
-  "noMatches": "No matches found"
+  "noMatches": "No matches found",
+  "missingFields": "Username and Tag are required!"
 }

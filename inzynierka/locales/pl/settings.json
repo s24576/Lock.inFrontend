@@ -12,5 +12,11 @@
   "changeEmail": "Zmień email",
   "saveChanges": "Zapisz zmiany",
   "emailChanged": "Email został zmieniony",
-  "passwordChanged": "Hasło zostało zmienione"
+  "passwordChanged": "Hasło zostało zmienione",
+  "oldPasswordRequired": "Stare hasło jest wymagane",
+  "newPasswordRequired": "Nowe hasło jest wymagane",
+  "confirmPasswordRequired": "Potwierdzenie hasła jest wymagane",
+  "passwordsDoNotMatch": "Hasła nie są takie same",
+  "passwordTooShort": "Hasło musi mieć co najmniej 6 znaków",
+  "unknownError": "Wystąpił nieznany błąd. Spróbuj ponownie"
 }

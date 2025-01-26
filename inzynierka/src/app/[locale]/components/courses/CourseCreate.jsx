@@ -14,6 +14,8 @@ const CourseCreate = () => {
     price: 0,
     picture: "",
   });
+  
+  const [validationError, setValidationError] = useState("");
   const axiosInstance = useAxios();
   const router = useRouter();
   const { isLogged } = useContext(UserContext);
@@ -28,14 +30,70 @@ const CourseCreate = () => {
       },
       onError: (error) => {
         console.error("Error creating course:", error);
+        setValidationError(t("courses:submitError"));
       },
     }
   );
 
+  const validateForm = () => {
+    if (!formValues.title.trim()) {
+      setValidationError(t("courses:titleRequired"));
+      return false;
+    }
+    if (formValues.title.length < 3) {
+      setValidationError(t("courses:titleTooShort"));
+      return false;
+    }
+    if (formValues.title.length > 50) {
+      setValidationError(t("courses:titleTooLong"));
+      return false;
+    }
+
+    if (!formValues.description.trim()) {
+      setValidationError(t("courses:descriptionRequired"));
+      return false;
+    }
+    if (formValues.description.length < 10) {
+      setValidationError(t("courses:descriptionTooShort"));
+      return false;
+    }
+    if (formValues.description.length > 1000) {
+      setValidationError(t("courses:descriptionTooLong"));
+      return false;
+    }
+
+    if (formValues.price < 0) {
+      setValidationError(t("courses:invalidPrice"));
+      return false;
+    }
+
+    if (!formValues.picture.trim()) {
+      setValidationError(t("courses:pictureRequired"));
+      return false;
+    }
+    const urlPattern = /^https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp)(?:[?#].*)?$/i;
+    if (!urlPattern.test(formValues.picture)) {
+      setValidationError(t("courses:invalidImageUrl"));
+      return false;
+    }
+
+    return true;
+  };
+
   const submitCourse = async (e) => {
     e.preventDefault();
-    setFormValues({ title: "", description: "", price: 0, picture: "" });
-    await handleCreateCourse();
+    setValidationError("");
+
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      await handleCreateCourse();
+      setFormValues({ title: "", description: "", price: 0, picture: "" });
+    } catch (error) {
+      console.error("Error submitting course:", error);
+    }
   };
 
   if (isLogged === false) {
@@ -58,7 +116,7 @@ const CourseCreate = () => {
               src={formValues.picture}
               alt="Course Preview"
               className="w-full h-full object-cover"
-              onError={(e) => (e.target.style.display = "none")} // Ukrycie obrazka, gdy link jest niepoprawny
+              onError={(e) => (e.target.style.display = "none")}
             />
           ) : (
             <div className="flex items-center w-full">
@@ -132,12 +190,16 @@ const CourseCreate = () => {
               {t("courses:createCourseFirst")}
             </p>
 
+
             <button
               type="submit"
               className="w-[20%] border-white-smoke border-[1px] rounded-xl text-white-smoke mt-[5%] px-6 py-2 text-[20px] mx-auto bg-transparent hover:bg-silver-hover transition-all duration-150"
-            >
+              >
               {t("courses:publishCourse")}
             </button>
+              {validationError && (
+                <p className="text-amber text-center mt-4 mb-2">{validationError}</p>
+              )}
           </form>
         </div>
       </div>

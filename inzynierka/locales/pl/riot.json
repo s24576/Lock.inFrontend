@@ -20,5 +20,6 @@
   "followProfile": "Obserwuj profil",
   "myAccount": "Moje konto",
   "claimAccount": "Przypisz konto",
-  "noMatches": "Nie znaleziono meczów"
+  "noMatches": "Nie znaleziono meczów",
+  "missingFields": "Nazwa użytkownika i Tag są wymagane!"
 }
