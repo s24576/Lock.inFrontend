@@ -8,5 +8,6 @@
   "signIn": "Zaloguj",
 
   "forgotPasswordHeader": "Resetowanie hasła",
-  "forgotPasswordButton": "Zresetuj hasło"
+  "forgotPasswordButton": "Zresetuj hasło",
+  "loading": "Ładowanie..."
 }
