@@ -1,6 +1,6 @@
 import React from "react";
 
-const LeaguePosition = ({ height, position, fillColor, hoverGold }) => {
+const LeaguePosition = ({ height, position, fillColor }) => {
   const renderPositionIcon = () => {
     switch (position) {
       case "Top":

@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { SearchContext } from "../../context/SearchContext";
-import axios from "axios";
 import useAxios from "../../hooks/useAxios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -15,12 +14,6 @@ import { IoChevronForward } from "react-icons/io5";
 import getFinalItems from "../../api/ddragon/getFinalItems";
 import createBuild from "../../api/builds/createBuild";
 import { useTranslation } from "react-i18next";
-
-const statShardsArray = {
-  firstRow: ["Adaptive", "Attack Speed", "Ability Haste"],
-  secondRow: ["Adaptive 2", "Movement Speed", "Bonus Health"],
-  thirdRow: ["Base Health", "Tenacity", "Bonus Health 2"],
-};
 
 const summoners = [
   "Barrier",
@@ -47,16 +40,14 @@ const runeShards = [
 ];
 
 const CreateBuild = () => {
-  const { userData, isLogged } = useContext(UserContext);
+  const { isLogged } = useContext(UserContext);
   const { version } = useContext(SearchContext);
   const [titlePlaceholder, setTitlePlaceholder] = useState("");
   const [descriptionPlaceholder, setDescriptionPlaceholder] = useState("");
   const [championOptions, setChampionOptions] = useState([]);
-  const [allItems, setAllItems] = useState([]);
   const [chosenItems, setChosenItems] = useState(["", "", "", "", "", ""]);
   const [itemSearch, setItemSearch] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const [navigation, setNavigation] = useState(0);
 
@@ -95,32 +86,29 @@ const CreateBuild = () => {
   const axiosInstance = useAxios();
   const router = useRouter();
 
-  const {
-    data: championNamesData,
-    error: championNamesError,
-    isLoading: championNamesIsLoading,
-  } = useQuery("championNamesData", () => getChampionNames(axiosInstance), {
-    refetchOnWindowFocus: false,
-    onSuccess: (data) => {
-      const options = Object.entries(data).map(
-        ([championKey, championValue]) => ({
-          value: championKey,
-          label: (
-            <div className="flex items-center">
-              <Image
-                src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championKey}.png`}
-                alt={championValue}
-                width={20}
-                height={20}
-              />
-              <span className="ml-2">{championValue}</span>
-            </div>
-          ),
-        })
-      );
-      setChampionOptions(options);
-    },
-  });
+  const { data: championNamesData, isLoading: championNamesIsLoading } =
+    useQuery("championNamesData", () => getChampionNames(axiosInstance), {
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        const options = Object.entries(data).map(
+          ([championKey, championValue]) => ({
+            value: championKey,
+            label: (
+              <div className="flex items-center">
+                <Image
+                  src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championKey}.png`}
+                  alt={championValue}
+                  width={20}
+                  height={20}
+                />
+                <span className="ml-2">{championValue}</span>
+              </div>
+            ),
+          })
+        );
+        setChampionOptions(options);
+      },
+    });
 
   const [searchChampion, setSearchChampion] = useState("");
 
@@ -222,21 +210,21 @@ const CreateBuild = () => {
     setSecondaryRunes(["", ""]);
   }, [runeTreeSecondary]);
 
-  const {
-    data: runesData,
-    error: runesError,
-    isLoading: runesIsLoading,
-  } = useQuery("runesData", () => getRunes(), {
-    refetchOnWindowFocus: false,
-  });
+  const { data: runesData, isLoading: runesIsLoading } = useQuery(
+    "runesData",
+    () => getRunes(),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
-  const {
-    data: itemsData,
-    error: itemsError,
-    isLoading: itemsIsLoading,
-  } = useQuery("itemsData", () => getFinalItems(axiosInstance), {
-    refetchOnWindowFocus: false,
-  });
+  const { data: itemsData, isLoading: itemsIsLoading } = useQuery(
+    "itemsData",
+    () => getFinalItems(axiosInstance),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const handleSetSelectedTags = (tag) => {
     setSelectedTags((prevTags) => {

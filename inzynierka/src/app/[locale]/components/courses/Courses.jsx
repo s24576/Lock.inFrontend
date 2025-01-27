@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { useQuery, useMutation, useQueries } from "react-query";
 import { useRouter } from "next/navigation";
@@ -16,26 +16,22 @@ import { useTranslation } from "react-i18next";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Courses = () => {
-  const [courseName, setCourseName] = useState("");
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
   const [previewIds, setPreviewIds] = useState([]);
   const [filterParams, setFilterParams] = useState({
     page: 0,
   });
-  const [activeIndex, setActiveIndex] = useState(0);
   const { isLogged } = useContext(UserContext);
 
   const axios = useAxios();
   const axiosPublic = useAxiosPublic();
   const axiosInstance = isLogged ? axios : axiosPublic;
-  const router = useRouter();
 
   const { t } = useTranslation();
 
   const {
     refetch: refetchCourses,
     data: coursesData,
-    error: coursesError,
     isLoading: coursesIsLoading,
   } = useQuery(
     "coursesData",
@@ -63,7 +59,6 @@ const Courses = () => {
   const {
     refetch: shortProfilesRefetch,
     data: shortProfilesData,
-    error: shortProfilesError,
     isLoading: shortProfilesIsLoading,
   } = useQuery(
     "shortProfilesData",
@@ -71,18 +66,6 @@ const Courses = () => {
     {
       refetchOnWindowFocus: false,
       enabled: usernamesToFetch?.length > 0,
-    }
-  );
-
-  const { mutateAsync: createNewCourse } = useMutation(
-    (courseData) => createCourse(axiosInstance, courseData),
-    {
-      onSuccess: (data) => {
-        refetchCourses();
-      },
-      onError: (error) => {
-        console.error("Error creating course:", error);
-      },
     }
   );
 

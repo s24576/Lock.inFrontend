@@ -6,7 +6,6 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { UserContext } from "../../context/UserContext";
 import { SearchContext } from "../../context/SearchContext";
 import Image from "next/image";
-import Link from "next/link";
 import { getSummonerSpell } from "@/lib/getSummonerSpell";
 import { getRuneIcon } from "@/lib/getRuneIcon";
 import findByPuuid from "../../api/riot/findByPuuid";
@@ -24,14 +23,13 @@ const FullMatch = ({ matchId }) => {
   const axiosPublic = useAxiosPublic();
   const axiosInstance = isLogged ? axios : axiosPublic;
 
-  const {
-    data: matchData,
-    isLoading: matchLoading,
-    error: matchError,
-    refetch: matchRefetch,
-  } = useQuery("matchData", () => getMatchInfo(axiosInstance, matchId), {
-    refetchOnWindowFocus: false,
-  });
+  const { data: matchData, isLoading: matchLoading } = useQuery(
+    "matchData",
+    () => getMatchInfo(axiosInstance, matchId),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const { mutateAsync: findAnotherProfile } = useMutation(
     (puuid) => findByPuuid(axiosInstance, matchData.metadata.server, puuid),

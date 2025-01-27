@@ -36,13 +36,13 @@ const ShortBuild = ({
 
   const [isHovered, setIsHovered] = useState(false);
 
-  const {
-    data: runesData,
-    error: runesError,
-    isLoading: runesIsLoading,
-  } = useQuery("runesData", () => getRunes(), {
-    refetchOnWindowFocus: false,
-  });
+  const { data: runesData, isLoading: runesIsLoading } = useQuery(
+    "runesData",
+    () => getRunes(),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const { mutateAsync: handleDeleteBuild } = useMutation(
     () => deleteBuild(axiosInstance, build._id),

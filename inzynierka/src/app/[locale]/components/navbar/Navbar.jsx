@@ -11,15 +11,13 @@ import Sidebar from "./Sidebar";
 import FriendList from "../FriendList";
 import { FaComment, FaBookOpen } from "react-icons/fa6";
 import { FaHome } from "react-icons/fa";
-import { CiWarning } from "react-icons/ci";
 import { BiSolidLock } from "react-icons/bi";
 import { RISwordFill, RITeamFill } from "@icongo/ri";
-import { IoDesktopOutline, IoNotifications, IoHome } from "react-icons/io5";
+import { IoDesktopOutline } from "react-icons/io5";
 import Notifications from "../Notifications";
 
 const Navbar = () => {
-  const { userData, setUserData, isLogged, setIsLogged } =
-    useContext(UserContext);
+  const { setUserData, isLogged, setIsLogged } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
 
   const api = useAxios();
@@ -96,7 +94,9 @@ const Navbar = () => {
 
   if (loading) {
     return (
-      <div className="w-full bg-night h-[72px] flex justify-center items-center gap-x-1 font-bangers text-amber z-50">
+      <div
+        className={`w-full ${navbarBg} h-[72px] flex justify-center items-center gap-x-1 font-bangers text-amber z-50`}
+      >
         <BiSolidLock className="text-[40px]"></BiSolidLock>
         <p className="text-[32px] pt-[1px]">Lock.in</p>
       </div>

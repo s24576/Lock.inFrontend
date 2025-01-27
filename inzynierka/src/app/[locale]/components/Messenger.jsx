@@ -4,12 +4,9 @@ import { UserContext } from "../context/UserContext";
 import { useQuery, useMutation } from "react-query";
 import useAxios from "../hooks/useAxios";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
   DialogClose,
@@ -23,7 +20,7 @@ import { IoIosSend } from "react-icons/io";
 import { MdPersonAdd } from "react-icons/md";
 import getChats from "../api/messenger/getChats";
 import getShortProfiles from "../api/profile/getShortProfiles";
-import { formatTimestampToDateTime, formatTimeAgo } from "@/lib/formatTimeAgo";
+import { formatTimeAgo } from "@/lib/formatTimeAgo";
 import getChatById from "../api/messenger/getChatById";
 import getMessages from "../api/messenger/getMessages";
 import sendMessage from "../api/messenger/sendMessage";
@@ -90,25 +87,18 @@ const Messenger = () => {
     },
   });
 
-  const {
-    refetch: shortProfilesRefetch,
-    data: shortProfilesData,
-    isLoading: shortProfilesIsLoading,
-  } = useQuery(
-    ["shortProfilesData", usernamesToFetch],
-    () => getShortProfiles(axiosInstance, usernamesToFetch),
-    {
-      refetchOnWindowFocus: false,
-      keepPreviousData: true,
-      enabled: usernamesToFetch.length > 0,
-    }
-  );
+  const { data: shortProfilesData, isLoading: shortProfilesIsLoading } =
+    useQuery(
+      ["shortProfilesData", usernamesToFetch],
+      () => getShortProfiles(axiosInstance, usernamesToFetch),
+      {
+        refetchOnWindowFocus: false,
+        keepPreviousData: true,
+        enabled: usernamesToFetch.length > 0,
+      }
+    );
 
-  const {
-    refetch: chatByIdrefetch,
-    data: chatByIdData,
-    isLoading: chatByIdIsLoading,
-  } = useQuery(
+  const { data: chatByIdData, isLoading: chatByIdIsLoading } = useQuery(
     ["getChatById", activeChat],
     () => getChatById(axiosInstance, activeChat),
     {
@@ -143,7 +133,7 @@ const Messenger = () => {
       });
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         setLocalLastMessage({
           message: newMessage,
           timestamp: Math.floor(Date.now() / 1000),
@@ -183,7 +173,7 @@ const Messenger = () => {
       addChatter(axiosInstance, activeChat, username);
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         chatsRefetch();
         messagesRefetch();
       },
@@ -201,7 +191,7 @@ const Messenger = () => {
       });
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         setNewMessage("");
         chatsRefetch();
         messagesRefetch();
@@ -238,7 +228,6 @@ const Messenger = () => {
   };
 
   const [stompClient, setStompClient] = useState(null);
-  const [newMessageReceived, setNewMessageReceived] = useState();
 
   //websocket
   useEffect(() => {

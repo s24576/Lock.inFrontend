@@ -1,9 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useQuery, useMutation } from "react-query";
-import addProfilePicture from "../../api/profile/addProfilePicture";
 import addBio from "../../api/profile/addBio";
 import useAxios from "../../hooks/useAxios";
-import Image from "next/image";
 import { UserContext } from "../../context/UserContext";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaSave } from "react-icons/fa";
@@ -37,17 +35,16 @@ const Profile = () => {
   const [bio, setBio] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const {
-    data: userInfo,
-    isLoading: userInfoLoading,
-    error: userInfoError,
-    refetch: userInfoRefetch,
-  } = useQuery("userInfo", () => getUserData(axiosInstance), {
-    refetchOnWindowFocus: false,
-    onSuccess: (data) => {
-      setUserData(data);
-    },
-  });
+  const { isLoading: userInfoLoading, refetch: userInfoRefetch } = useQuery(
+    "userInfo",
+    () => getUserData(axiosInstance),
+    {
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        setUserData(data);
+      },
+    }
+  );
 
   const handleBioChange = (event) => {
     setBio(event.target.value);

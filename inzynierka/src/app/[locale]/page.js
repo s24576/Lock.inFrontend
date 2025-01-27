@@ -1,11 +1,7 @@
 import Mainpage from "./components/Mainpage";
 import Footer from "./components/Footer";
-import initTranslations from "./i18n";
-import TranslationsProvider from "./components/TranslationsProvider";
 
-const i18nNamespaces = ["mainpage", "common"];
-
-export default async function Home({ params: { locale } }) {
+export default async function Home() {
   return (
     <main className="flex h-screen flex-col">
       <Mainpage></Mainpage>

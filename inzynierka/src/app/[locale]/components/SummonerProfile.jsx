@@ -1,27 +1,16 @@
 "use client";
 import React, { useContext, useState } from "react";
 import { SearchContext } from "../context/SearchContext";
-import axios from "axios";
 import useAxios from "../hooks/useAxios";
 import useAxiosPublic from "../hooks/useAxiosPublic";
 import { useRouter } from "next/navigation";
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import { UserContext } from "@/app/[locale]/context/UserContext";
-import Link from "next/link";
-import { BiWorld } from "react-icons/bi";
-import { GoLock } from "react-icons/go";
-import { MdOutlineRefresh } from "react-icons/md";
-import { toast } from "sonner";
 import { useQuery, useMutation } from "react-query";
 import findPlayer from "../api/riot/findPlayer";
 import { FaGlobeAmericas, FaGlobeEurope } from "react-icons/fa";
-import {
-  FaHeartCirclePlus,
-  FaHeartCircleXmark,
-  FaCheck,
-  FaHeart,
-} from "react-icons/fa6";
+import { FaHeartCirclePlus, FaCheck, FaHeart } from "react-icons/fa6";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BiLock } from "react-icons/bi";
 import ShortMatch from "./riot/ShortMatch";
@@ -30,7 +19,6 @@ import Select from "react-select";
 import { customStylesDuo } from "@/lib/styles/championNamesList";
 import followProfile from "../api/profile/followProfile";
 import getMatchHistory from "../api/riot/getMatchHistory";
-import { getSummonerSpell } from "@/lib/getSummonerSpell";
 import claimAccount from "../api/profile/claimAccount";
 import FullMatch from "./riot/FullMatch";
 import { useTranslation } from "react-i18next";
@@ -89,13 +77,11 @@ const queueOptions = [
 ];
 
 const SummonerProfile = () => {
-  const { userData, setUserData, isLogged, setIsLogged } =
-    useContext(UserContext);
+  const { isLogged } = useContext(UserContext);
 
   const { version } = useContext(SearchContext);
 
   const [matchesShown, setMatchesShown] = useState(10);
-  const [filterValue, setFilterValue] = useState("");
   const [queue, setQueue] = useState("");
 
   const { t } = useTranslation();
@@ -111,7 +97,6 @@ const SummonerProfile = () => {
   const {
     data: playerData,
     isLoading: playerIsLoading,
-    error: playerError,
     refetch: playerDataRefetch,
   } = useQuery(
     ["summonerData", params.username],
@@ -124,12 +109,7 @@ const SummonerProfile = () => {
     }
   );
 
-  const {
-    data: matchesData,
-    isLoading: matchesIsLoading,
-    error: matchesError,
-    refetch: matchesRefetch,
-  } = useQuery(
+  const { data: matchesData, isLoading: matchesIsLoading } = useQuery(
     ["matchesData", matchesShown, queue],
     () => getMatchHistory(axiosInstance, playerData.puuid, matchesShown, queue),
     {
@@ -142,7 +122,7 @@ const SummonerProfile = () => {
   const { mutateAsync: handleFollow } = useMutation(
     () => followProfile(axiosInstance, playerData.server, playerData.puuid),
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         playerDataRefetch();
       },
       onError: (error) => {
@@ -154,7 +134,7 @@ const SummonerProfile = () => {
   const { mutateAsync: handleClaimAccount } = useMutation(
     () => claimAccount(axiosInstance, playerData.server, playerData.puuid),
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         playerDataRefetch();
       },
       onError: (error) => {

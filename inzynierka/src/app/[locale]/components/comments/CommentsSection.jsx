@@ -76,51 +76,57 @@ const CommentsSection = ({ id: objectId }) => {
       refetchOnWindowFocus: false,
       enabled: !!numberOfComments,
       onSuccess: (data) => {
-        setAllCommentsData((prev) => {
-          const prevContent = prev?.content || [];
+        if (data !== null && data !== undefined) {
+          setAllCommentsData((prev) => {
+            const prevContent = prev?.content || [];
 
-          const newContent = data.content.reduce((acc, newItem) => {
-            const existingItem = prevContent.find(
-              (item) => item._id === newItem._id
-            );
+            const newContent = Array.isArray(data?.content)
+              ? data.content.reduce((acc, newItem) => {
+                  const existingItem = prevContent.find(
+                    (item) => item._id === newItem._id
+                  );
 
-            if (existingItem) {
-              if (
-                existingItem.likesCount !== newItem.likesCount ||
-                existingItem.dislikesCount !== newItem.dislikesCount ||
-                existingItem.canReact !== newItem.canReact ||
-                existingItem.reaction !== newItem.reaction
-              ) {
-                acc.push({
-                  ...existingItem,
-                  likesCount: newItem.likesCount,
-                  dislikesCount: newItem.dislikesCount,
-                  canReact: newItem.canReact,
-                  reaction: newItem.reaction,
-                });
-              } else {
-                acc.push(existingItem);
-              }
-            } else {
-              acc.push(newItem);
-            }
+                  if (existingItem) {
+                    if (
+                      existingItem.likesCount !== newItem.likesCount ||
+                      existingItem.dislikesCount !== newItem.dislikesCount ||
+                      existingItem.canReact !== newItem.canReact ||
+                      existingItem.reaction !== newItem.reaction
+                    ) {
+                      acc.push({
+                        ...existingItem,
+                        likesCount: newItem.likesCount,
+                        dislikesCount: newItem.dislikesCount,
+                        canReact: newItem.canReact,
+                        reaction: newItem.reaction,
+                      });
+                    } else {
+                      acc.push(existingItem);
+                    }
+                  } else {
+                    acc.push(newItem);
+                  }
 
-            return acc;
-          }, []);
+                  return acc;
+                }, [])
+              : [];
 
-          return {
-            ...prev,
-            content: newContent,
-            page: { ...prev.page, ...data.page },
-          };
-        });
+            return {
+              ...prev,
+              content: newContent,
+              page: { ...prev.page, ...data?.page },
+            };
+          });
 
-        const usernames = data.content.map((build) => build.username);
+          if (Array.isArray(data?.content)) {
+            const usernames = data.content.map((build) => build.username);
 
-        setUsernamesToFetch((prevUsernames) => {
-          const uniqueUsernames = new Set([...prevUsernames, ...usernames]);
-          return Array.from(uniqueUsernames);
-        });
+            setUsernamesToFetch((prevUsernames) => {
+              const uniqueUsernames = new Set([...prevUsernames, ...usernames]);
+              return Array.from(uniqueUsernames);
+            });
+          }
+        }
       },
     }
   );
@@ -549,8 +555,9 @@ const CommentsSection = ({ id: objectId }) => {
               <p className="mt-5 text-center">{t("comments:commentFirst")}</p>
             )}
           </div>
-          {allCommentsData.page.totalElements >
-            allCommentsData.content.length && (
+          {allCommentsData?.page?.totalElements >
+            allCommentsData?.content?.length >
+            0 && (
             <p
               className="w-[50%] text-center font-semibold text-[18px] mt-3 px-6 py-2 bg-transparent text-white-smoke border-[1px] border-white-smoke rounded-xl hover:bg-silver hover:bg-opacity-15 transition-all duration-100 cursor-pointer"
               onClick={() => {

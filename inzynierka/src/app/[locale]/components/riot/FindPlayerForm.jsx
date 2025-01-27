@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { useRouter } from "next/navigation";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
-
 import findPlayer from "../../api/riot/findPlayer";
-
 import { FaGlobeAmericas, FaGlobeEurope } from "react-icons/fa";
 import { BiSolidLock } from "react-icons/bi";
 import {

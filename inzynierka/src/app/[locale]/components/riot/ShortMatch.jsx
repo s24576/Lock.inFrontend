@@ -1,10 +1,7 @@
 "use client";
 import { SearchContext } from "../../context/SearchContext";
 import Image from "next/image";
-import Link from "next/link";
-import { formatTimestampToDateTime } from "@/lib/formatTimeAgo";
-import fromUnixTime from "date-fns/fromUnixTime";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { getSummonerSpell } from "@/lib/getSummonerSpell";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";

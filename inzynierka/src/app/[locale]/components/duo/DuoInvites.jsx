@@ -17,7 +17,7 @@ const DuoInvites = () => {
   const axiosInstance = useAxios();
   const router = useRouter();
   const { version } = useContext(SearchContext);
-  const { userData, isLogged } = useContext(UserContext);
+  const { isLogged } = useContext(UserContext);
   const [filterParams, setFilterParams] = useState({
     page: 0,
   });
@@ -27,7 +27,6 @@ const DuoInvites = () => {
   const {
     refetch: duoInvitesRefetch,
     data: duoInvites,
-    error: duoInvitesError,
     isLoading: duoInvitesIsLoading,
   } = useQuery("duoInvites", () => getAnswersDuo(axiosInstance), {
     refetchOnWindowFocus: false,

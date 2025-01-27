@@ -3,8 +3,6 @@ import "@fontsource/bangers";
 import "@fontsource/chewy";
 import "@fontsource/rum-raisin";
 import "@fontsource/dekko";
-import "@fontsource/itim";
-import "@fontsource/coiny";
 import "@fontsource/poetsen-one";
 import "./globals.css";
 import ClientLayout from "./clientLayout";
@@ -14,7 +12,6 @@ import { ProfileContextProvider } from "./context/ProfileContext";
 import { LanguageContextProvider } from "./context/LanguageContext";
 import initTranslations from "./i18n";
 import TranslationsProvider from "./components/TranslationsProvider";
-import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"] });
 

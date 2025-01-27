@@ -16,7 +16,7 @@ import { useQuery, useMutation } from "react-query";
 import getChampionNames from "../../api/ddragon/getChampionNames";
 import createDuo from "../../api/duo/createDuo";
 import Select from "react-select";
-import { customStyles, customStylesDuo } from "@/lib/styles/championNamesList";
+import { customStylesDuo } from "@/lib/styles/championNamesList";
 import Image from "next/image";
 import LeaguePosition from "../other/LeaguePosition";
 import { useTranslation } from "react-i18next";
@@ -83,13 +83,13 @@ const DuoCreation = () => {
     championIds: [],
   });
 
-  const {
-    data: championNames,
-    error: championNamesError,
-    isLoading: championNamesLoading,
-  } = useQuery("championNames", () => getChampionNames(axiosInstance), {
-    refetchOnWindowFocus: false,
-  });
+  const { data: championNames } = useQuery(
+    "championNames",
+    () => getChampionNames(axiosInstance),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   //champions
   const handleSelectChange = (selectedOption) => {
@@ -155,7 +155,7 @@ const DuoCreation = () => {
   const { mutateAsync } = useMutation(
     (formData) => createDuo(axiosInstance, formData),
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         setDuoBody({
           positions: [],
           lookedPositions: [],

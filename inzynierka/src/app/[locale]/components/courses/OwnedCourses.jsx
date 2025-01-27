@@ -26,7 +26,6 @@ const OwnedCourses = () => {
   const {
     refetch: refetchCourses,
     data: coursesData,
-    error: coursesError,
     isLoading: coursesIsLoading,
   } = useQuery(
     "coursesData",
@@ -45,7 +44,6 @@ const OwnedCourses = () => {
   const {
     refetch: shortProfilesRefetch,
     data: shortProfilesData,
-    error: shortProfilesError,
     isLoading: shortProfilesIsLoading,
   } = useQuery(
     "shortProfilesData",

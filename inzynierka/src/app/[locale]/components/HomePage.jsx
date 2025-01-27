@@ -16,7 +16,6 @@ import getMyRiotProfiles from "../api/riot/getMyRiotProfiles";
 import getWatchListRiotProfiles from "../api/riot/getWatchListRiotProfiles";
 import findPlayer from "../api/riot/findPlayer";
 import findProfile from "../api/profile/findProfile";
-import getChats from "../api/messenger/getChats";
 import ShortMatch from "./riot/ShortMatch";
 import { useTranslation } from "react-i18next";
 import FullMatch from "./riot/FullMatch";
@@ -35,15 +34,11 @@ const HomePage = () => {
   const router = useRouter();
   const axiosInstance = useAxios();
 
-  const {
-    refetch: refetchClaimedAccounts,
-    data: claimedAccountsData,
-    error: claimedAccountsError,
-    isLoading: claimedAccountsLoading,
-  } = useQuery("claimedAccountsData", () => getMyRiotProfiles(axiosInstance), {
-    refetchOnWindowFocus: false,
-    enabled: isLogged === true,
-  });
+  const { data: claimedAccountsData, isLoading: claimedAccountsLoading } =
+    useQuery("claimedAccountsData", () => getMyRiotProfiles(axiosInstance), {
+      refetchOnWindowFocus: false,
+      enabled: isLogged === true,
+    });
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -105,19 +100,15 @@ const HomePage = () => {
     await findAnotherProfile();
   };
 
-  const {
-    refetch: refetchFollowedProfiles,
-    data: followedProfilesData,
-    error: followedProfilesError,
-    isLoading: followedProfilesLoading,
-  } = useQuery(
-    "followedProfilesData",
-    () => getWatchListRiotProfiles(axiosInstance),
-    {
-      refetchOnWindowFocus: false,
-      enabled: isLogged === true,
-    }
-  );
+  const { data: followedProfilesData, isLoading: followedProfilesLoading } =
+    useQuery(
+      "followedProfilesData",
+      () => getWatchListRiotProfiles(axiosInstance),
+      {
+        refetchOnWindowFocus: false,
+        enabled: isLogged === true,
+      }
+    );
 
   const getImageSrc = (image) => {
     if (image && image.data) {

@@ -1,11 +1,8 @@
 "use client";
-import React, { useState, useContext, useEffect } from "react";
-import { ProfileContext } from "../context/ProfileContext";
-import axios from "axios";
+import React, { useState, useContext } from "react";
 import { useQuery, useMutation } from "react-query";
 import { useParams } from "next/navigation";
 import { UserContext } from "../context/UserContext";
-import { LanguageContext } from "../context/LanguageContext";
 import useAxios from "../hooks/useAxios";
 import findProfile from "../api/profile/findProfile";
 import { FaUser } from "react-icons/fa6";
@@ -32,7 +29,6 @@ const Profile = () => {
 
   const {
     data: profileData,
-    error: profileError,
     isLoading: profileIsLoading,
     refetch: profileRefetch,
   } = useQuery(
@@ -54,11 +50,7 @@ const Profile = () => {
     }
   );
 
-  const {
-    mutateAsync: handleSendFriendRequest,
-    error: sendFriendRequestError,
-    isError: sendFriendRequestIsError,
-  } = useMutation(
+  const { mutateAsync: handleSendFriendRequest } = useMutation(
     () => {
       sendFriendRequest(axiosInstance, profileData._id);
     },
@@ -70,18 +62,15 @@ const Profile = () => {
   );
 
   //short profile do znajomych
-  const {
-    refetch: shortProfilesRefetch,
-    data: shortProfilesData,
-    isLoading: shortProfilesIsLoading,
-  } = useQuery(
-    ["shortProfilesData", usernamesToFetch],
-    () => getShortProfiles(axiosInstance, usernamesToFetch),
-    {
-      refetchOnWindowFocus: false,
-      enabled: usernamesToFetch.length > 0,
-    }
-  );
+  const { data: shortProfilesData, isLoading: shortProfilesIsLoading } =
+    useQuery(
+      ["shortProfilesData", usernamesToFetch],
+      () => getShortProfiles(axiosInstance, usernamesToFetch),
+      {
+        refetchOnWindowFocus: false,
+        enabled: usernamesToFetch.length > 0,
+      }
+    );
 
   const { mutateAsync: findAnotherProfile } = useMutation(
     () => findProfile(axiosInstance, profileUsername),

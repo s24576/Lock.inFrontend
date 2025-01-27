@@ -6,14 +6,13 @@ import useAxios from "../../hooks/useAxios";
 const AdminPanel = () => {
   const axiosInstance = useAxios();
 
-  const {
-    refetch: refetchReports,
-    data: reportsData,
-    error: reportsError,
-    isLoading: reportsIsLoading,
-  } = useQuery("reportsData", () => getReports(axiosInstance), {
-    refetchOnWindowFocus: false,
-  });
+  const { data: reportsData } = useQuery(
+    "reportsData",
+    () => getReports(axiosInstance),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   return (
     <div className="p-[70px] min-h-screen flex flex-col justify-center items-center">

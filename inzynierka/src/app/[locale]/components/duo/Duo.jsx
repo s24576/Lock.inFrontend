@@ -54,8 +54,7 @@ const rankOptions = rankList.map((rank) => ({
 }));
 
 const Duo = () => {
-  const { duoSettings, setDuoSettings, userData, isLogged } =
-    useContext(UserContext);
+  const { setDuoSettings, userData, isLogged } = useContext(UserContext);
 
   const { version } = useContext(SearchContext);
 
@@ -103,28 +102,26 @@ const Duo = () => {
   });
 
   //claimed accounts
-  const {
-    data: riotProfiles,
-    error,
-    isLoading,
-    refetch: refetchRiotProfiles,
-  } = useQuery("myRiotProfiles", () => getMyRiotProfiles(axiosInstance), {
-    refetchOnWindowFocus: false,
-    enabled: isLogged === true,
-    onSuccess: (data) => {
-      if (data && data.length === 1) {
-        setDuoSettings((prevSettings) => ({
-          ...prevSettings,
-          duoAccount: data[0],
-        }));
-      }
-    },
-  });
+  const { data: riotProfiles } = useQuery(
+    "myRiotProfiles",
+    () => getMyRiotProfiles(axiosInstance),
+    {
+      refetchOnWindowFocus: false,
+      enabled: isLogged === true,
+      onSuccess: (data) => {
+        if (data && data.length === 1) {
+          setDuoSettings((prevSettings) => ({
+            ...prevSettings,
+            duoAccount: data[0],
+          }));
+        }
+      },
+    }
+  );
 
   const {
     refetch: refetchDuos,
     data: duos,
-    error: duosError,
     isLoading: duosLoading,
   } = useQuery(
     "duos",
@@ -137,7 +134,6 @@ const Duo = () => {
   const {
     refetch: riotShortProfilesRefetch,
     data: riotShortProfiles,
-    error: riotShortProfilesError,
     isLoading: riotShortProfilesLoading,
   } = useQuery(
     "riotShortProfiles",
@@ -148,32 +144,32 @@ const Duo = () => {
     }
   );
 
-  const {
-    data: championNamesData,
-    error: championNamesError,
-    isLoading: championNamesIsLoading,
-  } = useQuery("championNamesData", () => getChampionNames(axiosInstance), {
-    refetchOnWindowFocus: false,
-    onSuccess: (data) => {
-      const options = Object.entries(data).map(
-        ([championKey, championValue]) => ({
-          value: championKey,
-          label: (
-            <div className="flex items-center">
-              <Image
-                src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championKey}.png`}
-                alt={championValue}
-                width={20}
-                height={20}
-              />
-              <span className="ml-2">{championValue}</span>
-            </div>
-          ),
-        })
-      );
-      setChampionOptions(options);
-    },
-  });
+  const { isLoading: championNamesIsLoading } = useQuery(
+    "championNamesData",
+    () => getChampionNames(axiosInstance),
+    {
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        const options = Object.entries(data).map(
+          ([championKey, championValue]) => ({
+            value: championKey,
+            label: (
+              <div className="flex items-center">
+                <Image
+                  src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championKey}.png`}
+                  alt={championValue}
+                  width={20}
+                  height={20}
+                />
+                <span className="ml-2">{championValue}</span>
+              </div>
+            ),
+          })
+        );
+        setChampionOptions(options);
+      },
+    }
+  );
 
   //champions
   const handleSelectChange = (selectedOption) => {
@@ -243,7 +239,7 @@ const Duo = () => {
     refetch();
   }, [filterBody]);
 
-  if (duosLoading || riotShortProfilesLoading || championNamesIsLoading) {
+  if (duosLoading || riotShortProfilesLoading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-night">
         <AiOutlineLoading3Quarters className="text-[48px] animate-spin text-amber"></AiOutlineLoading3Quarters>
@@ -251,7 +247,7 @@ const Duo = () => {
     );
   }
 
-  if (!duosLoading && !riotShortProfilesLoading && !championNamesIsLoading) {
+  if (!duosLoading && !riotShortProfilesLoading) {
     return (
       <div className="relative min-h-screen w-full flex justify-between px-[5%] bg-night">
         <div

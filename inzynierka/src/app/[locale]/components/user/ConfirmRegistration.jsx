@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
-import { useQuery, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import useAxios from "../../hooks/useAxios";
 import confirmRegistration from "../../api/user/confirmRegistration";
 import resendConfirmationToken from "../../api/user/resendConfirmationToken";

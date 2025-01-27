@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import useAxios from "../../hooks/useAxios";
 import { useQuery } from "react-query";
@@ -20,14 +20,12 @@ export const MyBuilds = () => {
   const { t } = useTranslation();
 
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
-  const [championOptions, setChampionOptions] = useState([]);
 
   const axiosInstance = useAxios();
 
   const {
     refetch: refetchBuilds,
     data: buildsData,
-    error: buildsError,
     isLoading: buildsIsLoading,
   } = useQuery(
     "buildsData",
@@ -41,19 +39,15 @@ export const MyBuilds = () => {
     }
   );
 
-  const {
-    refetch: shortProfilesRefetch,
-    data: shortProfilesData,
-    error: shortProfilesError,
-    isLoading: shortProfilesIsLoading,
-  } = useQuery(
-    "shortProfilesData",
-    () => getShortProfiles(axiosInstance, usernamesToFetch),
-    {
-      refetchOnWindowFocus: false,
-      enabled: usernamesToFetch?.length > 0,
-    }
-  );
+  const { data: shortProfilesData, isLoading: shortProfilesIsLoading } =
+    useQuery(
+      "shortProfilesData",
+      () => getShortProfiles(axiosInstance, usernamesToFetch),
+      {
+        refetchOnWindowFocus: false,
+        enabled: usernamesToFetch?.length > 0,
+      }
+    );
 
   //page
   const handlePageChange = async (newPage) => {

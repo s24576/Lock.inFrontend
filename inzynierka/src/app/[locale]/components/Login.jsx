@@ -2,10 +2,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useQuery, useMutation } from "react-query";
-import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import getLocale from "../api/user/getLocale";
 import login from "../api/user/login";
@@ -23,7 +21,6 @@ const Login = () => {
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const router = useRouter();
-  const pathname = usePathname();
 
   const axios = useAxios();
   const axiosPublic = useAxiosPublic();
@@ -54,7 +51,7 @@ const Login = () => {
     }
   );
 
-  const { refetch: languageRefetch, isLoading: languageIsLoading } = useQuery(
+  const { refetch: languageRefetch } = useQuery(
     "languageChange",
     () => getLocale(axiosInstance),
     {

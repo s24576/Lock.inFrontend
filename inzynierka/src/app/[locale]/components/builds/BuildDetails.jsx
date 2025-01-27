@@ -1,16 +1,12 @@
 "use client";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { SearchContext } from "../../context/SearchContext";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import useAxios from "../../hooks/useAxios";
 import { useParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
-import { IoMdUnlock, IoMdLock } from "react-icons/io";
-import { MdDelete, MdReply, MdNavigateNext } from "react-icons/md";
 import { useQuery, useMutation } from "react-query";
 import getBuildById from "../../api/builds/getBuildById";
 import getRunes from "../../api/ddragon/getRunes";
@@ -52,13 +48,11 @@ const BuildDetails = () => {
   const axiosInstance = isLogged ? axios : axiosPublic;
   const { t } = useTranslation();
 
-  const [usernamesToFetch, setUsernamesToFetch] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
 
   const {
     refetch: refetchBuild,
     data: buildData,
-    error: buildError,
     isLoading: buildIsLoading,
   } = useQuery("buildData", () => getBuildById(axiosInstance, params.buildId), {
     refetchOnWindowFocus: false,
@@ -67,34 +61,26 @@ const BuildDetails = () => {
     },
   });
 
-  const {
-    refetch: authorProfileRefetch,
-    data: authorProfileData,
-    error: authorProfileError,
-    isLoading: authorProfileIsLoading,
-  } = useQuery(
-    "authorProfileData",
-    () => getShortProfile(axiosInstance, buildData.username),
+  const { data: authorProfileData, isLoading: authorProfileIsLoading } =
+    useQuery(
+      "authorProfileData",
+      () => getShortProfile(axiosInstance, buildData.username),
+      {
+        enabled: !!buildData,
+        refetchOnWindowFocus: false,
+      }
+    );
+
+  const { data: runesData, isLoading: runesIsLoading } = useQuery(
+    "runesData",
+    () => getRunes(),
     {
-      enabled: !!buildData,
       refetchOnWindowFocus: false,
     }
   );
 
-  const {
-    data: runesData,
-    error: runesError,
-    isLoading: runesIsLoading,
-  } = useQuery("runesData", () => getRunes(), {
-    refetchOnWindowFocus: false,
-  });
-
-  const langRegex = /^\/([a-z]{2})\//;
-  const langMatch = pathname.match(langRegex);
-  const language = langMatch ? langMatch[1] : "en";
-
   const { mutateAsync: handleDeleteBuild } = useMutation(
-    (buildId) => deleteBuild(axiosInstance, buildData._id),
+    () => deleteBuild(axiosInstance, buildData._id),
     {
       onSuccess: () => {
         router.push("/builds");

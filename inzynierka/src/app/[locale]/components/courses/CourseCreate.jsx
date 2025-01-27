@@ -24,7 +24,7 @@ const CourseCreate = () => {
   const { mutateAsync: handleCreateCourse } = useMutation(
     () => createCourse(axiosInstance, formValues),
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         router.push("/courses/my");
       },
       onError: (error) => {

@@ -1,14 +1,9 @@
 "use client";
-import React, { useState, useContext, useEffect, act } from "react";
+import React, { useContext } from "react";
 import { UserContext } from "../context/UserContext";
-import useAxios from "../hooks/useAxios";
-import Image from "next/image";
 import Link from "next/link";
 import FindPlayerForm from "./riot/FindPlayerForm";
-import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
-import { SearchContext } from "../context/SearchContext";
-import { useQuery } from "react-query";
 import { FaGooglePlay, FaComment, FaBookOpen } from "react-icons/fa";
 import {
   IoDesktopOutline,
@@ -17,12 +12,7 @@ import {
 } from "react-icons/io5";
 import { RITeamFill, RISwordFill } from "@icongo/ri";
 
-import Footer from "./Footer";
-
 const Mainpage = () => {
-  const { userData, isLogged, setUserData, setIsLogged } =
-    useContext(UserContext);
-
   const { t } = useTranslation();
 
   const tiles = [

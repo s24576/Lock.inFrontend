@@ -1,4 +1,4 @@
-import React, { useState, useContext, use } from "react";
+import React, { useState, useContext } from "react";
 import { useQuery, useMutation } from "react-query";
 import { useParams } from "next/navigation";
 import { UserContext } from "../../context/UserContext";
@@ -9,7 +9,7 @@ import addFilm from "../../api/courses/addFilm";
 import react from "../../api/comments/react";
 import { MdPhoto } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
-import { BiLike, BiDislike, BiEditAlt } from "react-icons/bi";
+import { BiLike, BiDislike } from "react-icons/bi";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { IoMdAdd } from "react-icons/io";
@@ -41,7 +41,6 @@ const CourseDetails = () => {
   const {
     refetch: refetchCourse,
     data: course,
-    error: courseError,
     isLoading: courseIsLoading,
   } = useQuery(
     ["courseDetailsData", params.courseId],
@@ -54,19 +53,15 @@ const CourseDetails = () => {
     }
   );
 
-  const {
-    refetch: authorProfileRefetch,
-    data: authorProfileData,
-    error: authorProfileError,
-    isLoading: authorProfileIsLoading,
-  } = useQuery(
-    "authorProfileData",
-    () => getShortProfile(axiosInstance, course.username),
-    {
-      enabled: !!course,
-      refetchOnWindowFocus: false,
-    }
-  );
+  const { data: authorProfileData, isLoading: authorProfileIsLoading } =
+    useQuery(
+      "authorProfileData",
+      () => getShortProfile(axiosInstance, course.username),
+      {
+        enabled: !!course,
+        refetchOnWindowFocus: false,
+      }
+    );
 
   const { mutateAsync: leaveReaction } = useMutation(
     (data) => react(axiosInstance, data.objectId, data.value),

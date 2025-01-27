@@ -1,13 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetClose,
-} from "@/componentsShad/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/componentsShad/ui/sheet";
 
 import { IoPeople, IoPersonAddSharp } from "react-icons/io5";
 import SockJS from "sockjs-client";
@@ -28,7 +20,7 @@ import sendFriendRequest from "../api/profile/sendFriendRequest";
 import getShortProfiles from "../api/profile/getShortProfiles";
 
 const FriendList = () => {
-  const { setUserData, isLogged, setIsLogged } = useContext(UserContext);
+  const { isLogged } = useContext(UserContext);
 
   const axiosInstance = useAxios();
 
@@ -43,54 +35,50 @@ const FriendList = () => {
 
   const [stompClient, setStompClient] = useState(null);
 
-  const {
-    refetch: invitesToMeRefetch,
-    data: invitesToMeData,
-    isLoading: invitesToMeIsLoading,
-  } = useQuery("getYourInvites", () => getYourInvites(axiosInstance), {
-    refetchOnWindowFocus: false,
-    onSuccess: (data) => {
-      setInvitesToMe(data.content || []);
-      const usernames = data.content.map((friend) => friend.from);
+  const { refetch: invitesToMeRefetch } = useQuery(
+    "getYourInvites",
+    () => getYourInvites(axiosInstance),
+    {
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        setInvitesToMe(data.content || []);
+        const usernames = data.content.map((friend) => friend.from);
 
-      setProfilesToMe(usernames);
-    },
-  });
+        setProfilesToMe(usernames);
+      },
+    }
+  );
 
-  const {
-    refetch: invitesFromMeRefetch,
-    data: invitesFromMeData,
-    isLoading: invitesFromMeIsLoading,
-  } = useQuery("getSentInvites", () => getSentInvites(axiosInstance), {
-    refetchOnWindowFocus: false,
-    onSuccess: (data) => {
-      setInvitesFromMe(data.content || []);
+  const { refetch: invitesFromMeRefetch } = useQuery(
+    "getSentInvites",
+    () => getSentInvites(axiosInstance),
+    {
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        setInvitesFromMe(data.content || []);
 
-      const usernames = data.content.map((friend) => friend.to);
-      setProfilesFromMe(usernames);
-    },
-  });
+        const usernames = data.content.map((friend) => friend.to);
+        setProfilesFromMe(usernames);
+      },
+    }
+  );
 
-  const {
-    refetch: userDataRefetch,
-    data: userData,
-    isLoading: userDataIsLoading,
-  } = useQuery("getUserData", () => getUserData(axiosInstance), {
-    refetchOnWindowFocus: false,
-    onSuccess: (data) => {
-      const usernames = data.friends.map((friend) =>
-        friend.username === data.username ? friend.username2 : friend.username
-      );
-      setUsernamesToFetch(usernames);
-    },
-  });
+  const { refetch: userDataRefetch, data: userData } = useQuery(
+    "getUserData",
+    () => getUserData(axiosInstance),
+    {
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        const usernames = data.friends.map((friend) =>
+          friend.username === data.username ? friend.username2 : friend.username
+        );
+        setUsernamesToFetch(usernames);
+      },
+    }
+  );
 
   //short profile do znajomych
-  const {
-    refetch: shortProfilesRefetch,
-    data: shortProfilesData,
-    isLoading: shortProfilesIsLoading,
-  } = useQuery(
+  const { data: shortProfilesData } = useQuery(
     ["shortProfilesData", usernamesToFetch],
     () => getShortProfiles(axiosInstance, usernamesToFetch),
     {
@@ -100,11 +88,7 @@ const FriendList = () => {
   );
 
   //short profile do zaproszen from me
-  const {
-    refetch: shortProfilesFromMeRefetch,
-    data: shortProfilesFromMeData,
-    isLoading: shortProfilesFromMeIsLoading,
-  } = useQuery(
+  const { data: shortProfilesFromMeData } = useQuery(
     ["shortProfilesData", profilesFromMe],
     () => getShortProfiles(axiosInstance, profilesFromMe),
     {
@@ -114,11 +98,7 @@ const FriendList = () => {
   );
 
   //short profile do zaproszen to me
-  const {
-    refetch: shortProfilesToMeRefetch,
-    data: shortProfilesToMeData,
-    isLoading: shortProfilesToMeIsLoading,
-  } = useQuery(
+  const { data: shortProfilesToMeData } = useQuery(
     ["shortProfilesToMeData", profilesToMe],
     () => getShortProfiles(axiosInstance, profilesToMe),
     {
@@ -227,7 +207,7 @@ const FriendList = () => {
       deleteFriend(axiosInstance, friendId);
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         userDataRefetch();
       },
       onError: (error) => {
@@ -242,7 +222,7 @@ const FriendList = () => {
       cancelFriendRequest(axiosInstance, requestId);
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         invitesFromMeRefetch();
       },
       onError: (error) => {

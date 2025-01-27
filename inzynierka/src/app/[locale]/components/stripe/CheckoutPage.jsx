@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  useStripe,
-  useElements,
-  CardElement,
-  PaymentElement,
-} from "@stripe/react-stripe-js";
+import { useStripe } from "@stripe/react-stripe-js";
 import useAxios from "../../hooks/useAxios";
 import { IoCartOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";

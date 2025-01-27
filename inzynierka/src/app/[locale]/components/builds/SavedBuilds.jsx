@@ -17,7 +17,6 @@ export const SavedBuilds = () => {
 
   const { isLogged } = useContext(UserContext);
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
-  const [championOptions, setChampionOptions] = useState([]);
 
   const axiosInstance = useAxios();
   const router = useRouter();
@@ -25,7 +24,6 @@ export const SavedBuilds = () => {
   const {
     refetch: refetchBuilds,
     data: buildsData,
-    error: buildsError,
     isLoading: buildsIsLoading,
   } = useQuery(
     "buildsData",
@@ -39,19 +37,15 @@ export const SavedBuilds = () => {
     }
   );
 
-  const {
-    refetch: shortProfilesRefetch,
-    data: shortProfilesData,
-    error: shortProfilesError,
-    isLoading: shortProfilesIsLoading,
-  } = useQuery(
-    "shortProfilesData",
-    () => getShortProfiles(axiosInstance, usernamesToFetch),
-    {
-      refetchOnWindowFocus: false,
-      enabled: usernamesToFetch?.length > 0,
-    }
-  );
+  const { data: shortProfilesData, isLoading: shortProfilesIsLoading } =
+    useQuery(
+      "shortProfilesData",
+      () => getShortProfiles(axiosInstance, usernamesToFetch),
+      {
+        refetchOnWindowFocus: false,
+        enabled: usernamesToFetch?.length > 0,
+      }
+    );
 
   //page
   const handlePageChange = async (newPage) => {

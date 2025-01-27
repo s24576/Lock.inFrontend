@@ -37,7 +37,6 @@ const Builds = () => {
   const {
     refetch: refetchBuilds,
     data: buildsData,
-    error: buildsError,
     isLoading: buildsIsLoading,
   } = useQuery(
     "buildsData",
@@ -57,46 +56,42 @@ const Builds = () => {
     }
   );
 
-  const {
-    refetch: shortProfilesRefetch,
-    data: shortProfilesData,
-    error: shortProfilesError,
-    isLoading: shortProfilesIsLoading,
-  } = useQuery(
-    "shortProfilesData",
-    () => getShortProfiles(axiosInstance, usernamesToFetch),
+  const { data: shortProfilesData, isLoading: shortProfilesIsLoading } =
+    useQuery(
+      "shortProfilesData",
+      () => getShortProfiles(axiosInstance, usernamesToFetch),
+      {
+        refetchOnWindowFocus: false,
+        enabled: usernamesToFetch.length > 0,
+      }
+    );
+
+  const { isLoading: championNamesIsLoading } = useQuery(
+    "championNamesData",
+    () => getChampionNames(axiosInstance),
     {
       refetchOnWindowFocus: false,
-      enabled: usernamesToFetch.length > 0,
+      onSuccess: (data) => {
+        const options = Object.entries(data).map(
+          ([championKey, championValue]) => ({
+            value: championKey,
+            label: (
+              <div className="flex items-center">
+                <Image
+                  src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championKey}.png`}
+                  alt={championValue}
+                  width={20}
+                  height={20}
+                />
+                <span className="ml-2">{championValue}</span>
+              </div>
+            ),
+          })
+        );
+        setChampionOptions(options);
+      },
     }
   );
-
-  const {
-    data: championNamesData,
-    error: championNamesError,
-    isLoading: championNamesIsLoading,
-  } = useQuery("championNamesData", () => getChampionNames(axiosInstance), {
-    refetchOnWindowFocus: false,
-    onSuccess: (data) => {
-      const options = Object.entries(data).map(
-        ([championKey, championValue]) => ({
-          value: championKey,
-          label: (
-            <div className="flex items-center">
-              <Image
-                src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championKey}.png`}
-                alt={championValue}
-                width={20}
-                height={20}
-              />
-              <span className="ml-2">{championValue}</span>
-            </div>
-          ),
-        })
-      );
-      setChampionOptions(options);
-    },
-  });
 
   //author
   const handleFilter = async (e) => {
