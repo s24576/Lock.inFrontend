@@ -1,6 +1,6 @@
 "use client";
-import React, { useContext, useState, useEffect } from "react";
-import { SearchContext } from "@/app/[locale]/context/SearchContext";
+import React, { useContext, useState } from "react";
+import { SearchContext } from "../context/SearchContext";
 import axios from "axios";
 import useAxios from "../hooks/useAxios";
 import useAxiosPublic from "../hooks/useAxiosPublic";
@@ -91,6 +91,8 @@ const queueOptions = [
 const SummonerProfile = () => {
   const { userData, setUserData, isLogged, setIsLogged } =
     useContext(UserContext);
+
+  const { version } = useContext(SearchContext);
 
   const [matchesShown, setMatchesShown] = useState(10);
   const [filterValue, setFilterValue] = useState("");
@@ -186,7 +188,7 @@ const SummonerProfile = () => {
           <Image
             src={
               "https://ddragon.leagueoflegends.com/cdn/" +
-              "15.1.1" +
+              version +
               "/img/profileicon/" +
               playerData.profileIconId +
               ".png"
@@ -442,7 +444,9 @@ const SummonerProfile = () => {
                     <div key={key} className="flex flex-col items-center">
                       <Image
                         src={
-                          "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/champion/" +
+                          "https://ddragon.leagueoflegends.com/cdn/" +
+                          version +
+                          "/img/champion/" +
                           champion.championName +
                           ".png"
                         }

@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import { SearchContext } from "../../context/SearchContext";
 import Image from "next/image";
 import Link from "next/link";
 import { formatTimestampToDateTime } from "@/lib/formatTimeAgo";
@@ -6,6 +7,7 @@ import fromUnixTime from "date-fns/fromUnixTime";
 import { format, formatDistanceToNow } from "date-fns";
 import { getSummonerSpell } from "@/lib/getSummonerSpell";
 import { useTranslation } from "react-i18next";
+import { useContext } from "react";
 
 const multiKill = (kills) => {
   switch (kills) {
@@ -35,6 +37,7 @@ const gamemode = (gameMode) => {
 
 const ShortMatch = ({ match }) => {
   const { t } = useTranslation();
+  const { version } = useContext(SearchContext);
 
   return (
     <div
@@ -46,7 +49,9 @@ const ShortMatch = ({ match }) => {
       <div className="">
         <Image
           src={
-            "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/champion/" +
+            "https://ddragon.leagueoflegends.com/cdn/" +
+            version +
+            "/img/champion/" +
             match.championName +
             ".png"
           }
@@ -59,7 +64,9 @@ const ShortMatch = ({ match }) => {
       <div className="flex flex-col gap-y-1 ml-3 w-[5%]">
         <Image
           src={
-            "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/spell/" +
+            "https://ddragon.leagueoflegends.com/cdn/" +
+            version +
+            "/img/spell/" +
             getSummonerSpell(match.summonerId1) +
             ".png"
           }
@@ -69,7 +76,9 @@ const ShortMatch = ({ match }) => {
         />
         <Image
           src={
-            "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/spell/" +
+            "https://ddragon.leagueoflegends.com/cdn/" +
+            version +
+            "/img/spell/" +
             getSummonerSpell(match.summonerId2) +
             ".png"
           }
@@ -116,7 +125,9 @@ const ShortMatch = ({ match }) => {
         {match.item0 !== 0 ? (
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/item/" +
               match.item0 +
               ".png"
             }
@@ -131,7 +142,9 @@ const ShortMatch = ({ match }) => {
         {match.item1 !== "0" ? (
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/item/" +
               match.item1 +
               ".png"
             }
@@ -146,7 +159,9 @@ const ShortMatch = ({ match }) => {
         {match.item2 !== "0" ? (
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/item/" +
               match.item2 +
               ".png"
             }
@@ -161,7 +176,9 @@ const ShortMatch = ({ match }) => {
         {match.item3 !== "0" ? (
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/item/" +
               match.item3 +
               ".png"
             }
@@ -176,7 +193,9 @@ const ShortMatch = ({ match }) => {
         {match.item4 !== "0" ? (
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/item/" +
               match.item4 +
               ".png"
             }
@@ -191,7 +210,9 @@ const ShortMatch = ({ match }) => {
         {match.item5 !== "0" ? (
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/item/" +
               match.item5 +
               ".png"
             }
@@ -208,7 +229,9 @@ const ShortMatch = ({ match }) => {
         {match.item6 !== "0" ? (
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/item/" +
               match.item6 +
               ".png"
             }

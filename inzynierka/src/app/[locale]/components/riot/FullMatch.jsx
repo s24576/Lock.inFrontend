@@ -4,6 +4,7 @@ import getMatchInfo from "../../api/riot/getMatchInfo";
 import useAxios from "../../hooks/useAxios";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { UserContext } from "../../context/UserContext";
+import { SearchContext } from "../../context/SearchContext";
 import Image from "next/image";
 import Link from "next/link";
 import { getSummonerSpell } from "@/lib/getSummonerSpell";
@@ -15,6 +16,7 @@ import { useTranslation } from "react-i18next";
 
 const FullMatch = ({ matchId }) => {
   const { isLogged } = useContext(UserContext);
+  const { version } = useContext(SearchContext);
   const { t } = useTranslation();
 
   const router = useRouter();
@@ -69,7 +71,9 @@ const FullMatch = ({ matchId }) => {
               >
                 <Image
                   src={
-                    "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/champion/" +
+                    "https://ddragon.leagueoflegends.com/cdn/" +
+                    version +
+                    "/img/champion/" +
                     participant.championName +
                     ".png"
                   }
@@ -80,7 +84,9 @@ const FullMatch = ({ matchId }) => {
                 <div className="flex flex-col gap-y-1 ml-2">
                   <Image
                     src={
-                      "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/spell/" +
+                      "https://ddragon.leagueoflegends.com/cdn/" +
+                      version +
+                      "/img/spell/" +
                       getSummonerSpell(participant.summoner1Id) +
                       ".png"
                     }
@@ -90,7 +96,9 @@ const FullMatch = ({ matchId }) => {
                   />
                   <Image
                     src={
-                      "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/spell/" +
+                      "https://ddragon.leagueoflegends.com/cdn/" +
+                      version +
+                      "/img/spell/" +
                       getSummonerSpell(participant.summoner2Id) +
                       ".png"
                     }
@@ -157,7 +165,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item0 !== 0 ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item0 +
                         ".png"
                       }
@@ -172,7 +182,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item1 !== "0" ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item1 +
                         ".png"
                       }
@@ -187,7 +199,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item2 !== "0" ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item2 +
                         ".png"
                       }
@@ -202,7 +216,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item3 !== "0" ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item3 +
                         ".png"
                       }
@@ -217,7 +233,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item4 !== "0" ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item4 +
                         ".png"
                       }
@@ -232,7 +250,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item5 !== "0" ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item5 +
                         ".png"
                       }
@@ -247,7 +267,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item6 !== 0 ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item6 +
                         ".png"
                       }
@@ -475,7 +497,9 @@ const FullMatch = ({ matchId }) => {
               >
                 <Image
                   src={
-                    "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/champion/" +
+                    "https://ddragon.leagueoflegends.com/cdn/" +
+                    version +
+                    "/img/champion/" +
                     participant.championName +
                     ".png"
                   }
@@ -486,7 +510,9 @@ const FullMatch = ({ matchId }) => {
                 <div className="flex flex-col gap-y-1 ml-2">
                   <Image
                     src={
-                      "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/spell/" +
+                      "https://ddragon.leagueoflegends.com/cdn/" +
+                      version +
+                      "/img/spell/" +
                       getSummonerSpell(participant.summoner1Id) +
                       ".png"
                     }
@@ -496,7 +522,9 @@ const FullMatch = ({ matchId }) => {
                   />
                   <Image
                     src={
-                      "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/spell/" +
+                      "https://ddragon.leagueoflegends.com/cdn/" +
+                      version +
+                      "/img/spell/" +
                       getSummonerSpell(participant.summoner2Id) +
                       ".png"
                     }
@@ -563,7 +591,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item0 !== 0 ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item0 +
                         ".png"
                       }
@@ -578,7 +608,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item1 !== "0" ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item1 +
                         ".png"
                       }
@@ -593,7 +625,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item2 !== "0" ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item2 +
                         ".png"
                       }
@@ -608,7 +642,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item3 !== "0" ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item3 +
                         ".png"
                       }
@@ -623,7 +659,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item4 !== "0" ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item4 +
                         ".png"
                       }
@@ -638,7 +676,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item5 !== "0" ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item5 +
                         ".png"
                       }
@@ -653,7 +693,9 @@ const FullMatch = ({ matchId }) => {
                   {participant.item6 !== 0 ? (
                     <Image
                       src={
-                        "https://ddragon.leagueoflegends.com/cdn/15.1.1/img/item/" +
+                        "https://ddragon.leagueoflegends.com/cdn/" +
+                        version +
+                        "/img/item/" +
                         participant.item6 +
                         ".png"
                       }
