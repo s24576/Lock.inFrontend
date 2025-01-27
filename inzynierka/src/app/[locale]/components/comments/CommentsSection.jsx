@@ -193,8 +193,6 @@ const CommentsSection = ({ id: objectId }) => {
     (comment) => addComment(axiosInstance, objectId, comment, showReplyInput),
     {
       onSuccess: (data) => {
-        console.log("comment created successfully:", data);
-
         refetchComments();
         refetchReplies();
         shortProfilesRefetch();
@@ -209,7 +207,6 @@ const CommentsSection = ({ id: objectId }) => {
     (commentId) => deleteComment(axiosInstance, commentId),
     {
       onSuccess: () => {
-        console.log("comment deleted:");
         refetchComments();
         refetchReplies();
       },
@@ -237,7 +234,6 @@ const CommentsSection = ({ id: objectId }) => {
     (data) => react(axiosInstance, data.objectId, data.value),
     {
       onSuccess: () => {
-        console.log("reaction created successfully:");
         refetchComments();
         refetchReplies();
       },
@@ -254,10 +250,7 @@ const CommentsSection = ({ id: objectId }) => {
   const handleCommentSubmit = async (e, comment) => {
     e.preventDefault();
 
-    console.log("New Comment:", comment);
-
     if (!comment.trim()) {
-      console.log("Comment is empty");
       return;
     }
 
@@ -561,7 +554,6 @@ const CommentsSection = ({ id: objectId }) => {
             <p
               className="w-[50%] text-center font-semibold text-[18px] mt-3 px-6 py-2 bg-transparent text-white-smoke border-[1px] border-white-smoke rounded-xl hover:bg-silver hover:bg-opacity-15 transition-all duration-100 cursor-pointer"
               onClick={() => {
-                console.log("increasing comments");
                 setNumberOfComments(numberOfComments + 5);
               }}
             >

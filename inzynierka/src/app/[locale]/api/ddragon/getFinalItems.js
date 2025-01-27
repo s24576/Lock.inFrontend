@@ -122,7 +122,6 @@ const getFinalItems = async (axiosInstance) => {
     const filteredData = response.data
       .filter((item) => !excludedIds.includes(item.id.toString()))
       .sort((a, b) => a.gold.total - b.gold.total);
-    console.log(filteredData);
     return filteredData;
   } catch (error) {
     console.log(error);

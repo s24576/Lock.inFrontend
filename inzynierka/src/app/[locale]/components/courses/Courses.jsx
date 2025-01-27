@@ -78,7 +78,6 @@ const Courses = () => {
     (courseData) => createCourse(axiosInstance, courseData),
     {
       onSuccess: (data) => {
-        console.log("Course created successfully:", data);
         refetchCourses();
       },
       onError: (error) => {

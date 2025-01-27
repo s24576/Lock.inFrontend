@@ -5,10 +5,8 @@ const followProfile = async (axiosIstance, server, puuid) => {
     const response = await axiosIstance.put(
       `/profile/manageWatchlist?server_puuid=${server_puuid}`
     );
-    console.log("followed/unfollowed profile");
   } catch (error) {
     console.error(error);
-    throw new Error("Error following/unfollowing profile");
   }
 };
 

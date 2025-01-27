@@ -23,9 +23,6 @@ export default function LanguageChanger() {
   const { mutateAsync: handleChangeLocale } = useMutation(
     (newLocale) => changeLocale(axiosInstance, newLocale),
     {
-      onSuccess: (data) => {
-        console.log("locale changed successfully:", data);
-      },
       onError: (error) => {
         console.error("Error locale change:", error);
       },

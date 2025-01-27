@@ -5,10 +5,6 @@ const getBuilds = async (axiosInstance, page, author, championId) => {
     page = 0;
   }
 
-  console.log("page", page);
-  console.log("author", author);
-  console.log("championId", championId);
-
   try {
     let url = `/build/getBuilds?size=${size}&page=${page}`;
 
@@ -21,7 +17,6 @@ const getBuilds = async (axiosInstance, page, author, championId) => {
     }
 
     const response = await axiosInstance.get(url);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.log(error);

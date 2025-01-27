@@ -17,7 +17,6 @@ export function SearchContextProvider({ children }) {
     const getV = async () => {
       try {
         const version = await getVersion();
-        console.log(version);
         setVersion(version);
       } catch (error) {
         console.log(error);

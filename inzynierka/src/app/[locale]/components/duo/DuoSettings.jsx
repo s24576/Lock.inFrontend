@@ -55,7 +55,6 @@ const DuoSettings = ({ riotProfiles }) => {
 
   const CustomSingleValue = (props) => {
     const { data } = props;
-    console.log("dziwna data", data);
     return (
       <components.SingleValue {...props}>
         <div className="flex items-center justify-between gap-x-4">

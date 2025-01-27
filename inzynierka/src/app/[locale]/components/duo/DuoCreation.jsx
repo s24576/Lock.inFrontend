@@ -156,7 +156,6 @@ const DuoCreation = () => {
     (formData) => createDuo(axiosInstance, formData),
     {
       onSuccess: (data) => {
-        console.log("Duo created successfully:", data);
         setDuoBody({
           positions: [],
           lookedPositions: [],

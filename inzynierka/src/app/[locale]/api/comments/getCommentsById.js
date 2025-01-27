@@ -1,9 +1,6 @@
 import axios from "axios";
 
 const getCommentsById = async (objectId, token, size) => {
-  console.log(token);
-  console.log("size,", size);
-
   try {
     const headers = {
       "Accept-Language": "en",
@@ -19,11 +16,9 @@ const getCommentsById = async (objectId, token, size) => {
         headers,
       }
     );
-    console.log("comments:", response.data);
     return response.data;
   } catch (error) {
     console.error(error);
-    throw new Error("Error fetching comments");
   }
 };
 

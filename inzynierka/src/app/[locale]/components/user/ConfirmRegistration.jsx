@@ -19,7 +19,6 @@ const ConfirmRegistration = () => {
       confirmRegistration(axiosInstance, confirmationToken),
     {
       onSuccess: () => {
-        console.log("Account confirmed successfully");
         router.push("/");
       },
       onError: () => {
@@ -31,9 +30,7 @@ const ConfirmRegistration = () => {
   const { mutateAsync: handleResendConfirmationToken } = useMutation(
     () => resendConfirmationToken(axiosInstance),
     {
-      onSuccess: () => {
-        console.log("Token sent successfully");
-      },
+      onSuccess: () => {},
       onError: () => {
         console.error("Error sending token account");
       },

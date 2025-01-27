@@ -34,9 +34,6 @@ const ReportForm = ({ objectType, objectId }) => {
         message: comment,
       }),
     {
-      onSuccess: (data) => {
-        console.log("report created successfully:", data);
-      },
       onError: (error) => {
         console.error("Error creating report:", error);
       },
@@ -45,12 +42,6 @@ const ReportForm = ({ objectType, objectId }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Report submitted:", {
-      objectType,
-      objectId,
-      selectedReason,
-      comment,
-    });
 
     try {
       await addNewReport();

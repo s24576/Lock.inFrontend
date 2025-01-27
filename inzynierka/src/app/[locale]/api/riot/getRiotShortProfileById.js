@@ -10,11 +10,9 @@ const getRiotShortProfileById = async (language, server_puuid) => {
         },
       }
     );
-    console.log("short riot profile by id:", response.data);
     return response.data;
   } catch (error) {
     console.error(error);
-    throw new Error("Error fetching duos");
   }
 };
 

@@ -201,7 +201,6 @@ const FriendList = () => {
     },
     {
       onSuccess: (data) => {
-        console.log("Success adding friend:", data);
         setUsernameInput("");
       },
       onError: (error) => {
@@ -216,9 +215,6 @@ const FriendList = () => {
       respondFriendRequest(axiosInstance, reqId, response);
     },
     {
-      onSuccess: (data) => {
-        console.log("Success action with friend request:", data);
-      },
       onError: (error) => {
         console.error("Error dwith friend request:", error);
       },
@@ -232,8 +228,6 @@ const FriendList = () => {
     },
     {
       onSuccess: (data) => {
-        console.log("Friend deleted succesfully:", data);
-
         userDataRefetch();
       },
       onError: (error) => {
@@ -249,7 +243,6 @@ const FriendList = () => {
     },
     {
       onSuccess: (data) => {
-        console.log("Friend request cancelled succesfully:", data);
         invitesFromMeRefetch();
       },
       onError: (error) => {

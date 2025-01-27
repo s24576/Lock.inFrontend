@@ -72,7 +72,6 @@ const CourseDetails = () => {
     (data) => react(axiosInstance, data.objectId, data.value),
     {
       onSuccess: () => {
-        console.log("reaction created successfully:");
         refetchCourse();
       },
       onError: (error) => {
@@ -85,7 +84,6 @@ const CourseDetails = () => {
     () => addFilm(axiosInstance, newVideo, course?._id),
     {
       onSuccess: () => {
-        console.log("film created successfully:");
         refetchCourse();
       },
       onError: (error) => {

@@ -1,6 +1,4 @@
 const resetPassword = async (axiosInstance, email) => {
-  console.log("resetting password: ", email);
-
   try {
     const response = await axiosInstance.put(
       `http://localhost:8080/user/resetPassword`,
@@ -13,11 +11,9 @@ const resetPassword = async (axiosInstance, email) => {
         },
       }
     );
-    console.log("password has been reset: ", response.data);
     return response.data;
   } catch (error) {
     console.log("Error resetting password:", error);
-    throw new Error("Error resetting password:");
   }
 };
 

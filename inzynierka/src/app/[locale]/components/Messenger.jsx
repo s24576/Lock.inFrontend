@@ -144,7 +144,6 @@ const Messenger = () => {
     },
     {
       onSuccess: (data) => {
-        console.log("Success adding msg:", data);
         setLocalLastMessage({
           message: newMessage,
           timestamp: Math.floor(Date.now() / 1000),
@@ -203,7 +202,6 @@ const Messenger = () => {
     },
     {
       onSuccess: (data) => {
-        console.log("Success adding msg:", data);
         setNewMessage("");
         chatsRefetch();
         messagesRefetch();
@@ -254,7 +252,6 @@ const Messenger = () => {
           `/user/${userData.username}/messenger/message`,
           (message) => {
             const parsed = JSON.parse(message.body);
-            console.log("new message received: ", parsed);
             chatsRefetch();
             messagesRefetch();
           }

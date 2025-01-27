@@ -63,9 +63,6 @@ const Profile = () => {
       sendFriendRequest(axiosInstance, profileData._id);
     },
     {
-      onSuccess: (data) => {
-        console.log("Success adding friend:", data);
-      },
       onError: (error) => {
         console.error("Error adding friend:", error);
       },

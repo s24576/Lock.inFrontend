@@ -7,11 +7,9 @@ const getChampionNames = async (axiosInstance) => {
       ([, a], [, b]) => a.localeCompare(b)
     );
 
-    console.log(Object.fromEntries(sortedChampionNames));
     return Object.fromEntries(sortedChampionNames);
   } catch (error) {
     console.error(error);
-    throw new Error("Error fetching champion names");
   }
 };
 

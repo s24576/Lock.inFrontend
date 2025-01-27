@@ -79,7 +79,6 @@ const Navbar = () => {
             ...prevUserData,
             ...response.data,
           }));
-          console.log(response.data);
           setIsLogged(true);
         }
       } catch (error) {

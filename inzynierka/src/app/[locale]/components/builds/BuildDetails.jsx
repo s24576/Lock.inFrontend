@@ -97,7 +97,6 @@ const BuildDetails = () => {
     (buildId) => deleteBuild(axiosInstance, buildData._id),
     {
       onSuccess: () => {
-        console.log("build deleted:");
         router.push("/builds");
       },
       onError: (error) => {
@@ -122,7 +121,6 @@ const BuildDetails = () => {
     (data) => react(axiosInstance, data.objectId, data.value),
     {
       onSuccess: () => {
-        console.log("reaction created successfully:");
         refetchBuild();
       },
       onError: (error) => {

@@ -16,11 +16,9 @@ const getResponsesById = async (commentId, token) => {
         headers,
       }
     );
-    console.log("repliues:", response.data);
     return response.data;
   } catch (error) {
     console.error(error);
-    throw new Error("Error fetching replies");
   }
 };
 

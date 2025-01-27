@@ -164,12 +164,10 @@ const SummonerProfile = () => {
   );
 
   const handleQueueFilter = async (value) => {
-    console.log(value.value);
     setQueue(value.value);
   };
 
   const toggleFullMatch = (matchId) => {
-    console.log("siema");
     setShowFullMatch(showFullMatch === matchId ? null : matchId);
   };
 

@@ -277,7 +277,6 @@ const CreateBuild = () => {
   const { mutateAsync: handleCreateBuild, isLoading: isCreatingBuild } =
     useMutation((requestBody) => createBuild(axiosInstance, requestBody), {
       onSuccess: (data) => {
-        console.log("build created successfully:", data);
         router.push("/builds/" + data);
       },
       onError: (error) => {

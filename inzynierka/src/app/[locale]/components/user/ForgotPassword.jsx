@@ -12,9 +12,7 @@ const ForgotPassword = () => {
   const { mutateAsync: sendEmail } = useMutation(
     (email) => resetPassword(axiosInstance, email),
     {
-      onSuccess: () => {
-        console.log("Reset password email sent successfully");
-      },
+      onSuccess: () => {},
       onError: () => {
         console.error("Error sending reset password email");
       },

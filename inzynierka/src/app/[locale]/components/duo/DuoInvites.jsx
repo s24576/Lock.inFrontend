@@ -38,7 +38,6 @@ const DuoInvites = () => {
     {
       onSuccess: () => {
         duoInvitesRefetch();
-        console.log("Duo invite answered successfully");
       },
       onError: () => {
         console.error("Error answering duo invite");

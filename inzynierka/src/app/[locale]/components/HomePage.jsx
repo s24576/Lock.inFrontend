@@ -127,7 +127,6 @@ const HomePage = () => {
   };
 
   const toggleFullMatch = (matchId) => {
-    console.log("siema");
     setShowFullMatch(showFullMatch === matchId ? null : matchId);
   };
 

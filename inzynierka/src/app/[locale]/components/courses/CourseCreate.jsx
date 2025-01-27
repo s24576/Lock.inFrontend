@@ -14,7 +14,7 @@ const CourseCreate = () => {
     price: 0,
     picture: "",
   });
-  
+
   const [validationError, setValidationError] = useState("");
   const axiosInstance = useAxios();
   const router = useRouter();
@@ -25,7 +25,6 @@ const CourseCreate = () => {
     () => createCourse(axiosInstance, formValues),
     {
       onSuccess: (data) => {
-        console.log("course created successfully:", data);
         router.push("/courses/my");
       },
       onError: (error) => {
@@ -190,16 +189,17 @@ const CourseCreate = () => {
               {t("courses:createCourseFirst")}
             </p>
 
-
             <button
               type="submit"
               className="w-[20%] border-white-smoke border-[1px] rounded-xl text-white-smoke mt-[5%] px-6 py-2 text-[20px] mx-auto bg-transparent hover:bg-silver-hover transition-all duration-150"
-              >
+            >
               {t("courses:publishCourse")}
             </button>
-              {validationError && (
-                <p className="text-amber text-center mt-4 mb-2">{validationError}</p>
-              )}
+            {validationError && (
+              <p className="text-amber text-center mt-4 mb-2">
+                {validationError}
+              </p>
+            )}
           </form>
         </div>
       </div>

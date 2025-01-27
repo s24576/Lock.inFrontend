@@ -56,7 +56,6 @@ const Notifications = () => {
           `/user/${userData.username}/messenger/message`,
           (message) => {
             const parsed = JSON.parse(message.body);
-            console.log(parsed);
             toast.custom(
               (t) => (
                 <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">
@@ -89,7 +88,6 @@ const Notifications = () => {
         client.subscribe(
           `/user/${userData.username}/notification`,
           (message) => {
-            console.log("Notification: ", message.body);
             toast.custom(
               (t) => (
                 <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">

@@ -10,11 +10,9 @@ const getDuoById = async (language, duoId) => {
         },
       }
     );
-    console.log("duo by id:", response.data);
     return response.data;
   } catch (error) {
     console.error(error);
-    throw new Error("Error fetching duos");
   }
 };
 

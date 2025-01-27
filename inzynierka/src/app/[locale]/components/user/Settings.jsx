@@ -58,7 +58,6 @@ const Profile = () => {
 
     try {
       await uploadBio(bio);
-      console.log("success");
     } catch (error) {
       console.error("Error updating bio:", error);
     }
@@ -76,7 +75,6 @@ const Profile = () => {
     (bio) => addBio(axiosInstance, bio),
     {
       onSuccess: () => {
-        console.log("bio uploaded successfully");
         setUserData((prevData) => ({
           ...prevData,
           bio: bio,
@@ -97,17 +95,11 @@ const Profile = () => {
     const formData = new FormData();
     formData.append("image", selectedFile);
 
-    console.log("FormData contents:");
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-
     try {
       const response = await axiosInstance.post(
         "/profile/addProfilePicture",
         formData
       );
-      console.log("Profile picture uploaded successfully:", response.data);
     } catch (error) {
       console.error("Error submitting profile picture:", error);
     }
@@ -124,13 +116,17 @@ const Profile = () => {
 
   const { mutateAsync: handleChangePassword } = useMutation(
     ({ oldPassword, newPassword, confirmPassword }) =>
-      changePassword(axiosInstance, oldPassword, newPassword, confirmPassword)
-        .then(response => {
-          if (response.status !== 200) {
-            throw new Error('Password change failed');
-          }
-          return response;
-        }),
+      changePassword(
+        axiosInstance,
+        oldPassword,
+        newPassword,
+        confirmPassword
+      ).then((response) => {
+        if (response.status !== 200) {
+          throw new Error("Password change failed");
+        }
+        return response;
+      }),
     {
       onSuccess: () => {
         toast.custom(
@@ -188,14 +184,13 @@ const Profile = () => {
   );
 
   const { mutateAsync: handleChangeEmail } = useMutation(
-    ({ password, email }) => 
-      changeEmail(axiosInstance, password, email)
-        .then(response => {
-          if (response.status !== 200) {
-            throw new Error('Email change failed');
-          }
-          return response;
-        }),
+    ({ password, email }) =>
+      changeEmail(axiosInstance, password, email).then((response) => {
+        if (response.status !== 200) {
+          throw new Error("Email change failed");
+        }
+        return response;
+      }),
     {
       onSuccess: () => {
         toast.custom(
@@ -278,7 +273,7 @@ const Profile = () => {
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
     setPasswordError("");
-    
+
     if (!validatePasswordForm()) {
       return;
     }
@@ -417,7 +412,9 @@ const Profile = () => {
                 className="w-full px-3 py-2 text-[18px]  bg-transparent rounded-xl focus:outline-none text-white-smoke border-[1px] border-white-smoke"
               />
               {passwordError && (
-                <p className="text-amber text-[14px] text-center">{passwordError}</p>
+                <p className="text-amber text-[14px] text-center">
+                  {passwordError}
+                </p>
               )}
               <button
                 type="submit"

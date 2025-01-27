@@ -112,7 +112,6 @@ const Duo = () => {
     refetchOnWindowFocus: false,
     enabled: isLogged === true,
     onSuccess: (data) => {
-      console.log(data);
       if (data && data.length === 1) {
         setDuoSettings((prevSettings) => ({
           ...prevSettings,
@@ -212,7 +211,6 @@ const Duo = () => {
     ({ puuid, duoId }) => answerDuo(axiosInstance, puuid, duoId),
     {
       onSuccess: () => {
-        console.log("Duo answered successfully");
         toast.success("Duo answered successfully");
       },
       onError: () => {
@@ -238,7 +236,6 @@ const Duo = () => {
   }, [duos]);
 
   useEffect(() => {
-    console.log("refetching duos", filterBody);
     const refetch = async () => {
       await refetchDuos();
     };
@@ -555,7 +552,6 @@ const Duo = () => {
                         {duo.author !== userData?.username && (
                           <BiSolidLock
                             onClick={() => {
-                              console.log("dodawanie duo");
                               answerDuoMutation({
                                 puuid: riotProfiles[0].puuid,
                                 duoId: duo._id,
