@@ -466,10 +466,10 @@ const Messenger = () => {
         </div>
 
         <div className="w-[70%] pt-[5%] h-screen overflow-y-auto z-10">
-          {chatByIdIsLoading && messagesIsLoading && (
+          {/* {chatByIdIsLoading && messagesIsLoading && (
             <div>{t("common:messenger.loading")}</div>
-          )}
-          {chatByIdData && messagesData && (
+          )} */}
+          {chatByIdData && (
             <div className="w-full h-full flex flex-col gap-y-2">
               <div className="flex justify-between items-center w-full px-[3%]">
                 <p className="text-[32px]">
@@ -565,7 +565,7 @@ const Messenger = () => {
               </div>
 
               <div className="flex flex-col gap-y-1 px-[3%] w-full overflow-y-auto items-center mb-[10%]">
-                {messagesSize < messagesData.page.totalElements && (
+                {messagesSize < messagesData?.page.totalElements && (
                   <div className="flex items-center justify-center hover:text-amber cursor-pointer duration-150 transition-all">
                     <FaPlus
                       onClick={() => setMessagesSize(messagesSize + 20)}
@@ -573,7 +573,7 @@ const Messenger = () => {
                     ></FaPlus>
                   </div>
                 )}
-                {messagesData.content
+                {messagesData?.content
                   .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
                   .map((message, key) => {
                     const isUserMessage = message.userId === userData.username;
@@ -612,7 +612,7 @@ const Messenger = () => {
                           {message.respondingTo !== null && (
                             <p>
                               Responding to:{" "}
-                              {messagesData.content.find(
+                              {messagesData?.content.find(
                                 (msg) => msg._id === message.respondingTo
                               )?.message || "Message not found"}
                             </p>
@@ -667,9 +667,9 @@ const Messenger = () => {
               </div>
             </div>
           )}
-          {chatByIdData && !messagesData && (
+          {/* {chatByIdData && !messagesData && (
             <div>{t("common:messenger.noMessages")}</div>
-          )}
+          )} */}
         </div>
       </div>
     );
