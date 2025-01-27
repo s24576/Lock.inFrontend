@@ -1,7 +1,7 @@
 const resetPassword = async (axiosInstance, email) => {
   try {
     const response = await axiosInstance.put(
-      `http://localhost:8080/user/resetPassword`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/resetPassword`,
       {
         email,
       },

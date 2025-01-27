@@ -3,7 +3,7 @@ import axios from "axios";
 const getRiotShortProfileById = async (language, server_puuid) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/riot/getRiotProfileByPuuid?server_puuid=${server_puuid}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/riot/getRiotProfileByPuuid?server_puuid=${server_puuid}`,
       {
         headers: {
           "Accept-Language": language,

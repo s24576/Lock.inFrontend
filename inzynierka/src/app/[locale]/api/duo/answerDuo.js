@@ -1,7 +1,7 @@
 const answerDuo = async (axiosIstance, puuid, duoId) => {
   try {
     const response = await axiosIstance.post(
-      `http://localhost:8080/api/duo/answerDuo?duoId=${duoId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/duo/answerDuo?duoId=${duoId}`,
       {
         puuid: puuid,
       }

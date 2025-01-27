@@ -1,7 +1,7 @@
 import axios from "axios";
 import { usePathname } from "next/navigation";
 
-const baseURL = "http://localhost:8080";
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const useAxiosPublic = () => {
   const pathname = usePathname();

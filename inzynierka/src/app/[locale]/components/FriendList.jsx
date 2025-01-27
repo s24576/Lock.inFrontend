@@ -108,7 +108,7 @@ const FriendList = () => {
   );
 
   useEffect(() => {
-    const socket = new SockJS("http://localhost:8080/ws");
+    const socket = new SockJS(process.env.NEXT_PUBLIC_BACKEND_URL + "/ws");
     const client = new Client({
       webSocketFactory: () => socket,
       debug: function (str) {},

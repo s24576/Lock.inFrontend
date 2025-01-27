@@ -6,7 +6,7 @@ const getAnswersDuo = async (axiosInstance, page) => {
   }
   try {
     const response = await axiosInstance.get(
-      `http://localhost:8080/api/duo/getAnswersDuo?page=${page}&size=${size}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/duo/getAnswersDuo?page=${page}&size=${size}`,
       {}
     );
     return response.data;

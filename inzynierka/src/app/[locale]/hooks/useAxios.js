@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { usePathname } from "next/navigation";
 
-const baseURL = "http://localhost:8080";
+const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const useAxios = () => {
   const context = useContext(UserContext);

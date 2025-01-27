@@ -11,7 +11,7 @@ const getCommentsById = async (objectId, token, size) => {
     }
 
     const response = await axios.get(
-      `http://localhost:8080/comments/getComments?objectId=${objectId}&size=${size}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/comments/getComments?objectId=${objectId}&size=${size}`,
       {
         headers,
       }

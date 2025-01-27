@@ -3,7 +3,7 @@ import axios from "axios";
 const getDuoById = async (language, duoId) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/duo/getDuoById?duoId=${duoId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/duo/getDuoById?duoId=${duoId}`,
       {
         headers: {
           "Accept-Language": language,

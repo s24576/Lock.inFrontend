@@ -5,7 +5,7 @@ const getVersion = async (language) => {
 
   try {
     const response = await axios.get(
-      `http://localhost:8080/ddragon/getVersion`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/ddragon/getVersion`,
       {
         headers: {
           "Accept-Language": language,
