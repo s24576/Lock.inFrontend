@@ -13,10 +13,10 @@ const respondFriendRequest = async (axiosInstance, reqId, response) => {
       requestId: reqId,
     });
     console.log("responding friend request : ", result.data);
-    return result.data; // Zwracamy dane
+    return result.data;
   } catch (error) {
     console.log("Error fetching responding friend request:", error);
-    throw new Error("Error fetching responding friend request"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error fetching responding friend request");
   }
 };
 

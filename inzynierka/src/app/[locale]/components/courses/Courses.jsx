@@ -43,13 +43,10 @@ const Courses = () => {
     {
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
-        // Wyekstrahuj username z każdego obiektu i przypisz do zmiennej
         const usernames = data?.content?.map((build) => build.username);
-        // Przypisz do odpowiedniej zmiennej lub użyj setUsernamesToFollow
         setUsernamesToFetch(usernames);
 
         const previewIds = data?.content?.slice(0, 5).map((build) => build._id);
-        // Przypisz previewIds do zmiennej
         setPreviewIds(previewIds);
       },
     }
@@ -92,7 +89,6 @@ const Courses = () => {
 
   //page
   const handlePageChange = async (newPage) => {
-    // Zaktualizuj numer strony
     setFilterParams((prev) => ({
       ...prev,
       page: newPage,
@@ -100,7 +96,6 @@ const Courses = () => {
 
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    // Refetch kursów głównych
     await refetchCourses();
 
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -192,7 +187,6 @@ const Courses = () => {
               })}
               {coursesData && (
                 <div className="flex justify-center items-center gap-x-4 mt-6 py-6 text-[20px]">
-                  {/* Jeśli strona jest większa niż 1, wyświetl przycisk "Back" */}
                   {filterParams.page > 0 && (
                     <p
                       className="cursor-pointer hover:text-amber duration-100 transition-colors"
@@ -202,9 +196,8 @@ const Courses = () => {
                     </p>
                   )}
 
-                  {/* Wyświetl numery stron w zakresie 5 stron */}
                   {Array.from({ length: 5 }, (_, i) => {
-                    const pageNumber = filterParams.page + i - 2; // Tworzymy tablicę z 5 stron
+                    const pageNumber = filterParams.page + i - 2;
                     if (
                       pageNumber >= 0 &&
                       pageNumber < coursesData.page.totalPages
@@ -226,7 +219,6 @@ const Courses = () => {
                     return null;
                   })}
 
-                  {/* Jeśli strona jest mniejsza niż ostatnia, wyświetl przycisk "Next" */}
                   {filterParams.page < coursesData.page.totalPages - 1 && (
                     <p
                       className="cursor-pointer hover:text-amber duration-100 transition-colors"

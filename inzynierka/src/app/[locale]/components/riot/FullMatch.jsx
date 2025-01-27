@@ -329,7 +329,7 @@ const FullMatch = ({ matchId }) => {
                           matchData.info.teams[1].objectives.champion.kills ||
                           1)) *
                       100
-                    }%`, // Dodajemy || 1, aby uniknąć dzielenia przez zero
+                    }%`,
                   }}
                 >
                   <p className="text-night pl-2">
@@ -347,7 +347,7 @@ const FullMatch = ({ matchId }) => {
                           matchData.info.teams[1].objectives.champion.kills ||
                           1)) *
                       100
-                    }%`, // Dodajemy || 1, aby uniknąć dzielenia przez zero
+                    }%`,
                   }}
                 >
                   <p className="text-night pr-2">
@@ -364,11 +364,10 @@ const FullMatch = ({ matchId }) => {
                     matchData.info.teams[0].win ? "bg-amber" : "bg-silver"
                   }`}
                   style={{
-                    // Jeśli suma baronów wynosi 0, ustawiamy szerokości na 50%/50%, w przeciwnym razie obliczamy normalnie
                     width: `${
                       matchData.info.teams[0].objectives.baron.kills === 0 &&
                       matchData.info.teams[1].objectives.baron.kills === 0
-                        ? 50 // Jeśli obie drużyny mają 0 baronów, ustawiamy 50%/50%
+                        ? 50
                         : (matchData.info.teams[0].objectives.baron.kills /
                             (matchData.info.teams[0].objectives.baron.kills +
                               matchData.info.teams[1].objectives.baron.kills ||
@@ -386,11 +385,10 @@ const FullMatch = ({ matchId }) => {
                     matchData.info.teams[1].win ? "bg-amber" : "bg-silver"
                   }`}
                   style={{
-                    // Jeśli suma baronów wynosi 0, ustawiamy szerokości na 50%/50%, w przeciwnym razie obliczamy normalnie
                     width: `${
                       matchData.info.teams[0].objectives.baron.kills === 0 &&
                       matchData.info.teams[1].objectives.baron.kills === 0
-                        ? 50 // Jeśli obie drużyny mają 0 baronów, ustawiamy 50%/50%
+                        ? 50
                         : (matchData.info.teams[1].objectives.baron.kills /
                             (matchData.info.teams[0].objectives.baron.kills +
                               matchData.info.teams[1].objectives.baron.kills ||
@@ -413,11 +411,10 @@ const FullMatch = ({ matchId }) => {
                     matchData.info.teams[0].win ? "bg-amber" : "bg-silver"
                   }`}
                   style={{
-                    // Jeśli suma baronów wynosi 0, ustawiamy szerokości na 50%/50%, w przeciwnym razie obliczamy normalnie
                     width: `${
                       matchData.info.teams[0].objectives.dragon.kills === 0 &&
                       matchData.info.teams[1].objectives.dragon.kills === 0
-                        ? 50 // Jeśli obie drużyny mają 0 baronów, ustawiamy 50%/50%
+                        ? 50
                         : (matchData.info.teams[0].objectives.dragon.kills /
                             (matchData.info.teams[0].objectives.dragon.kills +
                               matchData.info.teams[1].objectives.dragon.kills ||
@@ -435,11 +432,10 @@ const FullMatch = ({ matchId }) => {
                     matchData.info.teams[1].win ? "bg-amber" : "bg-silver"
                   }`}
                   style={{
-                    // Jeśli suma baronów wynosi 0, ustawiamy szerokości na 50%/50%, w przeciwnym razie obliczamy normalnie
                     width: `${
                       matchData.info.teams[0].objectives.dragon.kills === 0 &&
                       matchData.info.teams[1].objectives.dragon.kills === 0
-                        ? 50 // Jeśli obie drużyny mają 0 baronów, ustawiamy 50%/50%
+                        ? 50
                         : (matchData.info.teams[1].objectives.dragon.kills /
                             (matchData.info.teams[0].objectives.dragon.kills +
                               matchData.info.teams[1].objectives.dragon.kills ||

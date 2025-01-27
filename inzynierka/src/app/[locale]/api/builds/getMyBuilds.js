@@ -8,7 +8,6 @@ const getMyBuilds = async (axiosInstance, page) => {
   console.log("page", page);
 
   try {
-    // Budowanie URL-a dynamicznie
     let url = `/build/getMyBuilds?size=${size}&page=${page}`;
 
     const response = await axiosInstance.get(url);

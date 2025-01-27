@@ -4,7 +4,7 @@ const getRiotShortProfiles = async (axiosInstance, duos) => {
   try {
     console.log("data samych puuid", data);
     const response = await axiosInstance.post("/riot/getRiotProfiles", {
-      riotProfiles: data, // Przekaż tablicę puuids jako element body
+      riotProfiles: data,
     });
     console.log("short profiles", response.data);
     return response.data;

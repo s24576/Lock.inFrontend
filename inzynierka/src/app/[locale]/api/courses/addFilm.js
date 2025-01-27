@@ -7,10 +7,10 @@ const addFilm = async (axiosInstance, filmData, courseId) => {
       filmData
     );
     console.log("film created: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error adding film:", error);
-    throw new Error("Error adding film:"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error adding film:");
   }
 };
 

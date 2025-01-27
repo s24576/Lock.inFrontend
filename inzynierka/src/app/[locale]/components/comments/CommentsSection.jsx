@@ -51,7 +51,6 @@ const CommentsSection = ({ id: objectId }) => {
   const [showReplyInput, setShowReplyInput] = useState("");
 
   const [numberOfComments, setNumberOfComments] = useState(5);
-  const [numberOfReplies, setNumberOfReplies] = useState(5);
 
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
 
@@ -66,7 +65,7 @@ const CommentsSection = ({ id: objectId }) => {
     error: commentsError,
     isLoading: commentsIsLoading,
   } = useQuery(
-    ["commentsData", numberOfComments], // Dynamiczny klucz
+    ["commentsData", numberOfComments],
     () =>
       getCommentsById(
         objectId,
@@ -89,15 +88,15 @@ const CommentsSection = ({ id: objectId }) => {
               if (
                 existingItem.likesCount !== newItem.likesCount ||
                 existingItem.dislikesCount !== newItem.dislikesCount ||
-                existingItem.canReact !== newItem.canReact || // Sprawdź zmianę w canReact
-                existingItem.reaction !== newItem.reaction // Sprawdź zmianę w reaction
+                existingItem.canReact !== newItem.canReact ||
+                existingItem.reaction !== newItem.reaction
               ) {
                 acc.push({
                   ...existingItem,
                   likesCount: newItem.likesCount,
                   dislikesCount: newItem.dislikesCount,
-                  canReact: newItem.canReact, // Aktualizuj canReact
-                  reaction: newItem.reaction, // Aktualizuj reaction
+                  canReact: newItem.canReact,
+                  reaction: newItem.reaction,
                 });
               } else {
                 acc.push(existingItem);
@@ -112,22 +111,19 @@ const CommentsSection = ({ id: objectId }) => {
           return {
             ...prev,
             content: newContent,
-            page: { ...prev.page, ...data.page }, // Aktualizacja obiektu page
+            page: { ...prev.page, ...data.page },
           };
         });
 
         const usernames = data.content.map((build) => build.username);
 
-        // Upewnij się, że username są unikalne i nie powtarzają się
         setUsernamesToFetch((prevUsernames) => {
           const uniqueUsernames = new Set([...prevUsernames, ...usernames]);
-          return Array.from(uniqueUsernames); // Zamień Set na tablicę, aby zachować unikalność
+          return Array.from(uniqueUsernames);
         });
       },
     }
   );
-
-  //number of coments refetch przy zmianie tej wartosci
 
   const {
     refetch: refetchReplies,
@@ -157,15 +153,15 @@ const CommentsSection = ({ id: objectId }) => {
               if (
                 existingItem.likesCount !== newItem.likesCount ||
                 existingItem.dislikesCount !== newItem.dislikesCount ||
-                existingItem.canReact !== newItem.canReact || // Sprawdź zmianę w canReact
-                existingItem.reaction !== newItem.reaction // Sprawdź zmianę w reaction
+                existingItem.canReact !== newItem.canReact ||
+                existingItem.reaction !== newItem.reaction
               ) {
                 acc.push({
                   ...existingItem,
                   likesCount: newItem.likesCount,
                   dislikesCount: newItem.dislikesCount,
-                  canReact: newItem.canReact, // Aktualizuj canReact
-                  reaction: newItem.reaction, // Aktualizuj reaction
+                  canReact: newItem.canReact,
+                  reaction: newItem.reaction,
                 });
               } else {
                 acc.push(existingItem);
@@ -185,10 +181,9 @@ const CommentsSection = ({ id: objectId }) => {
 
         const usernames = newData.content.map((build) => build.username);
 
-        // Upewnij się, że username są unikalne i nie powtarzają się
         setUsernamesToFetch((prevUsernames) => {
           const uniqueUsernames = new Set([...prevUsernames, ...usernames]);
-          return Array.from(uniqueUsernames); // Zamień Set na tablicę, aby zachować unikalność
+          return Array.from(uniqueUsernames);
         });
       },
     }
@@ -201,7 +196,6 @@ const CommentsSection = ({ id: objectId }) => {
         console.log("comment created successfully:", data);
 
         refetchComments();
-        //data musi zwracac id komentarza a nie reply
         refetchReplies();
         shortProfilesRefetch();
       },
@@ -546,8 +540,6 @@ const CommentsSection = ({ id: objectId }) => {
                                 commentId: comment._id,
                                 action: "showMore",
                               });
-
-                              //refetch + size
                             }}
                             className="flex items-center mt-5 pl-[76px] py-1 rounded-md hover:text-amber duration-150 transition-all"
                           >

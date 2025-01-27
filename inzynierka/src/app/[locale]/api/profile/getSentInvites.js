@@ -9,10 +9,10 @@ const getSentInvites = async (axiosInstance) => {
       `/profile/from?size=${size}&page=${page}`
     );
     console.log("invites from me : ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error fetching invites from me:", error);
-    throw new Error("Error fetching invites from me"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error fetching invites from me");
   }
 };
 

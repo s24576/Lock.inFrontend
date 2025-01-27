@@ -5,36 +5,34 @@ export const customStyles = {
     borderColor: state.isFocused ? "#f5b800" : "#f5b800",
     color: "#f5f5f5",
     fontSize: "17px",
-    cursor: "pointer", // Change cursor to pointer on hover
+    cursor: "pointer",
     transition: "all 150ms ease",
-    boxShadow: "none", // Remove focus shadow
+    boxShadow: "none",
     "&:hover": {
       borderColor: "#f5b800",
       backgroundColor: "rgba(217,217,217,0.15)",
-      // Keep border color constant on hover
     },
   }),
   placeholder: (provided) => ({
     ...provided,
-    color: "#f5f5f5", // Setting placeholder color
+    color: "#f5f5f5",
   }),
   menu: (provided) => ({
     ...provided,
     backgroundColor: "transparent",
-    border: "1px solid #f5b800", // Color of the dropdown menu
+    border: "1px solid #f5b800",
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isSelected ? "#131313" : "#131313", // Color of selected and non-selected options
-    color: "#f5f5f5", // Text color of options
+    backgroundColor: state.isSelected ? "#131313" : "#131313",
+    color: "#f5f5f5",
     "&:hover": {
       backgroundColor: "#696969",
-      // Background color on hover
     },
   }),
   singleValue: (provided) => ({
     ...provided,
-    color: "#fff", // Color of the selected option text
+    color: "#fff",
   }),
   indicatorSeparator: (provided) => ({
     ...provided,
@@ -46,33 +44,32 @@ export const customStyles = {
   }),
   multiValue: (provided) => ({
     ...provided,
-    backgroundColor: "#555", // Background color of selected values
-    color: "#fff", // Text color of selected values
+    backgroundColor: "#555",
+    color: "#fff",
   }),
   multiValueLabel: (provided) => ({
     ...provided,
-    color: "#fff", // Text color of the label of selected values
+    color: "#fff",
   }),
   multiValueRemove: (provided) => ({
     ...provided,
-    color: "#fff", // Text color of the remove icon
+    color: "#fff",
     "&:hover": {
-      backgroundColor: "#ff0000", // Background color on hover
-      color: "#fff", // Text color on hover
+      backgroundColor: "#ff0000",
+      color: "#fff",
     },
   }),
-  // Custom scrollbar styles
   menuList: (provided) => ({
     ...provided,
     "&::-webkit-scrollbar": {
-      width: "8px", // Width of the scrollbar
+      width: "8px",
     },
     "&::-webkit-scrollbar-thumb": {
-      backgroundColor: "#f5f5f5", // Scrollbar thumb color
-      borderRadius: "4px", // Round edges of the thumb
+      backgroundColor: "#f5f5f5",
+      borderRadius: "4px",
     },
     "&::-webkit-scrollbar-track": {
-      backgroundColor: "#131313", // Track color (remove white background)
+      backgroundColor: "#131313",
     },
   }),
 };
@@ -94,7 +91,7 @@ export const customStylesDuo = {
   option: (base, state) => ({
     ...base,
     fontSize: "14px",
-    backgroundColor: state.isSelected ? "#131313" : "#131313", // Ustawienie tła opcji
+    backgroundColor: state.isSelected ? "#131313" : "#131313",
     color: "#f5f5f5",
     "&:hover": {
       backgroundColor: "#696969",
@@ -107,11 +104,11 @@ export const customStylesDuo = {
   menu: (base) => ({
     ...base,
     maxHeight: 150,
-    backgroundColor: "transparent", // Dodane przeźroczyste tło
+    backgroundColor: "transparent",
   }),
   placeholder: (provided) => ({
     ...provided,
-    color: "#f5f5f5", // Setting placeholder color
+    color: "#f5f5f5",
   }),
   indicatorSeparator: (provided) => ({
     ...provided,
@@ -123,25 +120,24 @@ export const customStylesDuo = {
   }),
   multiValue: (provided) => ({
     ...provided,
-    backgroundColor: "#555", // Background color of selected values
-    color: "#fff", // Text color of selected values
+    backgroundColor: "#555",
+    color: "#fff",
   }),
   multiValueLabel: (provided) => ({
     ...provided,
-    color: "#fff", // Text color of the label of selected values
+    color: "#fff",
   }),
   multiValueRemove: (provided) => ({
     ...provided,
-    color: "#fff", // Text color of the remove icon
+    color: "#fff",
     "&:hover": {
-      backgroundColor: "#ff0000", // Background color on hover
-      color: "#fff", // Text color on hover
+      backgroundColor: "#ff0000",
+      color: "#fff",
     },
   }),
-  // Custom scrollbar styles
   menuList: (provided) => ({
     ...provided,
-    backgroundColor: "#131313", // Dodane tło dla listy menu
+    backgroundColor: "#131313",
     "&::-webkit-scrollbar": {
       width: "8px",
     },

@@ -48,7 +48,6 @@ const ShortBuild = ({
     () => deleteBuild(axiosInstance, build._id),
     {
       onSuccess: () => {
-        // Przeładowanie strony po udanym usunięciu buildu
         window.location.reload();
       },
       onError: (error) => {
@@ -61,7 +60,6 @@ const ShortBuild = ({
     () => saveBuild(axiosInstance, build._id),
     {
       onSuccess: () => {
-        // Przeładowanie strony po udanym usunięciu buildu
         window.location.reload();
       },
       onError: (error) => {
@@ -122,7 +120,7 @@ const ShortBuild = ({
                 ) {
                   return (
                     <Image
-                      key={`${runeDataIndex}-${slotIndex}-${runeIndex}`} // Użycie unikalnego klucza
+                      key={`${runeDataIndex}-${slotIndex}-${runeIndex}`}
                       src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
                       alt={"test"}
                       width={40}
@@ -130,7 +128,7 @@ const ShortBuild = ({
                     />
                   );
                 }
-                return null; // Zwróć null, gdy warunek nie jest spełniony
+                return null;
               });
             });
           })}
@@ -187,7 +185,6 @@ const ShortBuild = ({
               "https://ddragon.leagueoflegends.com/cdn/" +
               version +
               "/img/spell/" +
-              // participant.summoner2Name +
               "SummonerFlash" +
               ".png"
             }
@@ -201,7 +198,6 @@ const ShortBuild = ({
               "https://ddragon.leagueoflegends.com/cdn/" +
               version +
               "/img/spell/" +
-              // participant.summoner2Name +
               "SummonerBarrier" +
               ".png"
             }
@@ -330,17 +326,11 @@ const ShortBuild = ({
       {savedFlag && (
         <div
           className="z-40 ml-3 text-[28px] cursor-pointer hover:text-amber duration-100 transition-colors"
-          onMouseEnter={() => setIsHovered(true)} // Zmieniamy stan na true, gdy najedziesz
-          onMouseLeave={() => setIsHovered(false)} // Przy wyjściu ustawiamy stan na false
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
           onClick={() => handleSaveBuild()}
         >
-          {isHovered || !build.saved ? (
-            // Wyświetlamy otwartą klodkę, gdy hover lub build.saved jest false
-            <BiSolidLockOpen />
-          ) : (
-            // Wyświetlamy zamkniętą klodkę, gdy build.saved jest true
-            <BiSolidLock />
-          )}
+          {isHovered || !build.saved ? <BiSolidLockOpen /> : <BiSolidLock />}
         </div>
       )}
     </div>

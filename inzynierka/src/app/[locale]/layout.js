@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
-import "@fontsource/bangers"; // Import czcionki Bangers
+import "@fontsource/bangers";
 import "@fontsource/chewy";
-import "@fontsource/rum-raisin"; // dodaj ten import
+import "@fontsource/rum-raisin";
 import "@fontsource/dekko";
 import "@fontsource/itim";
 import "@fontsource/coiny";
@@ -15,8 +15,6 @@ import { LanguageContextProvider } from "./context/LanguageContext";
 import initTranslations from "./i18n";
 import TranslationsProvider from "./components/TranslationsProvider";
 import { Toaster } from "sonner";
-
-// import { loadStripe } from "@stripe/stripe-js";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"] });
 
@@ -41,10 +39,6 @@ const i18nNamespaces = [
   "riot",
 ];
 
-// const stripePromise = loadStripe(
-//   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-// );
-
 export default async function RootLayout({ children, params: { locale } }) {
   const { t, resources } = await initTranslations(locale, i18nNamespaces);
 
@@ -61,8 +55,6 @@ export default async function RootLayout({ children, params: { locale } }) {
               <SearchContextProvider>
                 <UserContextProvider>
                   <ClientLayout>{children}</ClientLayout>
-
-                  {/* <Toaster richColors position="bottom-right"></Toaster> */}
                 </UserContextProvider>
               </SearchContextProvider>
             </ProfileContextProvider>

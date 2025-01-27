@@ -42,7 +42,7 @@ const rankOptions = rankList.map((rank) => ({
   label: (
     <div className="flex items-center">
       <Image
-        src={`/rank_emblems/${rank}.png`} // Źródło obrazka ranku
+        src={`/rank_emblems/${rank}.png`}
         alt={rank}
         width={20}
         height={20}
@@ -71,7 +71,7 @@ const DuoCreation = () => {
     "Other",
   ].map((language) => ({
     value: language,
-    label: t(`common:${language}`), // Pierwsza litera wielka
+    label: t(`common:${language}`),
   }));
 
   const [duoBody, setDuoBody] = useState({
@@ -87,14 +87,12 @@ const DuoCreation = () => {
     data: championNames,
     error: championNamesError,
     isLoading: championNamesLoading,
-    //dopisac axiosInstance do getChampionNames
   } = useQuery("championNames", () => getChampionNames(axiosInstance), {
     refetchOnWindowFocus: false,
   });
 
   //champions
   const handleSelectChange = (selectedOption) => {
-    // Bierzemy tylko pierwsze 3 opcje
     const selectedChampions = selectedOption
       .slice(0, 3)
       .map((option) => option.value);
@@ -107,7 +105,6 @@ const DuoCreation = () => {
 
   //languages
   const handleLanguagesChange = (selectedOption) => {
-    // Bierzemy tylko pierwsze 3 opcje lub ustawiamy "Other" jeśli nic nie wybrano
     const selectedLanguages =
       selectedOption && selectedOption.length > 0
         ? selectedOption.slice(0, 3).map((option) => option.value)
@@ -123,7 +120,7 @@ const DuoCreation = () => {
   const handleMinRankChange = (selectedOption) => {
     setDuoBody({
       ...duoBody,
-      minRank: selectedOption.value, // Aktualizujemy minRank w filterBody
+      minRank: selectedOption.value,
     });
   };
 
@@ -131,7 +128,7 @@ const DuoCreation = () => {
   const handleMaxRankChange = (selectedOption) => {
     setDuoBody({
       ...duoBody,
-      maxRank: selectedOption.value, // Aktualizujemy maxRank w filterBody
+      maxRank: selectedOption.value,
     });
   };
 
@@ -182,7 +179,6 @@ const DuoCreation = () => {
   const handleSubmit = async () => {
     setValidationError("");
 
-    // Walidacja formularza
     if (!duoSettings.duoAccount) {
       setValidationError(t("duo:noAccountError"));
       return;
@@ -203,7 +199,6 @@ const DuoCreation = () => {
       return;
     }
 
-    // Sprawdzanie czy minRank nie jest wyższy niż maxRank
     const rankOrder =
       rankList.indexOf(duoBody.minRank) > rankList.indexOf(duoBody.maxRank);
     if (rankOrder) {
@@ -323,13 +318,13 @@ const DuoCreation = () => {
                     let updatedPositions;
 
                     if (isFill) {
-                      updatedPositions = ["Fill"]; // Jeśli wybieramy "Fill", tylko "Fill" pozostaje
+                      updatedPositions = ["Fill"];
                     } else if (duoBody.lookedPositions.includes("Fill")) {
-                      updatedPositions = [position]; // Jeśli mamy "Fill" i klikamy inną rangę, resetujemy do wybranej rangi
+                      updatedPositions = [position];
                     } else if (newPositions.length > 4) {
-                      updatedPositions = ["Fill"]; // Jeśli więcej niż 4 rangi, resetujemy do "Fill"
+                      updatedPositions = ["Fill"];
                     } else {
-                      updatedPositions = newPositions; // Normalne dodawanie/usuwanie pozycji
+                      updatedPositions = newPositions;
                     }
 
                     setDuoBody({
@@ -364,13 +359,13 @@ const DuoCreation = () => {
                     let updatedPositions;
 
                     if (isFill) {
-                      updatedPositions = ["Fill"]; // Jeśli wybieramy "Fill", tylko "Fill" pozostaje
+                      updatedPositions = ["Fill"];
                     } else if (duoBody.positions.includes("Fill")) {
-                      updatedPositions = [position]; // Jeśli mamy "Fill" i klikamy inną rangę, resetujemy do wybranej rangi
+                      updatedPositions = [position];
                     } else if (newPositions.length > 4) {
-                      updatedPositions = ["Fill"]; // Jeśli więcej niż 4 rangi, resetujemy do "Fill"
+                      updatedPositions = ["Fill"];
                     } else {
-                      updatedPositions = newPositions; // Normalne dodawanie/usuwanie pozycji
+                      updatedPositions = newPositions;
                     }
 
                     setDuoBody({

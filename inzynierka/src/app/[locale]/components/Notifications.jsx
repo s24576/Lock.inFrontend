@@ -12,8 +12,8 @@ import { toast } from "sonner";
 const Notifications = () => {
   const { userData } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null); // Ref dla dropdownu
-  const buttonRef = useRef(null); // Ref dla ikony powiadomień
+  const dropdownRef = useRef(null);
+  const buttonRef = useRef(null);
   const axiosInstance = useAxios();
 
   const [stompClient, setStompClient] = useState(null);
@@ -22,15 +22,11 @@ const Notifications = () => {
     refetch: notificationsRefetch,
     data: notificationsData,
     isLoading: notificationsIsLoading,
-  } = useQuery(
-    "getNotifications",
-    () => getNotifications(axiosInstance), // Funkcja zawsze zwraca aktualne dane
-    {
-      refetchOnWindowFocus: false, // Wyłącz odświeżanie przy zmianie okna
-      cacheTime: 0, // Opcjonalnie wymuś odświeżanie danych zawsze
-      staleTime: 0, // Opcjonalnie ustaw brak czasu "świeżości" danych
-    }
-  );
+  } = useQuery("getNotifications", () => getNotifications(axiosInstance), {
+    refetchOnWindowFocus: false,
+    cacheTime: 0,
+    staleTime: 0,
+  });
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -59,11 +55,8 @@ const Notifications = () => {
         client.subscribe(
           `/user/${userData.username}/messenger/message`,
           (message) => {
-            // Jeśli message.body jest już obiektem, nie musisz używać JSON.parse
-            const parsed = JSON.parse(message.body); // Message jest już obiektem
-
-            console.log(parsed); // Sprawdź, co jest w parsed
-
+            const parsed = JSON.parse(message.body);
+            console.log(parsed);
             toast.custom(
               (t) => (
                 <div className="bg-night border-[1px] border-amber rounded-3xl p-4 text-white-smoke w-[300px] font-dekko flex flex-col">
@@ -152,8 +145,7 @@ const Notifications = () => {
         );
       },
       onStompError: (frame) => {
-        // console.error("STOMP Error: ", frame.headers["message"]);
-        // console.error("Additional details: ", frame.body);
+        console.error("STOMP Error: ", frame.headers["message"]);
       },
     });
 
@@ -182,7 +174,7 @@ const Notifications = () => {
             ?.sort((a, b) => b.timestamp - a.timestamp)
             ?.map((notification, key) => {
               const isLastElement =
-                key === notificationsData.content.length - 1; // Sprawdzenie, czy to ostatni element
+                key === notificationsData.content.length - 1;
               return (
                 <div
                   key={key}

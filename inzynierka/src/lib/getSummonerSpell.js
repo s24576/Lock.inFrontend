@@ -33,6 +33,6 @@ export const getSummonerSpell = (spellNumber) => {
     case 2201:
       return "SummonerCherryHold";
     default:
-      return "Unknown Spell"; // Jeśli nie znaleziono pasującego numeru
+      return "Unknown Spell";
   }
 };

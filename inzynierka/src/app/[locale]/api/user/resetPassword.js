@@ -14,10 +14,10 @@ const resetPassword = async (axiosInstance, email) => {
       }
     );
     console.log("password has been reset: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error resetting password:", error);
-    throw new Error("Error resetting password:"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error resetting password:");
   }
 };
 

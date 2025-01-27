@@ -6,10 +6,10 @@ const confirmRegistration = async (axiosInstance, confirmationToken) => {
       confirmationToken,
     });
     console.log("registration confirmed: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error confirming registration:", error);
-    throw new Error("Error confirming registration:"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error confirming registration:");
   }
 };
 

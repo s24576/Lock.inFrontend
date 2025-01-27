@@ -4,10 +4,10 @@ const resendConfirmationToken = async (axiosInstance) => {
   try {
     const response = await axiosInstance.put(`/user/resendConfirmationToken`);
     console.log("confirmation token sent: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error sending confirmation token:", error);
-    throw new Error("Error sending confirmation token:"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error sending confirmation token:");
   }
 };
 

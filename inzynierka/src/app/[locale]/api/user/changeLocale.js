@@ -10,7 +10,7 @@ const changeLocale = async (axiosInstance, locale) => {
       }
     );
     console.log("locale changed: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error changing locale:", error);
   }

@@ -97,29 +97,23 @@ const CourseDetails = () => {
   const addVideo = async (e) => {
     e.preventDefault();
 
-    // Sprawdzenie, czy link jest linkiem YouTube i wyciągnięcie ID
     const videoIdMatch = newVideo.link.match(
-      /(?:youtube\.com\/.*v=|youtu\.be\/)([^&?/]+)/ // Wyrażenie regularne dla ID filmu YouTube
+      /(?:youtube\.com\/.*v=|youtu\.be\/)([^&?/]+)/
     );
-    const videoId = videoIdMatch ? videoIdMatch[1] : newVideo.link; // Jeśli jest dopasowanie, użyj ID, w przeciwnym razie pozostaw oryginalny link
+    const videoId = videoIdMatch ? videoIdMatch[1] : newVideo.link;
 
-    // Ustawienie linku w obiekcie newVideo
     setNewVideo((prev) => ({
       ...prev,
-      link: videoId, // Zaktualizowanie linku zgodnie z wyrażeniem regularnym
+      link: videoId,
     }));
 
-    // Symulacja kolejki microtasków (wstrzymanie wykonania na 0 ms)
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    // Opcjonalnie wywołanie innej funkcji po dodaniu filmu
     await handleAddFilm();
 
-    // Ponownie symulacja kolejki microtasków
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    // Resetowanie stanu newVideo po dodaniu filmu
-    setNewVideo({ title: "", link: "" }); // Czyszczenie pól w newVideo
+    setNewVideo({ title: "", link: "" });
   };
 
   const getImageSrc = (image) => {
@@ -162,7 +156,7 @@ const CourseDetails = () => {
               ) : (
                 <div className="h-full w-full bg-night flex items-center justify-center">
                   <MdPhoto className="text-[64px]"></MdPhoto>
-                </div> // tło czarne, jeśli brak obrazu
+                </div>
               )}
             </div>
             <div className="mt-[5%] w-full flex flex-col items-center px-4 py-2 border-[1px] border-white-smoke rounded-xl font-dekko">
@@ -337,7 +331,7 @@ const CourseDetails = () => {
                           onChange={(e) =>
                             setNewVideo((prev) => ({
                               ...prev,
-                              link: e.target.value, // Ustawia pełny link, tak jak wpisuje użytkownik
+                              link: e.target.value,
                             }))
                           }
                           className="w-[80%] border-amber border-[1px] rounded-xl bg-transparent px-3 py-2 text-[18px] text-white-smoke z-20 font-dekko focus:outline-none"

@@ -34,11 +34,9 @@ const OwnedCourses = () => {
     {
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
-        // Wyekstrahuj username z każdego obiektu i przypisz do zmiennej
         const usernames = data?.content?.map((build) => {
           if (build?.username) return build.username;
         });
-        // Przypisz do odpowiedniej zmiennej lub użyj setUsernamesToFollow
         setUsernamesToFetch(usernames);
       },
     }
@@ -60,7 +58,6 @@ const OwnedCourses = () => {
 
   //page
   const handlePageChange = async (newPage) => {
-    // Zaktualizuj numer strony
     setFilterParams((prev) => ({
       ...prev,
       page: newPage,
@@ -68,7 +65,6 @@ const OwnedCourses = () => {
 
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    // Refetch kursów głównych
     await refetchCourses();
 
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -102,7 +98,6 @@ const OwnedCourses = () => {
   }
 
   if (isLogged && !coursesIsLoading && !shortProfilesIsLoading) {
-    //zdjac slice jak bedzie naprawiona funkcja i zmienic size w getOwnedCourses na 3
     return (
       <div className="h-screen w-full flex flex-col items-center  bg-night px-[5%] ">
         <p className="text-[64px] mt-[8%] font-bangers text-amber">
@@ -137,7 +132,7 @@ const OwnedCourses = () => {
                     ) : (
                       <div className="h-full w-full bg-night flex items-center justify-center">
                         <MdPhoto className="text-[64px]"></MdPhoto>
-                      </div> // tło czarne, jeśli brak obrazu
+                      </div>
                     )}
                   </div>
                   <div className="flex flex-col px-4 mt-[3%]">
@@ -203,7 +198,6 @@ const OwnedCourses = () => {
         </div>
         {coursesData && (
           <div className="flex justify-center items-center gap-x-4 mt-6 py-6 text-[20px] font-dekko">
-            {/* Jeśli strona jest większa niż 1, wyświetl przycisk "Back" */}
             {filterParams.page > 0 && (
               <p
                 className="cursor-pointer hover:text-amber duration-100 transition-colors"
@@ -213,9 +207,8 @@ const OwnedCourses = () => {
               </p>
             )}
 
-            {/* Wyświetl numery stron w zakresie 5 stron */}
             {Array.from({ length: 5 }, (_, i) => {
-              const pageNumber = filterParams.page + i - 2; // Tworzymy tablicę z 5 stron
+              const pageNumber = filterParams.page + i - 2;
               if (pageNumber >= 0 && pageNumber < coursesData.page.totalPages) {
                 return (
                   <p
@@ -232,7 +225,6 @@ const OwnedCourses = () => {
               return null;
             })}
 
-            {/* Jeśli strona jest mniejsza niż ostatnia, wyświetl przycisk "Next" */}
             {filterParams.page < coursesData.page.totalPages - 1 && (
               <p
                 className="cursor-pointer hover:text-amber duration-100 transition-colors"

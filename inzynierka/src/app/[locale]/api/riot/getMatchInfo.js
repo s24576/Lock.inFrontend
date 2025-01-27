@@ -4,10 +4,10 @@ const getMatchInfo = async (axiosInstance, matchId) => {
       `/riot/getMatchInfo?matchId=${matchId}`
     );
     console.log("match by id: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error fetching match by id:", error);
-    throw new Error("Error fetching match by id"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error fetching match by id");
   }
 };
 

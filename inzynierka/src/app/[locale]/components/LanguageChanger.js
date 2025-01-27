@@ -16,7 +16,7 @@ export default function LanguageChanger() {
   const router = useRouter();
   const currentPathname = usePathname();
 
-  const languages = i18nConfig.locales; // Assuming this array contains all available locales
+  const languages = i18nConfig.locales;
 
   const axiosInstance = useAxios();
 
@@ -33,14 +33,12 @@ export default function LanguageChanger() {
   );
 
   const handleChange = (newLocale) => {
-    // set cookie for next-i18n-router
     const days = 30;
     const date = new Date();
     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
     const expires = date.toUTCString();
     document.cookie = `NEXT_LOCALE=${newLocale};expires=${expires};path=/`;
 
-    // redirect to the new locale path
     if (
       currentLocale === i18nConfig.defaultLocale &&
       !i18nConfig.prefixDefault

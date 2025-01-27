@@ -48,14 +48,12 @@ const DuoInvites = () => {
 
   //page
   const handlePageChange = async (newPage) => {
-    // Zaktualizuj tylko numer strony
     setFilterParams((prev) => ({
       ...prev,
       page: newPage,
     }));
 
     await new Promise((resolve) => setTimeout(resolve, 0));
-    // Ponowne pobranie danych po zmianie strony
     await duoInvitesRefetch();
   };
 
@@ -86,11 +84,11 @@ const DuoInvites = () => {
           style={{
             backgroundImage: `url('/background-images/mybuilds.webp')`,
             opacity: "0.4",
-            backgroundSize: "cover", // Nie powiększa obrazu
-            backgroundPosition: "center", // Ustawienie środka obrazu
-            backgroundRepeat: "no-repeat", // Zapobiega powtarzaniu
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
             width: "100%",
-            height: "100vh", // Obraz będzie rozciągał się na wysokość widoku
+            height: "100vh",
           }}
         ></div>
         <div
@@ -201,7 +199,6 @@ const DuoInvites = () => {
             </div>
             {duoInvites && (
               <div className="flex justify-center items-center gap-x-4 mt-12 py-6 text-[20px]">
-                {/* Jeśli strona jest większa niż 1, wyświetl przycisk "Back" */}
                 {filterParams.page > 0 && (
                   <p
                     className="cursor-pointer hover:text-amber duration-100 transition-colors"
@@ -211,9 +208,8 @@ const DuoInvites = () => {
                   </p>
                 )}
 
-                {/* Wyświetl numery stron w zakresie 5 stron */}
                 {Array.from({ length: 5 }, (_, i) => {
-                  const pageNumber = filterParams.page + i - 2; // Tworzymy tablicę z 5 stron
+                  const pageNumber = filterParams.page + i - 2;
                   if (
                     pageNumber >= 0 &&
                     pageNumber < duoInvites.page.totalPages
@@ -233,7 +229,6 @@ const DuoInvites = () => {
                   return null;
                 })}
 
-                {/* Jeśli strona jest mniejsza niż ostatnia, wyświetl przycisk "Next" */}
                 {filterParams.page < duoInvites.page.totalPages - 1 && (
                   <p
                     className="cursor-pointer hover:text-amber duration-100 transition-colors"

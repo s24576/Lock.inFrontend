@@ -17,7 +17,6 @@ const Footer = () => {
           href="/"
           className="flex h-5 hover:text-amber transition-colors duration-100"
         >
-          {/* <RILock2Fill fill="#f5b800" className="text-[40px]"></RILock2Fill> */}
           <BiSolidLock className="text-[40px]"></BiSolidLock>
           <p className="text-[32px] pt-[1px] font-bangers">Lock.in</p>
         </Link>

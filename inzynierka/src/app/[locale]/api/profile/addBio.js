@@ -12,10 +12,10 @@ const addBio = async (axiosInstance, bio) => {
       }
     );
     console.log("bio created: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error adding bio:", error);
-    throw new Error("Error adding bio:"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error adding bio:");
   }
 };
 

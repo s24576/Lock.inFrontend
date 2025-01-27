@@ -204,7 +204,7 @@ const SummonerProfile = () => {
             </div>
             <div className="flex items-center gap-x-2">
               {(() => {
-                const { icon, name } = serverVisuals(playerData.server); // Wywołanie funkcji z przekazaniem 'server'
+                const { icon, name } = serverVisuals(playerData.server);
                 return (
                   <>
                     {icon}
@@ -233,10 +233,7 @@ const SummonerProfile = () => {
                   </div>
                 )}
                 {playerData.myAccount ? (
-                  <div
-                    className="flex items-center gap-x-1 text-amber"
-                    // onClick={() => handleClaimAccount()}
-                  >
+                  <div className="flex items-center gap-x-1 text-amber">
                     <FaCheck className="text-[24px]" />
                     <p className="text-[20px]">{t("riot:myAccount")}</p>
                   </div>

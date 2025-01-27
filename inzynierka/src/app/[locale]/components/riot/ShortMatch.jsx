@@ -41,7 +41,6 @@ const ShortMatch = ({ match }) => {
 
   return (
     <div
-      // href={"/match/" + match.matchId}
       className={`h-[80px] w-[100%] border-[1px] rounded-2xl flex items-center px-3 transition-colors duration-100 ${
         match.win ? "border-amber" : "border-white-smoke"
       } hover:bg-white-smoke hover:bg-opacity-5`}
@@ -87,20 +86,6 @@ const ShortMatch = ({ match }) => {
           alt="test"
         />
       </div>
-      {/* <div className="flex flex-col gap-y-1 ml-2 items-center">
-        <Image
-          src={`https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png`}
-          height={24}
-          width={24}
-          alt="test"
-        />
-        <Image
-          src={`https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7200_Domination.png`}
-          height={20}
-          width={20}
-          alt="test"
-        />
-      </div> */}
       <div className="flex flex-col justify-center ml-3 w-[15%]">
         <p className="text-[24px]">
           {match.kills + "/" + match.deaths + "/" + match.assists}
@@ -119,7 +104,7 @@ const ShortMatch = ({ match }) => {
           )}
           %
         </p>
-        <p className="text-[16px] text-amber">{multiKill(match.multiKill)}</p>
+        <p className="text-[14px] text-amber">{multiKill(match.multiKill)}</p>
       </div>
       <div className="grid grid-cols-3 gap-y-2 gap-x-1 ml-4">
         {match.item0 !== 0 ? (
@@ -254,7 +239,6 @@ const ShortMatch = ({ match }) => {
           <p className={match.win ? "text-amber" : "text-white-smoke"}>
             {match.win === true ? t("riot:victory") : t("riot:defeat")}
           </p>
-          {/* <p>30:39</p> */}
         </div>
       </div>
     </div>

@@ -43,7 +43,7 @@ const rankOptions = rankList.map((rank) => ({
   label: (
     <div className="flex items-center">
       <Image
-        src={`/rank_emblems/${rank}.png`} // Źródło obrazka ranku
+        src={`/rank_emblems/${rank}.png`}
         alt={rank}
         width={20}
         height={20}
@@ -83,7 +83,7 @@ const Duo = () => {
     "Other",
   ].map((language) => ({
     value: language,
-    label: t(`common:${language}`), // Pierwsza litera wielka
+    label: t(`common:${language}`),
   }));
 
   //do selecta z championami
@@ -145,7 +145,7 @@ const Duo = () => {
     () => getRiotShortProfiles(axiosInstance, duos),
     {
       refetchOnWindowFocus: false,
-      enabled: !!duos && !!duos.content, // Sprawdź, czy duos są dostępne
+      enabled: !!duos && !!duos.content,
     }
   );
 
@@ -180,7 +180,7 @@ const Duo = () => {
   const handleSelectChange = (selectedOption) => {
     setFilterBody({
       ...filterBody,
-      champions: selectedOption.map((option) => option.value), // Aktualizujemy champions w filterBody
+      champions: selectedOption.map((option) => option.value),
     });
   };
 
@@ -188,7 +188,7 @@ const Duo = () => {
   const handleLanguagesChange = (selectedOption) => {
     setFilterBody({
       ...filterBody,
-      languages: selectedOption.map((option) => option.value), // Aktualizujemy languages w filterBody
+      languages: selectedOption.map((option) => option.value),
     });
   };
 
@@ -196,7 +196,7 @@ const Duo = () => {
   const handleMinRankChange = (selectedOption) => {
     setFilterBody({
       ...filterBody,
-      minRank: selectedOption.value, // Aktualizujemy minRank w filterBody
+      minRank: selectedOption.value,
     });
   };
 
@@ -204,7 +204,7 @@ const Duo = () => {
   const handleMaxRankChange = (selectedOption) => {
     setFilterBody({
       ...filterBody,
-      maxRank: selectedOption.value, // Aktualizujemy maxRank w filterBody
+      maxRank: selectedOption.value,
     });
   };
 
@@ -222,14 +222,12 @@ const Duo = () => {
   );
 
   const handlePageChange = async (newPage) => {
-    // Zaktualizuj tylko numer strony
     setFilterParams((prev) => ({
       ...prev,
       page: newPage,
     }));
 
     await new Promise((resolve) => setTimeout(resolve, 0));
-    // Ponowne pobranie danych po zmianie strony
     await refetchDuos();
   };
 
@@ -264,11 +262,11 @@ const Duo = () => {
           style={{
             backgroundImage: `url('/background-images/duos.webp')`,
             opacity: "0.4",
-            backgroundSize: "cover", // Nie powiększa obrazu
-            backgroundPosition: "center", // Ustawienie środka obrazu
-            backgroundRepeat: "no-repeat", // Zapobiega powtarzaniu
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
             width: "100%",
-            height: "100vh", // Obraz będzie rozciągał się na wysokość widoku
+            height: "100vh",
           }}
         ></div>
         <div className="mt-[10%] w-[25%] flex flex-col gap-y-2 z-20 font-dekko">
@@ -574,7 +572,6 @@ const Duo = () => {
           </div>
           {duos && (
             <div className="flex justify-center items-center gap-x-4 mt-12 py-6 text-[20px]">
-              {/* Jeśli strona jest większa niż 1, wyświetl przycisk "Back" */}
               {filterParams.page > 0 && (
                 <p
                   className="cursor-pointer hover:text-amber duration-100 transition-colors"
@@ -584,9 +581,8 @@ const Duo = () => {
                 </p>
               )}
 
-              {/* Wyświetl numery stron w zakresie 5 stron */}
               {Array.from({ length: 5 }, (_, i) => {
-                const pageNumber = filterParams.page + i - 2; // Tworzymy tablicę z 5 stron
+                const pageNumber = filterParams.page + i - 2;
                 if (pageNumber >= 0 && pageNumber < duos.page.totalPages) {
                   return (
                     <p
@@ -603,7 +599,6 @@ const Duo = () => {
                 return null;
               })}
 
-              {/* Jeśli strona jest mniejsza niż ostatnia, wyświetl przycisk "Next" */}
               {filterParams.page < duos.page.totalPages - 1 && (
                 <p
                   className="cursor-pointer hover:text-amber duration-100 transition-colors"

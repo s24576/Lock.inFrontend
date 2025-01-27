@@ -76,7 +76,7 @@ const BuildDetails = () => {
     "authorProfileData",
     () => getShortProfile(axiosInstance, buildData.username),
     {
-      enabled: !!buildData, // Odpali tylko, gdy buildData jest dostępne
+      enabled: !!buildData,
       refetchOnWindowFocus: false,
     }
   );
@@ -110,7 +110,6 @@ const BuildDetails = () => {
     () => saveBuild(axiosInstance, buildData._id),
     {
       onSuccess: () => {
-        // Przeładowanie strony po udanym usunięciu buildu
         refetchBuild();
       },
       onError: (error) => {
@@ -167,11 +166,11 @@ const BuildDetails = () => {
             backgroundColor:
               buildData && buildData.championId ? "transparent" : "#131313",
             opacity: "0.4",
-            backgroundSize: "cover", // Nie powiększa obrazu
-            backgroundPosition: "center", // Ustawienie środka obrazu
-            backgroundRepeat: "no-repeat", // Zapobiega powtarzaniu
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
             width: "100%",
-            height: "100vh", // Obraz będzie rozciągał się na wysokość widoku
+            height: "100vh",
           }}
         ></div>
         <div className="flex w-full px-[10%] justify-between items-strech">
@@ -186,8 +185,8 @@ const BuildDetails = () => {
                     buildData?.championId +
                     ".png"
                   }
-                  width={100} // 1/4 wielkości oryginalnego obrazka
-                  height={100} // 1/4 wielkości oryginalnego obrazka
+                  width={100}
+                  height={100}
                   alt={buildData?.championName}
                   className="rounded-full border-[1px] border-white-smoke mx-3"
                 />
@@ -207,8 +206,8 @@ const BuildDetails = () => {
                           buildData?.championId +
                           ".png"
                         }
-                        width={48} // 1/4 wielkości oryginalnego obrazka
-                        height={48} // 1/4 wielkości oryginalnego obrazka
+                        width={48}
+                        height={48}
                         alt={buildData?.championName}
                         className=" mx-2"
                       />
@@ -218,19 +217,17 @@ const BuildDetails = () => {
                     {isLogged && (
                       <div
                         className="z-40 ml-3 text-[28px] cursor-pointer hover:text-amber duration-100 transition-colors"
-                        onMouseEnter={() => setIsHovered(true)} // Zmieniamy stan na true, gdy najedziesz
-                        onMouseLeave={() => setIsHovered(false)} // Przy wyjściu ustawiamy stan na false
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
                         onClick={() => handleSaveBuild()}
                       >
                         {isHovered ? (
-                          // Odwrotna ikona na hover
                           buildData?.saved ? (
                             <BiSolidLockOpen />
                           ) : (
                             <BiSolidLock className="text-amber" />
                           )
-                        ) : // Normalna ikona bez hover
-                        buildData?.saved ? (
+                        ) : buildData?.saved ? (
                           <BiSolidLock className="text-amber" />
                         ) : (
                           <BiSolidLockOpen />
@@ -418,7 +415,7 @@ const BuildDetails = () => {
                                 </Tooltip>
                               );
                             }
-                            return null; // Jeśli warunek nie jest spełniony, nic nie renderujemy
+                            return null;
                           });
                         });
                       })}
@@ -453,7 +450,7 @@ const BuildDetails = () => {
                                 </Tooltip>
                               );
                             }
-                            return null; // Jeśli warunek nie jest spełniony, nic nie renderujemy
+                            return null;
                           });
                         });
                       })}
@@ -497,7 +494,6 @@ const BuildDetails = () => {
                       "https://ddragon.leagueoflegends.com/cdn/" +
                       version +
                       "/img/spell/" +
-                      // participant.summoner2Name +
                       "Summoner" +
                       buildData.summoner2Name +
                       ".png"

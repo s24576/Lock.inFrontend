@@ -32,7 +32,6 @@ const FriendList = () => {
 
   const axiosInstance = useAxios();
 
-  //friends, locale do poprawy
   const [usernameInput, setUsernameInput] = useState("");
 
   const [invitesToMe, setInvitesToMe] = useState([]);
@@ -43,68 +42,48 @@ const FriendList = () => {
   const [profilesToMe, setProfilesToMe] = useState([]);
 
   const [stompClient, setStompClient] = useState(null);
-  const [receivedMessage, setReceivedMessage] = useState("");
 
   const {
     refetch: invitesToMeRefetch,
     data: invitesToMeData,
     isLoading: invitesToMeIsLoading,
-  } = useQuery(
-    "getYourInvites",
-    () => getYourInvites(axiosInstance), // Funkcja zawsze zwraca aktualne dane
-    {
-      refetchOnWindowFocus: false, // Wyłącz odświeżanie przy zmianie okna
-      onSuccess: (data) => {
-        setInvitesToMe(data.content || []); // Zainicjalizuj dane w stanie
+  } = useQuery("getYourInvites", () => getYourInvites(axiosInstance), {
+    refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      setInvitesToMe(data.content || []);
+      const usernames = data.content.map((friend) => friend.from);
 
-        const usernames = data.content.map((friend) => friend.from);
-
-        // Przypisz do odpowiedniej zmiennej lub użyj setUsernamesToFollow
-        setProfilesToMe(usernames);
-      },
-    }
-  );
+      setProfilesToMe(usernames);
+    },
+  });
 
   const {
     refetch: invitesFromMeRefetch,
     data: invitesFromMeData,
     isLoading: invitesFromMeIsLoading,
-  } = useQuery(
-    "getSentInvites",
-    () => getSentInvites(axiosInstance), // Funkcja zawsze zwraca aktualne dane
-    {
-      refetchOnWindowFocus: false, // Wyłącz odświeżanie przy zmianie okna
-      onSuccess: (data) => {
-        setInvitesFromMe(data.content || []); // Zainicjalizuj dane w stanie
+  } = useQuery("getSentInvites", () => getSentInvites(axiosInstance), {
+    refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      setInvitesFromMe(data.content || []);
 
-        const usernames = data.content.map((friend) => friend.to);
-
-        // Przypisz do odpowiedniej zmiennej lub użyj setUsernamesToFollow
-        setProfilesFromMe(usernames);
-      },
-    }
-  );
+      const usernames = data.content.map((friend) => friend.to);
+      setProfilesFromMe(usernames);
+    },
+  });
 
   const {
     refetch: userDataRefetch,
     data: userData,
     isLoading: userDataIsLoading,
-  } = useQuery(
-    "getUserData",
-    () => getUserData(axiosInstance), // Funkcja zawsze zwraca aktualne dane
-    {
-      refetchOnWindowFocus: false, // Wyłącz odświeżanie przy zmianie okna
-      onSuccess: (data) => {
-        // Wyekstrahuj username z każdego obiektu i przypisz do zmiennej
-        const usernames = data.friends.map((friend) =>
-          friend.username === data.username ? friend.username2 : friend.username
-        );
-
-        // Przypisz do odpowiedniej zmiennej lub użyj setUsernamesToFollow
-        setUsernamesToFetch(usernames);
-      },
-    }
-  );
+  } = useQuery("getUserData", () => getUserData(axiosInstance), {
+    refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      const usernames = data.friends.map((friend) =>
+        friend.username === data.username ? friend.username2 : friend.username
+      );
+      setUsernamesToFetch(usernames);
+    },
+  });
 
   //short profile do znajomych
   const {
@@ -112,7 +91,7 @@ const FriendList = () => {
     data: shortProfilesData,
     isLoading: shortProfilesIsLoading,
   } = useQuery(
-    ["shortProfilesData", usernamesToFetch], // Dodanie zmiennej jako klucz
+    ["shortProfilesData", usernamesToFetch],
     () => getShortProfiles(axiosInstance, usernamesToFetch),
     {
       refetchOnWindowFocus: false,
@@ -126,7 +105,7 @@ const FriendList = () => {
     data: shortProfilesFromMeData,
     isLoading: shortProfilesFromMeIsLoading,
   } = useQuery(
-    ["shortProfilesData", profilesFromMe], // Dodanie zmiennej jako klucz
+    ["shortProfilesData", profilesFromMe],
     () => getShortProfiles(axiosInstance, profilesFromMe),
     {
       refetchOnWindowFocus: false,
@@ -140,7 +119,7 @@ const FriendList = () => {
     data: shortProfilesToMeData,
     isLoading: shortProfilesToMeIsLoading,
   } = useQuery(
-    ["shortProfilesToMeData", profilesToMe], // Dodanie zmiennej jako klucz
+    ["shortProfilesToMeData", profilesToMe],
     () => getShortProfiles(axiosInstance, profilesToMe),
     {
       refetchOnWindowFocus: false,
@@ -158,7 +137,6 @@ const FriendList = () => {
         client.subscribe(
           `/user/${userData.username}/friendRequest/to`,
           (message) => {
-            // console.log("friend request to: ", message.body); // Debug incoming messages
             setInvitesToMe((prevInvites) => [...prevInvites, message.body]);
             invitesToMeRefetch();
           }
@@ -168,8 +146,6 @@ const FriendList = () => {
         client.subscribe(
           `/user/${userData.username}/friendRequest/from`,
           (message) => {
-            // console.log("friend request from: ", message.body); // Debug incoming messages
-            // console.log(fromRequests);
             setInvitesFromMe((prevInvites) => [...prevInvites, message.body]);
             invitesFromMeRefetch();
           }
@@ -179,8 +155,6 @@ const FriendList = () => {
         client.subscribe(
           `/user/${userData.username}/delete/friendRequest/from`,
           (message) => {
-            // console.log("delete friend request from: ", message.body);
-            // console.log(fromRequests);
             setInvitesFromMe((prevData) =>
               prevData.filter((request) => request._id !== message.body)
             );
@@ -193,8 +167,6 @@ const FriendList = () => {
         client.subscribe(
           `/user/${userData.username}/delete/friendRequest/to`,
           (message) => {
-            // console.log("delete friend request to: ", message.body);
-            // console.log(toRequests);
             setInvitesToMe((prevData) =>
               prevData.filter((request) => request._id !== message.body)
             );
@@ -204,8 +176,7 @@ const FriendList = () => {
         );
       },
       onStompError: (frame) => {
-        // console.error("STOMP Error: ", frame.headers["message"]);
-        // console.error("Additional details: ", frame.body);
+        console.error("STOMP Error: ", frame.headers["message"]);
       },
     });
 

@@ -45,7 +45,6 @@ const ReportForm = ({ objectType, objectId }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission logic here
     console.log("Report submitted:", {
       objectType,
       objectId,

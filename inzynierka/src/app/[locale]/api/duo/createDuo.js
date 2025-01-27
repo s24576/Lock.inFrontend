@@ -16,10 +16,10 @@ const createDuo = async (api, formData) => {
   try {
     const response = await api.post(`/api/duo/createDuo`, data);
     console.log("claimed accounts for duo: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error fetching riot profiles:", error);
-    throw new Error("Error fetching riot profiles"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error fetching riot profiles");
   }
 };
 

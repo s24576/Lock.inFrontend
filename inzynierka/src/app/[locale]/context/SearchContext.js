@@ -6,7 +6,6 @@ import getVersion from "../api/ddragon/getVersion";
 export const SearchContext = createContext();
 
 export function SearchContextProvider({ children }) {
-  //roboczo zmien useState na true zeby widziec strone po zalogowaniu
   const [paramsData, setParamsData] = useState({});
   const [playerData, setPlayerData] = useState({});
   const [matchHistoryData, setMatchHistoryData] = useState([]);
@@ -27,18 +26,6 @@ export function SearchContextProvider({ children }) {
 
     getV();
   }, []);
-
-  // useEffect(() => {
-  //   const getQ = async () => {
-  //     try {
-  //       const data = await getQueues();
-  //       setQueueList(data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getQ();
-  // }, []);
 
   return (
     <SearchContext.Provider

@@ -37,35 +37,23 @@ const Messenger = () => {
   const router = useRouter();
   const { t } = useTranslation();
 
-  //metadane z konkretnego wybranego chatu, np members
-  const [chatData, setChatData] = useState();
-
-  //wszystkie chaty uzytkownika
-  const [allChats, setAllChats] = useState([]);
-
-  //ktory chat ma byc aktywny w okienku
-  const [selectedChat, setSelectedChat] = useState(0);
-
   //wybrani do dodania do chatu
   const [selectedFriends, setSelectedFriends] = useState([]);
 
   //nazwa nowego chatu
   const [newChatName, setNewChatName] = useState("");
 
-  const [newMemberName, setNewMemberName] = useState("");
-
   //tresc nowej wiadomosci
   const [newMessage, setNewMessage] = useState("");
 
-  //wiadomosci konkretnego wybranego chatu
-  const [chatMessages, setChatMessages] = useState({});
-
   //ilosc wiadomosci wyswietlonych w chacie
   const [size, setSize] = useState(10);
+
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
 
   //czy to pierwsze zaladowanie chatow
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+
   const [activeChat, setActiveChat] = useState(null);
   const [messagesSize, setMessagesSize] = useState(20);
 
@@ -81,38 +69,33 @@ const Messenger = () => {
     refetch: chatsRefetch,
     data: chatsData,
     isLoading: chatsIsLoading,
-  } = useQuery(
-    ["chatsData", size], // Dodanie zmiennej jako klucz
-    () => getChats(axiosInstance, size),
-    {
-      refetchOnWindowFocus: false,
-      keepPreviousData: true,
-      onSuccess: (data) => {
-        const usernamesToFetch = data.content
-          .map(
-            (chat) =>
-              chat.members.find(
-                (member) => member.username !== userData.username
-              )?.username
-          )
-          .filter(Boolean); // Usuwamy ewentualne `undefined` jeśli `find` nic nie zwróci
+  } = useQuery(["chatsData", size], () => getChats(axiosInstance, size), {
+    refetchOnWindowFocus: false,
+    keepPreviousData: true,
+    onSuccess: (data) => {
+      const usernamesToFetch = data.content
+        .map(
+          (chat) =>
+            chat.members.find((member) => member.username !== userData.username)
+              ?.username
+        )
+        .filter(Boolean);
 
-        setUsernamesToFetch(usernamesToFetch);
+      setUsernamesToFetch(usernamesToFetch);
 
-        if (isInitialLoad && data.content.length > 0) {
-          setActiveChat(data.content[0]._id);
-          setIsInitialLoad(false); // Ustawiamy, że załadowano początkowo
-        }
-      },
-    }
-  );
+      if (isInitialLoad && data.content.length > 0) {
+        setActiveChat(data.content[0]._id);
+        setIsInitialLoad(false);
+      }
+    },
+  });
 
   const {
     refetch: shortProfilesRefetch,
     data: shortProfilesData,
     isLoading: shortProfilesIsLoading,
   } = useQuery(
-    ["shortProfilesData", usernamesToFetch], // Dodanie zmiennej jako klucz
+    ["shortProfilesData", usernamesToFetch],
     () => getShortProfiles(axiosInstance, usernamesToFetch),
     {
       refetchOnWindowFocus: false,
@@ -126,11 +109,11 @@ const Messenger = () => {
     data: chatByIdData,
     isLoading: chatByIdIsLoading,
   } = useQuery(
-    ["getChatById", activeChat], // Klucz zawiera ID czatu, aby zmiana powodowała nowe zapytanie
+    ["getChatById", activeChat],
     () => getChatById(axiosInstance, activeChat),
     {
       refetchOnWindowFocus: false,
-      enabled: Boolean(activeChat), // Zapytanie wykona się tylko, gdy ID jest prawidłowe
+      enabled: Boolean(activeChat),
     }
   );
 
@@ -139,16 +122,16 @@ const Messenger = () => {
     data: messagesData,
     isLoading: messagesIsLoading,
   } = useQuery(
-    ["getMessages", activeChat, messagesSize], // Upewnij się, że te dane są poprawne
+    ["getMessages", activeChat, messagesSize],
     () => {
       if (activeChat && messagesSize) {
-        return getMessages(axiosInstance, activeChat, messagesSize); // Upewnij się, że activeChat i messagesSize są prawidłowe
+        return getMessages(axiosInstance, activeChat, messagesSize);
       }
       throw new Error("Invalid parameters for getMessages");
     },
     {
       refetchOnWindowFocus: false,
-      enabled: Boolean(activeChat), // Zapytanie wykona się tylko, gdy ID jest prawidłowe
+      enabled: Boolean(activeChat),
     }
   );
 
@@ -233,17 +216,14 @@ const Messenger = () => {
 
   const selectFriend = (friend) => {
     setSelectedFriends((prev) => {
-      // Sprawdzamy, czy przyjaciel już istnieje w tablicy na podstawie `_id`
       const alreadySelected = prev.some(
         (selected) => selected._id === friend._id
       );
 
-      // Jeżeli przyjaciel już istnieje, zwracamy poprzednią tablicę bez zmian
       if (alreadySelected) {
         return prev;
       }
 
-      // Jeżeli przyjaciela nie ma, dodajemy go do tablicy
       return [...prev, friend];
     });
   };
@@ -274,11 +254,6 @@ const Messenger = () => {
           `/user/${userData.username}/messenger/message`,
           (message) => {
             const parsed = JSON.parse(message.body);
-            // setNewMessageReceived(parsed.message);
-            // setChatMessages((prev) => ({
-            //   ...prev, // Kopiuj poprzedni stan
-            //   content: [...prev.content, parsed], // Dodaj nową wiadomość do tablicy content
-            // }));
             console.log("new message received: ", parsed);
             chatsRefetch();
             messagesRefetch();
@@ -312,7 +287,7 @@ const Messenger = () => {
     return null;
   };
 
-  const messagesEndRef = useRef(null); // Ref dla końca kontenera wiadomości
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -351,7 +326,6 @@ const Messenger = () => {
   if (isLogged) {
     return (
       <div className="bg-night min-h-screen w-full flex font-dekko">
-        {/* Kontener z listą czatów */}
         <div className="w-[30%] pt-[5%] flex flex-col items-center gap-y-3 px-6 h-screen overflow-y-auto">
           {chatsData && (
             <div className="flex flex-col items-center gap-y-4 w-full">
@@ -432,7 +406,6 @@ const Messenger = () => {
                   (member) => member.username !== userData.username
                 );
 
-                // Używamy lokalnej wiadomości jeśli jest dostępna i dotyczy aktualnego chatu
                 const lastMessage =
                   chat._id === activeChat && localLastMessage
                     ? localLastMessage
@@ -501,7 +474,6 @@ const Messenger = () => {
           </button>
         </div>
 
-        {/* Kontener z wiadomościami */}
         <div className="w-[70%] pt-[5%] h-screen overflow-y-auto z-10">
           {chatByIdIsLoading && messagesIsLoading && (
             <div>{t("common:messenger.loading")}</div>
@@ -534,7 +506,6 @@ const Messenger = () => {
                         <div>
                           {userData.friends && userData.friends.length > 0 ? (
                             userData.friends.filter((friend) => {
-                              // Sprawdź, czy friend znajduje się już w chatData.members
                               const isAlreadyInChat = chatByIdData.members.some(
                                 (member) =>
                                   member.username ===
@@ -602,7 +573,6 @@ const Messenger = () => {
                 )}
               </div>
 
-              {/* Kontener wiadomości */}
               <div className="flex flex-col gap-y-1 px-[3%] w-full overflow-y-auto items-center mb-[10%]">
                 {messagesSize < messagesData.page.totalElements && (
                   <div className="flex items-center justify-center hover:text-amber cursor-pointer duration-150 transition-all">
@@ -673,7 +643,6 @@ const Messenger = () => {
                       </div>
                     );
                   })}
-                {/* Dodajemy ref do kontenera wiadomości, by przewinąć na dół */}
                 <form
                   className="w-[64%] flex justify-between items-center absolute bottom-0 px-[1%] z-30 border-t-[1px] border-white-smoke bg-night"
                   onSubmit={handleMessageForm}

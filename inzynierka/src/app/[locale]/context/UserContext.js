@@ -9,7 +9,6 @@ export function UserContextProvider({ children }) {
   const [isLogged, setIsLogged] = useState(null);
   const [userData, setUserData] = useState({});
 
-  //db czy local storage?
   const [duoSettings, setDuoSettings] = useState({});
 
   return (

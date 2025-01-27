@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 export const LanguageContext = createContext();
 
 export function LanguageContextProvider({ children }) {
-  //roboczo zmien useState na true zeby widziec strone po zalogowaniu
   const [language, setLanguage] = useState("");
 
   const pathname = usePathname();

@@ -30,10 +30,6 @@ const Login = () => {
 
   const axiosInstance = isLogged ? axios : axiosPublic;
 
-  const langRegex = /^\/([a-z]{2})\//;
-  const langMatch = pathname.match(langRegex);
-  const language = langMatch ? langMatch[1] : "en";
-
   const { mutate: loginMutation, isLoading: loginIsLoading } = useMutation(
     () => login(axiosInstance, password, username),
     {

@@ -6,7 +6,6 @@ const getRiotShortProfileById = async (language, server_puuid) => {
       `http://localhost:8080/riot/getRiotProfileByPuuid?server_puuid=${server_puuid}`,
       {
         headers: {
-          // Ustawienie pustego nagłówka Authorization, aby upewnić się, że nie jest dodawany
           "Accept-Language": language,
         },
       }

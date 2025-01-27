@@ -7,10 +7,10 @@ const addReport = async (axiosInstance, reportForm) => {
       reportForm
     );
     console.log("report created: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error adding report:", error);
-    throw new Error("Error adding report:"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error adding report:");
   }
 };
 

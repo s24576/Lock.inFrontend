@@ -61,6 +61,7 @@ const CreateBuild = () => {
   const [navigation, setNavigation] = useState(0);
 
   const { t } = useTranslation();
+
   //rune tree selection
   const [runeTree, setRuneTree] = useState(0);
 
@@ -124,25 +125,22 @@ const CreateBuild = () => {
   const [searchChampion, setSearchChampion] = useState("");
 
   const handleChampionSearch = (e) => {
-    setSearchChampion(e.target.value); // Przechowuj dokładnie to, co wpisuje użytkownik
+    setSearchChampion(e.target.value);
   };
 
   const filteredChampionOptions = Object.entries(
     championNamesData || {}
-  ).filter(
-    ([, championValue]) =>
-      championValue.toLowerCase().includes(searchChampion.toLowerCase()) // Porównuj w lowercase
+  ).filter(([, championValue]) =>
+    championValue.toLowerCase().includes(searchChampion.toLowerCase())
   );
 
   const handleSummonerClick = (summoner) => {
     if (!formValues.summoner1Name) {
-      // If summoner 1 is not set, set summoner 1
       setFormValues({
         ...formValues,
         summoner1Name: summoner,
       });
     } else if (!formValues.summoner2Name) {
-      // If summoner 2 is not set, set summoner 2
       setFormValues({
         ...formValues,
         summoner2Name: summoner,
@@ -152,14 +150,12 @@ const CreateBuild = () => {
 
   const handleSummonerRemove = (summoner) => {
     if (formValues.summoner1Name === summoner) {
-      // If summoner 1 is removed, make summoner 2 the first
       setFormValues({
         ...formValues,
         summoner1Name: formValues.summoner2Name,
         summoner2Name: "",
       });
     } else if (formValues.summoner2Name === summoner) {
-      // If summoner 2 is removed, clear summoner 2 slot
       setFormValues({
         ...formValues,
         summoner2Name: "",
@@ -169,16 +165,14 @@ const CreateBuild = () => {
 
   const handleSetRuneTree = (key) => {
     setRuneTree(key);
-    // Zaktualizuj runeTreeSecondary, aby zawsze było inne niż runeTree
     if (key === 0) {
-      setRuneTreeSecondary(1); // Jeżeli wybrano drzewko o indeksie 0, ustaw runeTreeSecondary na 1
+      setRuneTreeSecondary(1);
     } else {
-      setRuneTreeSecondary(0); // Jeżeli wybrano inne drzewko, ustaw runeTreeSecondary na 0
+      setRuneTreeSecondary(0);
     }
   };
 
   const handleSetRuneTreeSecondary = (key) => {
-    // Upewnij się, że drugie drzewko nie jest takie samo jak pierwsze
     if (key !== runeTree) {
       setRuneTreeSecondary(key);
     }
@@ -186,37 +180,31 @@ const CreateBuild = () => {
 
   const handleSetPrimaryRunes = (newId, newIcon, index) => {
     setPrimaryRunes((prevRunes) => {
-      const updatedRunes = [...prevRunes]; // Tworzymy kopię tablicy
-      updatedRunes[index] = { id: newId, icon: newIcon }; // Ustawiamy obiekt {id, icon} na danym indeksie
-      return updatedRunes; // Zwracamy zaktualizowaną tablicę
+      const updatedRunes = [...prevRunes];
+      updatedRunes[index] = { id: newId, icon: newIcon };
+      return updatedRunes;
     });
   };
 
   const handleSetSecondaryRunes = (newId, newIcon, index) => {
     setSecondaryRunes((prevRunes) => {
-      const updatedRunes = [...prevRunes]; // Tworzymy kopię tablicy
+      const updatedRunes = [...prevRunes];
 
       if (index === 0) {
-        // Ustawiamy runę na pierwszą pozycję
         updatedRunes[0] = { id: newId, icon: newIcon };
       } else if (index === 1) {
-        // Ustawiamy runę na drugą pozycję
         updatedRunes[1] = { id: newId, icon: newIcon };
       } else if (index === 2) {
-        // Jeśli oba miejsca są już zajęte
         if (updatedRunes[0] && updatedRunes[1]) {
-          // Przesuwamy runę w lewo, usuwając najstarszy wybór (pierwszy wybór)
-          updatedRunes[0] = { id: newId, icon: newIcon }; // Nowy wybór wchodzi na pierwsze miejsce
+          updatedRunes[0] = { id: newId, icon: newIcon };
         } else if (updatedRunes[0]) {
-          // Jeśli tylko pierwsze miejsce jest zajęte, to nowe ustawienie trafia na drugie miejsce
           updatedRunes[1] = { id: newId, icon: newIcon };
         } else {
-          // Jeśli tylko drugie miejsce jest puste, pierwsze miejsce zostaje zastąpione
           updatedRunes[0] = { id: newId, icon: newIcon };
         }
       }
 
-      return updatedRunes; // Zwracamy zaktualizowaną tablicę run
+      return updatedRunes;
     });
   };
 
@@ -262,27 +250,26 @@ const CreateBuild = () => {
 
   const handleAddItem = (itemId) => {
     setChosenItems((prevItems) => {
-      // Jeśli itemId już istnieje w tablicy, nie dodawaj go ponownie
       if (prevItems.includes(itemId)) {
         return prevItems;
       }
 
-      const index = prevItems.findIndex((id) => id === ""); // Znajdujemy pierwsze wolne miejsce
+      const index = prevItems.findIndex((id) => id === "");
       if (index !== -1) {
         const newItems = [...prevItems];
         newItems[index] = itemId;
         return newItems;
       }
 
-      return prevItems; // Jeśli brak miejsca, zwracamy poprzednią tablicę
+      return prevItems;
     });
   };
 
   const handleDeleteItem = (index) => {
     setChosenItems((prevItems) => {
       const newItems = [...prevItems];
-      newItems.splice(index, 1); // Usuwamy element na wskazanym indeksie
-      newItems.push(""); // Dodajemy puste miejsce na koniec
+      newItems.splice(index, 1);
+      newItems.push("");
       return newItems;
     });
   };
@@ -303,13 +290,11 @@ const CreateBuild = () => {
   const handleSubmit = async () => {
     setValidationError("");
 
-    // Sprawdzamy czy tytuł nie jest pusty i nie jest domyślną wartością
     if (!formValues.title || formValues.title === t("builds:newBuild")) {
       setValidationError(t("builds:titleRequired"));
       return;
     }
 
-    // Sprawdzamy czy opis nie jest pusty i nie jest domyślną wartością
     if (
       !formValues.description ||
       formValues.description === t("builds:newDescription")
@@ -346,7 +331,6 @@ const CreateBuild = () => {
       return;
     }
 
-    // Jeśli walidacja przeszła, kontynuujemy z wysyłaniem
     const [item1, item2, item3, item4, item5, item6] = chosenItems;
     const runes1 = primaryRunes.map((rune) => rune.id);
     const runes2 = secondaryRunes.map((rune) => rune.id);
@@ -476,11 +460,11 @@ const CreateBuild = () => {
           style={{
             backgroundImage: `url('/background-images/createbuild.webp')`,
             opacity: "0.3",
-            backgroundSize: "cover", // Nie powiększa obrazu
-            backgroundPosition: "center", // Ustawienie środka obrazu
-            backgroundRepeat: "no-repeat", // Zapobiega powtarzaniu
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
             width: "100%",
-            height: "100vh", // Obraz będzie rozciągał się na wysokość widoku
+            height: "100vh",
           }}
         ></div>
         <div className="mt-[7%] flex items-center gap-x-1 z-20 text-[20px]">
@@ -542,8 +526,8 @@ const CreateBuild = () => {
               <Image
                 src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${formValues.championKey}.png`}
                 alt={formValues.championKey}
-                width={56} // Adjust the width as needed
-                height={56} // Adjust the height as needed
+                width={56}
+                height={56}
                 key={formValues.championKey}
                 className="border-[1px] border-white-smoke rounded-full hover:opacity-70 cursor-pointer transition-all duration-150"
                 onClick={() =>
@@ -565,9 +549,8 @@ const CreateBuild = () => {
             <div className="flex items-center gap-x-2">
               {primaryRunes &&
                 primaryRunes.map((rune, key) => {
-                  // Sprawdzamy, czy pole `icon` ma zawartość przed renderowaniem
                   if (!rune.icon) {
-                    return null; // Jeśli nie ma `icon`, nie renderujemy tej runy
+                    return null;
                   }
 
                   return (
@@ -586,9 +569,8 @@ const CreateBuild = () => {
               <div className="flex gap-x-2 items-center">
                 {secondaryRunes &&
                   secondaryRunes.map((rune, key) => {
-                    // Sprawdzamy, czy pole `icon` ma zawartość przed renderowaniem
                     if (!rune.icon) {
-                      return null; // Jeśli nie ma `icon`, nie renderujemy tej runy
+                      return null;
                     }
 
                     return (
@@ -607,7 +589,7 @@ const CreateBuild = () => {
                 {selectedShards &&
                   selectedShards.map((shard, key) => {
                     if (!shard) {
-                      return null; // Jeśli nie ma sharda, nie renderujemy
+                      return null;
                     }
 
                     return (
@@ -668,7 +650,6 @@ const CreateBuild = () => {
           <div className="flex items-center gap-x-2">
             {chosenItems?.length > 0 &&
               chosenItems.map((item, key) => {
-                // Sprawdzenie, czy item nie jest pustym stringiem
                 if (item.trim() === "") return null;
 
                 return (
@@ -876,7 +857,7 @@ const CreateBuild = () => {
                       >
                         <Image
                           src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
-                          alt={rune.name} // You can use rune.name instead of a static "test"
+                          alt={rune.name}
                           width={48}
                           height={48}
                           className=""
@@ -884,7 +865,6 @@ const CreateBuild = () => {
                       </div>
                     ))}
                   </div>
-                  {/* Handle different rune trees */}
                   {runesData.map((rune, key) => {
                     return runeTree === key ? (
                       <div className="mt-[8%] flex flex-col gap-y-2" key={key}>
@@ -906,8 +886,8 @@ const CreateBuild = () => {
                                 <Image
                                   src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
                                   alt={rune.name}
-                                  width={slotIndex === 0 ? 48 + 10 : 48 + 20} // Adjust size based on slotIndex
-                                  height={slotIndex === 0 ? 48 + 10 : 48 + 20} // Adjust size based on slotIndex
+                                  width={slotIndex === 0 ? 48 + 10 : 48 + 20}
+                                  height={slotIndex === 0 ? 48 + 10 : 48 + 20}
                                   className={
                                     primaryRunes.some((r) => r.id === rune.id)
                                       ? "opacity-100"
@@ -941,17 +921,16 @@ const CreateBuild = () => {
                           runeTree === key
                             ? "cursor-auto opacity-50 hover:bg-night hover:bg-opacity-80"
                             : ""
-                        }`} // Dodanie logiki blokującej dla tego samego drzewa
+                        }`}
                           onClick={() => {
                             if (runeTree !== key) {
-                              // Tylko wtedy, gdy runeTree nie jest równe key
                               handleSetRuneTreeSecondary(key);
                             }
                           }}
                         >
                           <Image
                             src={`https://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`}
-                            alt={rune.name} // You can use rune.name instead of a static "test"
+                            alt={rune.name}
                             width={48}
                             height={48}
                             className=""
@@ -959,7 +938,6 @@ const CreateBuild = () => {
                         </div>
                       ))}
                     </div>
-                    {/* Handle different rune trees */}
                     {runesData.map((rune, key) => {
                       return runeTreeSecondary === key ? (
                         <div
@@ -988,10 +966,10 @@ const CreateBuild = () => {
                                       alt={rune.name}
                                       width={
                                         slotIndex === 0 ? 48 + 10 : 48 + 20
-                                      } // Adjust size based on slotIndex
+                                      }
                                       height={
                                         slotIndex === 0 ? 48 + 10 : 48 + 20
-                                      } // Adjust size based on slotIndex
+                                      }
                                       className={
                                         secondaryRunes.some(
                                           (r) => r.id === rune.id
@@ -1013,19 +991,19 @@ const CreateBuild = () => {
 
                 <div className="mt-[3%] grid grid-cols-3 gap-1 w-[30%] ml-[18px]">
                   {runeShards.map((shard, key) => {
-                    const row = Math.floor(key / 3); // Określenie wiersza
-                    const isSelected = selectedShards[row] === shard; // Sprawdzanie, czy shard jest wybrany w danym wierszu
+                    const row = Math.floor(key / 3);
+                    const isSelected = selectedShards[row] === shard;
 
                     return (
                       <div
                         key={key}
-                        onClick={() => handleShardSelection(row, shard)} // Obsługuje kliknięcie na shard
+                        onClick={() => handleShardSelection(row, shard)}
                         className={`cursor-pointer ${
                           isSelected ? "opacity-100" : "opacity-60"
                         }`}
                       >
                         <Image
-                          src={`/rune-shards/${shard}.webp`} // Zakładając, że masz odpowiednią ścieżkę do obrazków
+                          src={`/rune-shards/${shard}.webp`}
                           alt={shard}
                           width={32}
                           height={32}
@@ -1088,21 +1066,19 @@ const CreateBuild = () => {
                     const matchesTags =
                       selectedTags.length === 0 ||
                       item.tags.some((tag) => selectedTags.includes(tag));
-                    return matchesSearch && matchesTags; // Przedmiot musi spełniać oba warunki
+                    return matchesSearch && matchesTags;
                   })
                   .map((item, key) => {
-                    // Sprawdzamy, czy wszystkie elementy w chosenItems są pełne (nie są pustymi ciągami)
                     const isFull =
                       chosenItems.filter((id) => id !== "").length === 6;
                     const isItemChosen = chosenItems.includes(item.id);
 
-                    // Określamy opacity na podstawie warunków
-                    let itemOpacity = "opacity-80 "; // Domyślna opacity 80% dla nieklikniętych i niewybranych przedmiotów
+                    let itemOpacity = "opacity-80 ";
 
                     if (isItemChosen) {
-                      itemOpacity = "opacity-100 border-amber border-[1.5px]"; // Zawsze opacity 100% dla klikniętego przedmiotu
+                      itemOpacity = "opacity-100 border-amber border-[1.5px]";
                     } else if (isFull) {
-                      itemOpacity = "opacity-30 "; // Opacity 50% dla nieklikniętych, gdy wszystkie przedmioty zostały wybrane
+                      itemOpacity = "opacity-30 ";
                     }
 
                     return (

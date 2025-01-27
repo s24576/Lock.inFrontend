@@ -22,6 +22,7 @@ const Profile = () => {
   const { userData, isLogged } = useContext(UserContext);
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
   const { t } = useTranslation();
+
   //profil do wyszukania
   const [profileUsername, setProfileUsername] = useState("");
 
@@ -41,12 +42,10 @@ const Profile = () => {
       refetchOnWindowFocus: false,
       keepPreviousData: true,
       onSuccess: (data) => {
-        // Wyekstrahuj username z każdego obiektu i przypisz do zmiennej
         const usernames = data.friends.map((friend) =>
           friend.username === data._id ? friend.username2 : friend.username
         );
 
-        // Przypisz do odpowiedniej zmiennej lub użyj setUsernamesToFollow
         setUsernamesToFetch(usernames);
       },
       onError: () => {
@@ -79,7 +78,7 @@ const Profile = () => {
     data: shortProfilesData,
     isLoading: shortProfilesIsLoading,
   } = useQuery(
-    ["shortProfilesData", usernamesToFetch], // Dodanie zmiennej jako klucz
+    ["shortProfilesData", usernamesToFetch],
     () => getShortProfiles(axiosInstance, usernamesToFetch),
     {
       refetchOnWindowFocus: false,

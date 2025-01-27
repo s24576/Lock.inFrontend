@@ -14,22 +14,19 @@ const WinRatioChart = ({ matchesData }) => {
     const wins = matchesData.filter((match) => match.win === true).length;
     const losses = matchesData.filter((match) => match.win === false).length;
     if (matchesData) {
-      // Obliczanie liczby wygranych i przegranych
-
       const totalGames = wins + losses;
       const winPercentage = totalGames === 0 ? 0 : (wins / totalGames) * 100;
       const lossPercentage = totalGames === 0 ? 0 : (losses / totalGames) * 100;
 
-      // Ustawienia wykresu
       setChartData({
         labels: [t("riot:wins"), t("riot:losses")],
         datasets: [
           {
             data: [winPercentage, lossPercentage],
-            backgroundColor: ["#f5b800", "#afafaf"], // Kolory dla wygranych i przegranych
+            backgroundColor: ["#f5b800", "#afafaf"],
             hoverBackgroundColor: ["#c89400", "#8a8a8a"],
-            borderColor: "#131313", // Kolor obramowania
-            borderWidth: 2, // Grubość obramowania
+            borderColor: "#131313",
+            borderWidth: 2,
           },
         ],
       });
@@ -37,20 +34,19 @@ const WinRatioChart = ({ matchesData }) => {
   }, [matchesData]);
 
   if (!chartData) {
-    return <div>Loading...</div>; // Jeśli dane nie zostały jeszcze przetworzone
+    return <div>Loading...</div>;
   }
 
-  // Opcje wykresu z wyłączonymi etykietami
   const chartOptions = {
     responsive: true,
     plugins: {
       legend: {
-        display: false, // Ukrywa legendę
+        display: false,
       },
       tooltip: {
         callbacks: {
           label: function (context) {
-            return `${context.label}: ${context.raw.toFixed(1)}%`; // Pokazuje procent
+            return `${context.label}: ${context.raw.toFixed(1)}%`;
           },
         },
       },

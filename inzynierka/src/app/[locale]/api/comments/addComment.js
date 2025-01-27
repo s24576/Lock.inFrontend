@@ -10,10 +10,10 @@ const addComment = async (axiosInstance, objectId, comment, replyingTo) => {
         replyingTo: replyingTo,
       });
       console.log("reply created: ", response.data);
-      return response.data; // Zwracamy dane
+      return response.data;
     } catch (error) {
       console.log("Error adding reply:", error);
-      throw new Error("Error adding reply:"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+      throw new Error("Error adding reply:");
     }
   } else {
     try {
@@ -22,10 +22,10 @@ const addComment = async (axiosInstance, objectId, comment, replyingTo) => {
         comment: comment,
       });
       console.log("comment created: ", response.data);
-      return response.data; // Zwracamy dane
+      return response.data;
     } catch (error) {
       console.log("Error adding comment:", error);
-      throw new Error("Error adding comment:"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+      throw new Error("Error adding comment:");
     }
   }
 };

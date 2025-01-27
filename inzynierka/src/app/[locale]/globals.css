@@ -31,11 +31,6 @@ body {
     text-wrap: balance;
   }
 
-  .placeholder-oxford-blue::placeholder {
-    color: #001427; /* Oxford Blue */
-    text-align: center; /* Center the placeholder text */
-  }
-
   .placeholder-white::placeholder {
     color: #f5f5f5;
   }
@@ -138,29 +133,27 @@ body {
     @apply bg-background text-foreground;
   }
 
-  /* Scrollbar styles */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #f5f5f5; /* Suwak */
+    background-color: #f5f5f5;
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-track {
-    background-color: #131313; /* Tło ścieżki */
+    background-color: #131313;
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #f5f5f5; /* Kolor suwaka po najechaniu */
+    background-color: #f5f5f5;
   }
 
-  /* Stylizacja dla Firefox */
   html {
-    scrollbar-color: #f5f5f5 #131313; /* Kolor suwaka i tracka */
-    scrollbar-width: thin; /* Można ustawić na thin, auto, none */
+    scrollbar-color: #f5f5f5 #131313;
+    scrollbar-width: thin;
   }
 }

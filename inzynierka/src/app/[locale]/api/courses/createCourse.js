@@ -7,10 +7,10 @@ const createCourse = async (axiosInstance, courseData) => {
       courseData
     );
     console.log("course created: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error creating course:", error);
-    throw new Error("Error creating course:"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error creating course:");
   }
 };
 

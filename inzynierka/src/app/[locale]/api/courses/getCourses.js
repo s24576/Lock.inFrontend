@@ -10,7 +10,6 @@ const getCourses = async (axiosInstance, page) => {
   console.log("page", page);
 
   try {
-    // Budowanie URL-a dynamicznie
     let url = `/api/course/getCourses?size=${size}&page=${page}`;
 
     const response = await axiosInstance.get(url);

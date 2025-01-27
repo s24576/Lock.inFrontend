@@ -6,7 +6,6 @@ const getDuoById = async (language, duoId) => {
       `http://localhost:8080/api/duo/getDuoById?duoId=${duoId}`,
       {
         headers: {
-          // Ustawienie pustego nagłówka Authorization, aby upewnić się, że nie jest dodawany
           "Accept-Language": language,
         },
       }

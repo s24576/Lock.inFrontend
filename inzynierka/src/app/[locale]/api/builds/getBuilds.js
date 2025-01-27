@@ -10,7 +10,6 @@ const getBuilds = async (axiosInstance, page, author, championId) => {
   console.log("championId", championId);
 
   try {
-    // Budowanie URL-a dynamicznie
     let url = `/build/getBuilds?size=${size}&page=${page}`;
 
     if (author && author.trim() !== "") {

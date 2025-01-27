@@ -21,7 +21,6 @@ const CheckoutPage = ({ course }) => {
     setLoading(true);
 
     if (!stripe) {
-      // Stripe.js nie został jeszcze załadowany
       return;
     }
 
@@ -32,7 +31,6 @@ const CheckoutPage = ({ course }) => {
 
       const sessionId = response.data.sessionId;
 
-      // Przekierowanie do Stripe Checkout za pomocą sessionId
       const { error } = await stripe.redirectToCheckout({
         sessionId: sessionId,
       });

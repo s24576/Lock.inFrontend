@@ -6,7 +6,7 @@ const sendFriendRequest = async (axiosInstance, to) => {
       to: to,
     });
     console.log("sending friend request : ", result.data);
-    return result.data; // Zwracamy dane
+    return result.data;
   } catch (error) {
     console.log("Error fetching sending friend request:", error);
   }

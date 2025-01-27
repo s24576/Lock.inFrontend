@@ -29,7 +29,6 @@ const Navbar = () => {
   const isRootOrLocaleOnly =
     pathname === "/" ||
     languages.some((locale) => {
-      // Sprawdzamy, czy ścieżka zaczyna się od "/builds" lub "/locale/builds"
       const buildsPath = `/builds`;
       const localeBuildsPath = `/${locale}/builds`;
       const duoPath = `/duo`;
@@ -58,9 +57,9 @@ const Navbar = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 180) {
-        setIsFixed(false); // Przestań być fixed po przejściu h-screen
+        setIsFixed(false);
       } else {
-        setIsFixed(true); // Pozostaje fixed, jeśli w obrębie h-screen
+        setIsFixed(true);
       }
     };
 

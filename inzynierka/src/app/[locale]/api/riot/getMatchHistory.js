@@ -9,12 +9,12 @@ const getMatchHistory = async (axiosInstance, puuid, count, queue) => {
   try {
     const response = await axiosInstance.get(
       `/riot/getMatchHistory?puuid=${puuid}&count=${count}&queue=${queue}`
-    ); // Wywołujemy zapytanie do API
+    );
     console.log("match history: ", response.data);
-    return response.data; // Zwracamy dane
+    return response.data;
   } catch (error) {
     console.log("Error fetching match history:", error);
-    throw new Error("Error fetching match history"); // Rzucamy błąd, aby React Query mógł go obsłużyć
+    throw new Error("Error fetching match history");
   }
 };
 

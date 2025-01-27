@@ -46,7 +46,6 @@ const HomePage = () => {
   });
 
   useEffect(() => {
-    // Close the dropdown if clicked outside
     const handleClickOutside = (e) => {
       if (
         claimedAccountsRef.current &&
@@ -85,7 +84,6 @@ const HomePage = () => {
     })) || []
   );
 
-  // Sprawdź czy którykolwiek z queries jest w trakcie ładowania
   const isAnyDetailedAccountLoading = detailedAccountsData.some(
     (query) => query.isLoading
   );
@@ -106,17 +104,6 @@ const HomePage = () => {
     e.preventDefault();
     await findAnotherProfile();
   };
-
-  //po przerobieniu messengera dodac tu ws i refetchowac chaty
-  const {
-    refetch: refetchChats,
-    data: chatsData,
-    error: chatsError,
-    isLoading: chatsLoading,
-  } = useQuery("chatsData", () => getChats(axiosInstance, 3), {
-    refetchOnWindowFocus: false,
-    enabled: isLogged === true,
-  });
 
   const {
     refetch: refetchFollowedProfiles,
@@ -148,7 +135,6 @@ const HomePage = () => {
 
   if (
     claimedAccountsLoading ||
-    chatsLoading ||
     followedProfilesLoading ||
     isLogged === null ||
     isAnyDetailedAccountLoading
@@ -162,7 +148,6 @@ const HomePage = () => {
 
   if (
     !claimedAccountsLoading &&
-    !chatsLoading &&
     !followedProfilesLoading &&
     isLogged === true
   ) {
@@ -399,7 +384,7 @@ const HomePage = () => {
                   })}
               </div>
             )}
-            {/* followed profiles strona do dorobienia*/}
+            {/* followed profiles*/}
             {followedProfilesData &&
               followedProfilesData.length > numberOfFollowedProfiles && (
                 <p
