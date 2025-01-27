@@ -114,7 +114,7 @@ const SummonerProfile = () => {
     error: playerError,
     refetch: playerDataRefetch,
   } = useQuery(
-    "summonerData",
+    ["summonerData", params.username],
     () => findPlayer(axiosInstance, params.server, params.username, params.tag),
     {
       refetchOnWindowFocus: false,

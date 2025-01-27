@@ -27,6 +27,7 @@ const HomePage = () => {
   const [lastMatches, setLastMatches] = useState([]);
   const claimedAccountsRef = useRef(null);
   const [showFullMatch, setShowFullMatch] = useState(null);
+  const [numberOfFollowedProfiles, setNumberOfFollowedProfiles] = useState(6);
 
   const { userData, isLogged } = useContext(UserContext);
   const { version } = useContext(SearchContext);
@@ -61,7 +62,6 @@ const HomePage = () => {
     };
   }, []);
 
-  //po sukcesie wybranie 5 ostatnich meczy z kazdych kont, narazie brak pelnych danych w matches od findPlayer
   const detailedAccountsData = useQueries(
     claimedAccountsData?.map((account) => ({
       queryKey: ["playerData", account.gameName, account.tagLine],
@@ -341,113 +341,76 @@ const HomePage = () => {
               <BiSolidLock className="text-[28px] text-silver cursor-pointer hover:text-[#969696]"></BiSolidLock>
             </button>
           </form>
-          <div className="flex flex-col gap-y-2 mt-4 ml-2">
-            <p className="text-[24px]"> {t("mainpage:lastChats")}</p>
-            {chatsLoading && <p>Loading...</p>}
-            {/* sa 3 last messages przypadek jak nie ma */}
-            {chatsData && (
-              <div className="flex flex-col gap-y-3">
-                {chatsData.content.map((chat) => {
-                  if (chat.lastMessage === null) return null;
-                  return (
-                    <div key={chat._id} className="flex gap-x-2 items-center">
-                      {chat.lastMessage.image ? (
-                        <Link href={"/profile/" + chat.lastMessage.userId}>
-                          <img
-                            src={getImageSrc(chat.lastMessage.image)}
-                            className="w-[50px] h-[50px] object-cover border-2 border-white-smoke rounded-full"
-                          ></img>
-                        </Link>
-                      ) : (
-                        <Link href={"/profile/" + chat.lastMessage.userId}>
-                          <div className="h-[50px] w-[50px] border-2 border-silver rounded-full flex items-center justify-center">
-                            <FaUser className="text-silver text-[26px]"></FaUser>
-                          </div>
-                        </Link>
-                      )}
 
-                      {/* dodac linki do chatow a nie samego messengera */}
-                      <Link
-                        href="/messenger"
-                        className="bg-white-smoke w-full p-2 rounded-2xl flex flex-col hover:bg-[#E6E6E6] hover:bg-opacity-100 transition-colors duration-100"
-                      >
-                        <p className="text-night">{chat.lastMessage.userId}</p>
-                        <p className="text-night">{chat.lastMessage.message}</p>
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-            <Link
-              href="/messenger"
-              className="text-end text-[18px] hover:text-silver transition-colors duration-150"
-            >
-              {t("mainpage:seeMore")}
-            </Link>
-          </div>
           <div className="flex flex-col gap-y-2 mt-3 ml-2">
             <p className="text-[24px]"> {t("mainpage:followedProfiles")}</p>
             {followedProfilesLoading && <p>Loading...</p>}
             {followedProfilesData && (
               <div className="flex flex-col gap-y-3">
-                {followedProfilesData.map((profile, key) => {
-                  return (
-                    <Link
-                      href={
-                        "/summoner/" +
-                        profile.server +
-                        "/" +
-                        profile.tagLine +
-                        "/" +
-                        profile.gameName
-                      }
-                      key={key}
-                      className="flex items-center justify-between hover:bg-silver hover:bg-opacity-5 transition-colors duration-100 p-2 rounded-2xl"
-                    >
-                      <div className="flex items-center gap-x-2">
-                        <Image
-                          src={
-                            "https://ddragon.leagueoflegends.com/cdn/" +
-                            version +
-                            "/img/profileicon/" +
-                            profile.profileIconId +
-                            ".png"
-                          }
-                          height={50}
-                          width={50}
-                          className="rounded-full border-[1px] border-white-smoke"
-                          alt="profile icon"
-                        />
-                        <p className="text-[24px]">{profile.gameName}</p>
-                      </div>
-                      <div className="flex items-center">
-                        {profile.tier ? (
+                {followedProfilesData
+                  .slice(0, numberOfFollowedProfiles)
+                  .map((profile, key) => {
+                    return (
+                      <Link
+                        href={
+                          "/summoner/" +
+                          profile.server +
+                          "/" +
+                          profile.tagLine +
+                          "/" +
+                          profile.gameName
+                        }
+                        key={key}
+                        className="flex items-center justify-between hover:bg-silver hover:bg-opacity-5 transition-colors duration-100 p-2 rounded-2xl"
+                      >
+                        <div className="flex items-center gap-x-2">
                           <Image
-                            src={"/rank_emblems/" + profile.tier + ".png"}
-                            width={50}
+                            src={
+                              "https://ddragon.leagueoflegends.com/cdn/" +
+                              version +
+                              "/img/profileicon/" +
+                              profile.profileIconId +
+                              ".png"
+                            }
                             height={50}
-                            alt="ranktier"
+                            width={50}
+                            className="rounded-full border-[1px] border-white-smoke"
+                            alt="profile icon"
                           />
-                        ) : (
-                          <p className="text-[20px]">Unranked</p>
-                        )}
-                        {profile.rank && (
-                          <p className="text-[24px]">{profile.rank}</p>
-                        )}
-                      </div>
-                    </Link>
-                  );
-                })}
+                          <p className="text-[24px]">{profile.gameName}</p>
+                        </div>
+                        <div className="flex items-center">
+                          {profile.tier ? (
+                            <Image
+                              src={"/rank_emblems/" + profile.tier + ".png"}
+                              width={50}
+                              height={50}
+                              alt="ranktier"
+                            />
+                          ) : (
+                            <p className="text-[20px]">Unranked</p>
+                          )}
+                          {profile.rank && (
+                            <p className="text-[24px]">{profile.rank}</p>
+                          )}
+                        </div>
+                      </Link>
+                    );
+                  })}
               </div>
             )}
             {/* followed profiles strona do dorobienia*/}
-            <Link
-              href="/messenger"
-              className="mt-3 text-end text-[18px] hover:text-silver transition-colors duration-150"
-            >
-              {t("mainpage:seeMore")}
-            </Link>
+            {followedProfilesData &&
+              followedProfilesData.length > numberOfFollowedProfiles && (
+                <p
+                  onClick={() =>
+                    setNumberOfFollowedProfiles((prev) => prev + 6)
+                  }
+                  className="mt-3 text-end text-[18px] hover:text-silver transition-colors duration-150 cursor-pointer"
+                >
+                  {t("mainpage:seeMore")}
+                </p>
+              )}
           </div>
         </div>
       </div>
