@@ -185,7 +185,9 @@ const CommentsSection = ({ id: objectId }) => {
           };
         });
 
-        const usernames = newData?.content?.map((build) => build.username);
+        const usernames = newData?.content
+          ? newData.content.map((build) => build.username)
+          : [];
 
         setUsernamesToFetch((prevUsernames) => {
           const uniqueUsernames = new Set([...prevUsernames, ...usernames]);
