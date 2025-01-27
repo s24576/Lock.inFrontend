@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
+import { SearchContext } from "../../context/SearchContext";
 import axios from "axios";
 import useAxios from "../../hooks/useAxios";
 import { useRouter } from "next/navigation";
@@ -23,12 +24,12 @@ const statShardsArray = {
 
 const summoners = [
   "Barrier",
-  "Cleanse",
+  "Boost",
   "Exhaust",
   "Flash",
   "Haste",
   "Heal",
-  "Ignite",
+  "Dot",
   "Smite",
   "Teleport",
 ];
@@ -47,6 +48,7 @@ const runeShards = [
 
 const CreateBuild = () => {
   const { userData, isLogged } = useContext(UserContext);
+  const { version } = useContext(SearchContext);
   const [titlePlaceholder, setTitlePlaceholder] = useState("");
   const [descriptionPlaceholder, setDescriptionPlaceholder] = useState("");
   const [championOptions, setChampionOptions] = useState([]);
@@ -105,7 +107,7 @@ const CreateBuild = () => {
           label: (
             <div className="flex items-center">
               <Image
-                src={`https://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${championKey}.png`}
+                src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championKey}.png`}
                 alt={championValue}
                 width={20}
                 height={20}
@@ -285,9 +287,8 @@ const CreateBuild = () => {
     });
   };
 
-  const { mutateAsync: handleCreateBuild, isLoading: isCreatingBuild } = useMutation(
-    (requestBody) => createBuild(axiosInstance, requestBody),
-    {
+  const { mutateAsync: handleCreateBuild, isLoading: isCreatingBuild } =
+    useMutation((requestBody) => createBuild(axiosInstance, requestBody), {
       onSuccess: (data) => {
         console.log("build created successfully:", data);
         router.push("/builds/" + data);
@@ -295,8 +296,7 @@ const CreateBuild = () => {
       onError: (error) => {
         console.error("Error creating course:", error);
       },
-    }
-  );
+    });
 
   const [validationError, setValidationError] = useState("");
 
@@ -540,7 +540,7 @@ const CreateBuild = () => {
           <div className="flex items-center gap-x-4 ml-8">
             {formValues.championKey && (
               <Image
-                src={`https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${formValues.championKey}.png`}
+                src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${formValues.championKey}.png`}
                 alt={formValues.championKey}
                 width={56} // Adjust the width as needed
                 height={56} // Adjust the height as needed
@@ -628,7 +628,12 @@ const CreateBuild = () => {
               <div className="hover:opacity-50 transition-opacity duration-150 cursor-pointer">
                 <Image
                   src={
-                    "/league-summoners/" + formValues.summoner1Name + ".webp"
+                    "https://ddragon.leagueoflegends.com/cdn/" +
+                    version +
+                    "/img/spell/" +
+                    "Summoner" +
+                    formValues.summoner1Name +
+                    ".png"
                   }
                   width={48}
                   height={48}
@@ -642,7 +647,12 @@ const CreateBuild = () => {
               <div className="hover:opacity-50 transition-opacity duration-150 cursor-pointer">
                 <Image
                   src={
-                    "/league-summoners/" + formValues.summoner2Name + ".webp"
+                    "https://ddragon.leagueoflegends.com/cdn/" +
+                    version +
+                    "/img/spell/" +
+                    "Summoner" +
+                    formValues.summoner2Name +
+                    ".png"
                   }
                   width={48}
                   height={48}
@@ -666,7 +676,7 @@ const CreateBuild = () => {
                     key={key}
                     src={
                       "https://ddragon.leagueoflegends.com/cdn/" +
-                      "14.11.1" +
+                      version +
                       "/img/item/" +
                       item +
                       ".png"
@@ -796,7 +806,7 @@ const CreateBuild = () => {
                       }
                     >
                       <Image
-                        src={`https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${championKey}.png`}
+                        src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championKey}.png`}
                         alt={championValue}
                         width={50}
                         height={50}
@@ -827,7 +837,14 @@ const CreateBuild = () => {
                         onClick={() => handleSummonerClick(summoner)}
                       >
                         <Image
-                          src={"/league-summoners/" + summoner + ".webp"}
+                          src={
+                            "https://ddragon.leagueoflegends.com/cdn/" +
+                            version +
+                            "/img/spell/" +
+                            "Summoner" +
+                            summoner +
+                            ".png"
+                          }
                           width={56}
                           height={56}
                           alt={summoner}
@@ -1097,7 +1114,7 @@ const CreateBuild = () => {
                         <Image
                           src={
                             "https://ddragon.leagueoflegends.com/cdn/" +
-                            "14.11.1" +
+                            version +
                             "/img/item/" +
                             item.id +
                             ".png"

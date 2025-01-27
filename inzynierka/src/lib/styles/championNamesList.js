@@ -4,7 +4,7 @@ export const customStyles = {
     backgroundColor: "transparent",
     borderColor: state.isFocused ? "#f5b800" : "#f5b800",
     color: "#f5f5f5",
-    fontSize: "20px",
+    fontSize: "17px",
     cursor: "pointer", // Change cursor to pointer on hover
     transition: "all 150ms ease",
     boxShadow: "none", // Remove focus shadow

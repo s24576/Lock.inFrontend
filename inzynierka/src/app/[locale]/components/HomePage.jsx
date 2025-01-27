@@ -1,5 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
+import { SearchContext } from "../context/SearchContext";
 import { useQuery, useQueries, useMutation } from "react-query";
 import useAxios from "../hooks/useAxios";
 import { useRouter } from "next/navigation";
@@ -28,6 +29,7 @@ const HomePage = () => {
   const [showFullMatch, setShowFullMatch] = useState(null);
 
   const { userData, isLogged } = useContext(UserContext);
+  const { version } = useContext(SearchContext);
 
   const router = useRouter();
   const axiosInstance = useAxios();
@@ -245,7 +247,7 @@ const HomePage = () => {
                                 <Image
                                   src={
                                     "https://ddragon.leagueoflegends.com/cdn/" +
-                                    "14.11.1" +
+                                    version +
                                     "/img/profileicon/" +
                                     account.profileIconId +
                                     ".png"
@@ -407,7 +409,7 @@ const HomePage = () => {
                         <Image
                           src={
                             "https://ddragon.leagueoflegends.com/cdn/" +
-                            "14.11.1" +
+                            version +
                             "/img/profileicon/" +
                             profile.profileIconId +
                             ".png"

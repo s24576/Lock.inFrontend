@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
+import { SearchContext } from "../../context/SearchContext";
 import getMyRiotProfiles from "../../api/riot/getMyRiotProfiles";
 import getDuos from "../../api/duo/getDuos";
 import getRiotShortProfiles from "../../api/riot/getRiotShortProfiles";
@@ -55,6 +56,8 @@ const rankOptions = rankList.map((rank) => ({
 const Duo = () => {
   const { duoSettings, setDuoSettings, userData, isLogged } =
     useContext(UserContext);
+
+  const { version } = useContext(SearchContext);
 
   const axios = useAxios();
   const axiosPublic = useAxiosPublic();
@@ -159,7 +162,7 @@ const Duo = () => {
           label: (
             <div className="flex items-center">
               <Image
-                src={`https://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${championKey}.png`}
+                src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championKey}.png`}
                 alt={championValue}
                 width={20}
                 height={20}
@@ -278,7 +281,7 @@ const Duo = () => {
                   <Image
                     src={
                       "https://ddragon.leagueoflegends.com/cdn/" +
-                      "14.24.1" +
+                      version +
                       "/img/profileicon/" +
                       riotProfiles[0].profileIconId +
                       ".png"
@@ -428,7 +431,7 @@ const Duo = () => {
                         <Image
                           src={
                             "https://ddragon.leagueoflegends.com/cdn/" +
-                            "14.24.1" +
+                            version +
                             "/img/profileicon/" +
                             shortProfile.profileIconId +
                             ".png"
@@ -529,7 +532,7 @@ const Duo = () => {
                             key={key}
                             src={
                               "https://ddragon.leagueoflegends.com/cdn/" +
-                              "14.24.1" +
+                              version +
                               "/img/champion/" +
                               champion +
                               ".png"

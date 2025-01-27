@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
+import { SearchContext } from "../../context/SearchContext";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import useAxios from "../../hooks/useAxios";
@@ -40,6 +41,7 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const BuildDetails = () => {
   const { userData, isLogged } = useContext(UserContext);
+  const { version } = useContext(SearchContext);
 
   const params = useParams();
   const pathname = usePathname();
@@ -179,7 +181,7 @@ const BuildDetails = () => {
                 <Image
                   src={
                     "https://ddragon.leagueoflegends.com/cdn/" +
-                    "14.11.1" +
+                    version +
                     "/img/champion/" +
                     buildData?.championId +
                     ".png"
@@ -200,7 +202,7 @@ const BuildDetails = () => {
                       <Image
                         src={
                           "https://ddragon.leagueoflegends.com/cdn/" +
-                          "14.11.1" +
+                          version +
                           "/img/champion/" +
                           buildData?.championId +
                           ".png"
@@ -307,7 +309,7 @@ const BuildDetails = () => {
               <Image
                 src={
                   "https://ddragon.leagueoflegends.com/cdn/" +
-                  "14.11.1" +
+                  version +
                   "/img/item/" +
                   buildData?.item1 +
                   ".png"
@@ -320,7 +322,7 @@ const BuildDetails = () => {
               <Image
                 src={
                   "https://ddragon.leagueoflegends.com/cdn/" +
-                  "14.11.1" +
+                  version +
                   "/img/item/" +
                   buildData?.item2 +
                   ".png"
@@ -333,7 +335,7 @@ const BuildDetails = () => {
               <Image
                 src={
                   "https://ddragon.leagueoflegends.com/cdn/" +
-                  "14.11.1" +
+                  version +
                   "/img/item/" +
                   buildData?.item3 +
                   ".png"
@@ -346,7 +348,7 @@ const BuildDetails = () => {
               <Image
                 src={
                   "https://ddragon.leagueoflegends.com/cdn/" +
-                  "14.11.1" +
+                  version +
                   "/img/item/" +
                   buildData?.item4 +
                   ".png"
@@ -359,7 +361,7 @@ const BuildDetails = () => {
               <Image
                 src={
                   "https://ddragon.leagueoflegends.com/cdn/" +
-                  "14.11.1" +
+                  version +
                   "/img/item/" +
                   buildData?.item5 +
                   ".png"
@@ -372,7 +374,7 @@ const BuildDetails = () => {
               <Image
                 src={
                   "https://ddragon.leagueoflegends.com/cdn/" +
-                  "14.11.1" +
+                  version +
                   "/img/item/" +
                   buildData?.item6 +
                   ".png"
@@ -476,7 +478,9 @@ const BuildDetails = () => {
                 {buildData?.summoner1Name && (
                   <Image
                     src={
-                      "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+                      "https://ddragon.leagueoflegends.com/cdn/" +
+                      version +
+                      "/img/spell/" +
                       "Summoner" +
                       buildData.summoner1Name +
                       ".png"
@@ -490,7 +494,9 @@ const BuildDetails = () => {
                 {buildData?.summoner2Name && (
                   <Image
                     src={
-                      "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+                      "https://ddragon.leagueoflegends.com/cdn/" +
+                      version +
+                      "/img/spell/" +
                       // participant.summoner2Name +
                       "Summoner" +
                       buildData.summoner2Name +

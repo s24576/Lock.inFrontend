@@ -120,7 +120,7 @@ const DuoInvites = () => {
                           <Image
                             src={
                               "https://ddragon.leagueoflegends.com/cdn/" +
-                              "14.24.1" +
+                              version +
                               "/img/profileicon/" +
                               duo.profile.profileIconId +
                               ".png"

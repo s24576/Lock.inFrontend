@@ -108,9 +108,10 @@ const DuoCreation = () => {
   //languages
   const handleLanguagesChange = (selectedOption) => {
     // Bierzemy tylko pierwsze 3 opcje lub ustawiamy "Other" jeśli nic nie wybrano
-    const selectedLanguages = selectedOption && selectedOption.length > 0
-      ? selectedOption.slice(0, 3).map((option) => option.value)
-      : ["Other"];
+    const selectedLanguages =
+      selectedOption && selectedOption.length > 0
+        ? selectedOption.slice(0, 3).map((option) => option.value)
+        : ["Other"];
 
     setDuoBody({
       ...duoBody,
@@ -232,10 +233,10 @@ const DuoCreation = () => {
           <p className="text-[20px]">{t("duo:createDuo")}</p>
         </div>
       </DialogTrigger>
-      <DialogContent 
+      <DialogContent
         className="bg-night border-[1px] border-amber font-dekko fixed top-[5vh] translate-y-0"
-        style={{ 
-          transform: 'translate(-50%, 0)'
+        style={{
+          transform: "translate(-50%, 0)",
         }}
       >
         <DialogHeader>
@@ -251,7 +252,7 @@ const DuoCreation = () => {
                 <Image
                   src={
                     "https://ddragon.leagueoflegends.com/cdn/" +
-                    "14.24.1" +
+                    version +
                     "/img/profileicon/" +
                     duoSettings?.duoAccount?.profileIconId +
                     ".png"

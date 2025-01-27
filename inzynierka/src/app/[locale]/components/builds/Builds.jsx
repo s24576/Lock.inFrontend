@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
+import { SearchContext } from "../../context/SearchContext";
 import Image from "next/image";
 import { useQuery } from "react-query";
 import Select from "react-select";
@@ -20,6 +21,8 @@ const Builds = () => {
     author: "",
     championId: "",
   });
+
+  const { version } = useContext(SearchContext);
 
   //potrzebne do selecta z championami
   const [championOptions, setChampionOptions] = useState([]);
@@ -84,7 +87,7 @@ const Builds = () => {
           label: (
             <div className="flex items-center">
               <Image
-                src={`https://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${championKey}.png`}
+                src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championKey}.png`}
                 alt={championValue}
                 width={20}
                 height={20}
@@ -193,7 +196,7 @@ const Builds = () => {
         </form>
         <div className="z-20 bg-night bg-opacity-50 w-full px-[14%] mt-[3%] font-dekko">
           <div className="flex gap-x-6 items-center py-8">
-            <p className="text-[36px] text-amber pr-6">{t("common:sortBy")}</p>
+            <p className="text-[28px] text-amber pr-6">{t("common:sortBy")}</p>
             <Select
               styles={customStyles}
               options={championOptions}

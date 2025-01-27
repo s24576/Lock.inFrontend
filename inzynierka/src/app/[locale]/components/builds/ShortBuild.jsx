@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { SearchContext } from "../../context/SearchContext";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
@@ -28,6 +29,8 @@ const ShortBuild = ({
   dayjs.extend(relativeTime);
 
   const image = shortProfilesData?.[build.username]?.image;
+
+  const { version } = useContext(SearchContext);
 
   const axiosInstance = useAxios();
 
@@ -83,7 +86,7 @@ const ShortBuild = ({
         <Image
           src={
             "https://ddragon.leagueoflegends.com/cdn/" +
-            "14.11.1" +
+            version +
             "/img/champion/" +
             build.championId +
             ".png"
@@ -150,7 +153,9 @@ const ShortBuild = ({
         <div className="flex items-center gap-x-1 pl-10 pr-4">
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/spell/" +
               "Summoner" +
               build.summoner1Name +
               ".png"
@@ -162,7 +167,9 @@ const ShortBuild = ({
           />
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/spell/" +
               "Summoner" +
               build.summoner2Name +
               ".png"
@@ -177,7 +184,9 @@ const ShortBuild = ({
         <div className="flex items-center gap-x-1 pl-10 pr-4">
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/spell/" +
               // participant.summoner2Name +
               "SummonerFlash" +
               ".png"
@@ -189,7 +198,9 @@ const ShortBuild = ({
           />
           <Image
             src={
-              "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" +
+              "https://ddragon.leagueoflegends.com/cdn/" +
+              version +
+              "/img/spell/" +
               // participant.summoner2Name +
               "SummonerBarrier" +
               ".png"
@@ -206,7 +217,7 @@ const ShortBuild = ({
         <Image
           src={
             "https://ddragon.leagueoflegends.com/cdn/" +
-            "14.11.1" +
+            version +
             "/img/item/" +
             build.item1 +
             ".png"
@@ -219,7 +230,7 @@ const ShortBuild = ({
         <Image
           src={
             "https://ddragon.leagueoflegends.com/cdn/" +
-            "14.11.1" +
+            version +
             "/img/item/" +
             build.item2 +
             ".png"
@@ -232,7 +243,7 @@ const ShortBuild = ({
         <Image
           src={
             "https://ddragon.leagueoflegends.com/cdn/" +
-            "14.11.1" +
+            version +
             "/img/item/" +
             build.item3 +
             ".png"
@@ -245,7 +256,7 @@ const ShortBuild = ({
         <Image
           src={
             "https://ddragon.leagueoflegends.com/cdn/" +
-            "14.11.1" +
+            version +
             "/img/item/" +
             build.item4 +
             ".png"
@@ -258,7 +269,7 @@ const ShortBuild = ({
         <Image
           src={
             "https://ddragon.leagueoflegends.com/cdn/" +
-            "14.11.1" +
+            version +
             "/img/item/" +
             build.item5 +
             ".png"
@@ -271,7 +282,7 @@ const ShortBuild = ({
         <Image
           src={
             "https://ddragon.leagueoflegends.com/cdn/" +
-            "14.11.1" +
+            version +
             "/img/item/" +
             build.item6 +
             ".png"
