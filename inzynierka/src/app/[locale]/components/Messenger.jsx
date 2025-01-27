@@ -42,6 +42,7 @@ const Messenger = () => {
 
   //tresc nowej wiadomosci
   const [newMessage, setNewMessage] = useState("");
+  const [messageKey, setMessageKey] = useState(newMessage || "");
 
   //ilosc wiadomosci wyswietlonych w chacie
   const [size, setSize] = useState(10);
@@ -66,29 +67,33 @@ const Messenger = () => {
     refetch: chatsRefetch,
     data: chatsData,
     isLoading: chatsIsLoading,
-  } = useQuery(["chatsData", size], () => getChats(axiosInstance, size), {
-    refetchOnWindowFocus: false,
-    keepPreviousData: true,
-    onSuccess: (data) => {
-      if (data?.content?.length > 0) {
-        const usernamesToFetch = data?.content
-          .map(
-            (chat) =>
-              chat.members.find(
-                (member) => member.username !== userData.username
-              )?.username
-          )
-          .filter(Boolean);
+  } = useQuery(
+    ["chatsData", size, messageKey],
+    () => getChats(axiosInstance, size),
+    {
+      refetchOnWindowFocus: false,
+      keepPreviousData: true,
+      onSuccess: (data) => {
+        if (data?.content?.length > 0) {
+          const usernamesToFetch = data?.content
+            .map(
+              (chat) =>
+                chat.members.find(
+                  (member) => member.username !== userData.username
+                )?.username
+            )
+            .filter(Boolean);
 
-        setUsernamesToFetch(usernamesToFetch);
+          setUsernamesToFetch(usernamesToFetch);
 
-        if (isInitialLoad && data.content.length > 0) {
-          setActiveChat(data.content[0]._id);
-          setIsInitialLoad(false);
+          if (isInitialLoad && data.content.length > 0) {
+            setActiveChat(data.content[0]._id);
+            setIsInitialLoad(false);
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   const { data: shortProfilesData, isLoading: shortProfilesIsLoading } =
     useQuery(
@@ -115,12 +120,11 @@ const Messenger = () => {
     data: messagesData,
     isLoading: messagesIsLoading,
   } = useQuery(
-    ["getMessages", activeChat, messagesSize],
+    ["getMessages", activeChat, messagesSize, messageKey],
     () => {
       if (activeChat && messagesSize) {
         return getMessages(axiosInstance, activeChat, messagesSize);
       }
-      throw new Error("Invalid parameters for getMessages");
     },
     {
       refetchOnWindowFocus: false,
@@ -137,11 +141,11 @@ const Messenger = () => {
     },
     {
       onSuccess: () => {
-        setLocalLastMessage({
-          message: newMessage,
-          timestamp: Math.floor(Date.now() / 1000),
-          userId: userData.username,
-        });
+        // setLocalLastMessage({
+        //   message: newMessage,
+        //   timestamp: Math.floor(Date.now() / 1000),
+        //   userId: userData.username,
+        // });
         setNewMessage("");
         chatsRefetch();
         messagesRefetch();
@@ -392,10 +396,7 @@ const Messenger = () => {
                 (member) => member.username !== userData?.username
               );
 
-              const lastMessage =
-                chat._id === activeChat && localLastMessage
-                  ? localLastMessage
-                  : chat.lastMessage;
+              const lastMessage = chat.lastMessage;
 
               return (
                 <div

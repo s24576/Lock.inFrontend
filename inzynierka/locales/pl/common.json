@@ -20,6 +20,8 @@
   "next": "Następna",
   "back": "Poprzednia",
   "notification": "Powiadomienie",
+  "notificationsPanel": "Panel powiadomień",
+  "noNotifications": "Brak powiadomień",
   "error": "Błąd",
   "close": "Zamknij",
   "redirecting": "Przekierowywanie...",

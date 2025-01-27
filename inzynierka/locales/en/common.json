@@ -20,6 +20,8 @@
   "next": "Next",
   "back": "Back",
   "notification": "Notification",
+  "notificationsPanel": "Notifications panel",
+  "noNotifications": "No notifications",
   "close": "Close",
   "redirecting": "Redirecting...",
 

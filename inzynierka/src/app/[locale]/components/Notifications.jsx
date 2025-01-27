@@ -8,6 +8,7 @@ import { formatTimeAgo, formatTimestampToDateTime } from "@/lib/formatTimeAgo";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const Notifications = () => {
   const { userData } = useContext(UserContext);
@@ -15,6 +16,7 @@ const Notifications = () => {
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
   const axiosInstance = useAxios();
+  const { t } = useTranslation();
 
   const [stompClient, setStompClient] = useState(null);
 
@@ -63,11 +65,11 @@ const Notifications = () => {
                     <h1 className="px-[10px]">New message</h1>
                     <button onClick={() => toast.dismiss(t)}>Close</button>
                   </div>
-                  <div className="flex items-start gap-x-2 px-4 mt-2 w-full">
+                  <div className="flex items-center gap-x-2 px-4 mt-2 w-full">
                     <p className="pl-[10px] text-[20px] min-w-[30%]">
                       {parsed.userId}:
                     </p>
-                    <p>
+                    <p className="text-[20px]">
                       {parsed.message.length > 50
                         ? `${parsed.message.slice(0, 50)}...`
                         : parsed.message}
@@ -168,6 +170,9 @@ const Notifications = () => {
           ref={dropdownRef}
           className="absolute right-0 mt-2 w-[400px] bg-night border border-amber rounded-xl shadow-lg font-dekko"
         >
+          <p className="font-bangers text-[18px] pl-4 py-1">
+            {t("common:notificationsPanel")}
+          </p>
           {notificationsData?.content
             ?.sort((a, b) => b.timestamp - a.timestamp)
             ?.map((notification, key) => {
@@ -189,7 +194,10 @@ const Notifications = () => {
             })}
           {notificationsData?.content?.length === 0 && (
             <div className="p-2 hover:bg-amber hover:text-night transition-colors rounded-xl duration-150 flex items-center gap-x-4">
-              <p className="w-[100%] text-[16px]">You have no notifications</p>
+              <p className="w-[100%] text-[16px]">
+                {" "}
+                {t("common:noNotifications")}
+              </p>
             </div>
           )}
         </div>
