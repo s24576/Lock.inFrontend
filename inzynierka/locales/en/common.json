@@ -50,6 +50,7 @@
     "leaveChat": "Leave chat",
     "noFriends": "You don't have any friends yet",
     "typeMessage": "Aa",
-    "noMessages": "No messages"
+    "noMessages": "No messages",
+    "noChats": "Add some friends to start chatting!"
   }
 }

@@ -70,19 +70,22 @@ const Messenger = () => {
     refetchOnWindowFocus: false,
     keepPreviousData: true,
     onSuccess: (data) => {
-      const usernamesToFetch = data.content
-        .map(
-          (chat) =>
-            chat.members.find((member) => member.username !== userData.username)
-              ?.username
-        )
-        .filter(Boolean);
+      if (data?.content?.length > 0) {
+        const usernamesToFetch = data?.content
+          .map(
+            (chat) =>
+              chat.members.find(
+                (member) => member.username !== userData.username
+              )?.username
+          )
+          .filter(Boolean);
 
-      setUsernamesToFetch(usernamesToFetch);
+        setUsernamesToFetch(usernamesToFetch);
 
-      if (isInitialLoad && data.content.length > 0) {
-        setActiveChat(data.content[0]._id);
-        setIsInitialLoad(false);
+        if (isInitialLoad && data.content.length > 0) {
+          setActiveChat(data.content[0]._id);
+          setIsInitialLoad(false);
+        }
       }
     },
   });
@@ -160,6 +163,7 @@ const Messenger = () => {
       onSuccess: (data) => {
         setIsInitialLoad(true);
         chatsRefetch();
+        window.location.reload();
       },
       onError: (error) => {
         console.error("Error adding msg:", error);
@@ -195,6 +199,7 @@ const Messenger = () => {
         setNewMessage("");
         chatsRefetch();
         messagesRefetch();
+        window.location.reload();
       },
       onError: (error) => {
         console.error("Error adding msg:", error);
@@ -313,151 +318,151 @@ const Messenger = () => {
     return (
       <div className="bg-night min-h-screen w-full flex font-dekko">
         <div className="w-[30%] pt-[5%] flex flex-col items-center gap-y-3 px-6 h-screen overflow-y-auto">
-          {chatsData && (
-            <div className="flex flex-col items-center gap-y-4 w-full">
-              <div className="flex justify-between items-center pb-[2%] w-full">
-                <p className="text-[24px]">
-                  {t("common:messenger.createChat")}
-                </p>
-                <Dialog>
-                  <DialogTrigger>
-                    <FaEdit className="text-[28px]"></FaEdit>
-                  </DialogTrigger>
-                  <DialogContent className="bg-night font-dekko">
-                    <p className="text-[24px]">
-                      {t("common:messenger.createChat")}
-                    </p>
-                    <input
-                      type="text"
-                      placeholder={t("common:messenger.chatName")}
-                      className="px-4 py-2 text-white-smoke bg-transparent border-[1px] border-white-smoke rounded-lg focus:outline-none"
-                      value={newChatName}
-                      onChange={(e) => setNewChatName(e.target.value)}
-                    />
-                    <div>
-                      {userData.friends &&
-                        userData.friends.map((friend, key) => {
-                          return (
-                            <div
-                              key={key}
-                              className="flex justify-between px-[1%]"
-                            >
-                              <p>
-                                {friend.username !== userData._id
-                                  ? friend.username
-                                  : friend.username2}
-                              </p>
-                              <button onClick={() => selectFriend(friend)}>
-                                {t("common:messenger.add")}
-                              </button>
-                            </div>
-                          );
-                        })}
-                    </div>
-                    <p>{t("common:messenger.pickedFriends")}:</p>
-                    <div className="flex gap-x-5">
-                      {selectedFriends.length > 0 &&
-                        selectedFriends.map((friend) => {
-                          return (
-                            <div className="flex gap-x-1 items-center">
-                              <p>
-                                {friend.username !== userData._id
-                                  ? friend.username
-                                  : friend.username2}
-                              </p>
-                              <AiOutlineDelete
-                                onClick={() => unselectFriend(friend)}
-                                className="hover:text-amber transition-all duration-150 cursor-pointer"
-                              ></AiOutlineDelete>
-                            </div>
-                          );
-                        })}
-                    </div>
-
-                    <DialogClose>
-                      <button
-                        onClick={() => handleCreateChat()}
-                        className="border-2 border-white mx-auto px-5 py-2 w-[30%] rounded-full text-[20px] text-center hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
-                      >
-                        {selectedFriends.length > 1 && newChatName !== ""
-                          ? "Create chat"
-                          : "Add more"}
-                      </button>
-                    </DialogClose>
-                  </DialogContent>
-                </Dialog>
-              </div>
-              {chatsData?.content?.map((chat, key) => {
-                const otherMember = chat.members.find(
-                  (member) => member.username !== userData.username
-                );
-
-                const lastMessage =
-                  chat._id === activeChat && localLastMessage
-                    ? localLastMessage
-                    : chat.lastMessage;
-
-                return (
-                  <div
-                    key={key}
-                    onClick={() => setActiveChat(chat._id)}
-                    className={`flex items-center gap-x-2 py-4 px-3 border-[1px] rounded-xl cursor-pointer w-full hover:bg-silver hover:bg-opacity-15 transition-all duration-150 ${
-                      activeChat === chat._id
-                        ? "border-amber"
-                        : "border-white-smoke"
-                    }`}
-                  >
-                    {shortProfilesData &&
-                    shortProfilesData[otherMember.username]?.image ? (
-                      <div className="w-[48px] h-[48px] rounded-full border-[1px] border-white-smoke overflow-hidden">
-                        <img
-                          src={getImageSrc(
-                            shortProfilesData[otherMember.username]?.image
-                          )}
-                          className="object-cover h-full w-full"
-                        />
-                      </div>
-                    ) : (
-                      <div className="w-[48px] h-[48px] bg-night flex items-center justify-center border-[1px] border-white-smoke rounded-full">
-                        <FaUser className="text-[24px]" />
-                      </div>
-                    )}
-                    <div className="flex justify-between items-center w-full">
-                      <div className="flex flex-col gap-y-1">
-                        <p className="text-[24px]">
-                          {chat.name === "Private Chat" && otherMember
-                            ? otherMember.username
-                            : chat.name}
-                        </p>
-                        <p className="flex items-center gap-x-1">
-                          {lastMessage.userId
-                            ? lastMessage.userId === userData.username
-                              ? "You: "
-                              : lastMessage.userId + ": "
-                            : ""}
-                          {lastMessage?.message.length > 80
-                            ? lastMessage.message.slice(0, 80) + "..."
-                            : lastMessage?.message}
-                        </p>
-                      </div>
-                      {lastMessage?.timestamp !== null ? (
-                        <p>{formatTimeAgo(lastMessage.timestamp)}</p>
-                      ) : (
-                        ""
-                      )}
-                    </div>
+          <div className="flex flex-col items-center gap-y-4 w-full">
+            <div className="flex justify-between items-center pb-[2%] w-full">
+              <p className="text-[24px]">{t("common:messenger.createChat")}</p>
+              <Dialog>
+                <DialogTrigger>
+                  <FaEdit className="text-[28px]"></FaEdit>
+                </DialogTrigger>
+                <DialogContent className="bg-night font-dekko">
+                  <p className="text-[24px]">
+                    {t("common:messenger.createChat")}
+                  </p>
+                  <input
+                    type="text"
+                    placeholder={t("common:messenger.chatName")}
+                    className="px-4 py-2 text-white-smoke bg-transparent border-[1px] border-white-smoke rounded-lg focus:outline-none"
+                    value={newChatName}
+                    onChange={(e) => setNewChatName(e.target.value)}
+                  />
+                  <div>
+                    {userData.friends &&
+                      userData.friends.map((friend, key) => {
+                        return (
+                          <div
+                            key={key}
+                            className="flex justify-between px-[1%]"
+                          >
+                            <p>
+                              {friend.username !== userData._id
+                                ? friend.username
+                                : friend.username2}
+                            </p>
+                            <button onClick={() => selectFriend(friend)}>
+                              {t("common:messenger.add")}
+                            </button>
+                          </div>
+                        );
+                      })}
                   </div>
-                );
-              })}
-              <button></button>
+                  <p>{t("common:messenger.pickedFriends")}:</p>
+                  <div className="flex gap-x-5">
+                    {selectedFriends.length > 0 &&
+                      selectedFriends.map((friend) => {
+                        return (
+                          <div className="flex gap-x-1 items-center">
+                            <p>
+                              {friend.username !== userData._id
+                                ? friend.username
+                                : friend.username2}
+                            </p>
+                            <AiOutlineDelete
+                              onClick={() => unselectFriend(friend)}
+                              className="hover:text-amber transition-all duration-150 cursor-pointer"
+                            ></AiOutlineDelete>
+                          </div>
+                        );
+                      })}
+                  </div>
+
+                  <DialogClose>
+                    <button
+                      onClick={() => handleCreateChat()}
+                      className="border-2 border-white mx-auto px-5 py-2 w-[50%] rounded-full text-[20px] text-center hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
+                    >
+                      {t("common:messenger.createChat")}
+                    </button>
+                  </DialogClose>
+                </DialogContent>
+              </Dialog>
             </div>
+            {chatsData?.content?.map((chat, key) => {
+              const otherMember = chat.members?.find(
+                (member) => member.username !== userData?.username
+              );
+
+              const lastMessage =
+                chat._id === activeChat && localLastMessage
+                  ? localLastMessage
+                  : chat.lastMessage;
+
+              return (
+                <div
+                  key={key}
+                  onClick={() => setActiveChat(chat._id)}
+                  className={`flex items-center gap-x-2 py-4 px-3 border-[1px] rounded-xl cursor-pointer w-full hover:bg-silver hover:bg-opacity-15 transition-all duration-150 ${
+                    activeChat === chat._id
+                      ? "border-amber"
+                      : "border-white-smoke"
+                  }`}
+                >
+                  {otherMember &&
+                  shortProfilesData?.[otherMember.username]?.image ? (
+                    <div className="w-[48px] h-[48px] rounded-full border-[1px] border-white-smoke overflow-hidden">
+                      <img
+                        src={getImageSrc(
+                          shortProfilesData[otherMember.username]?.image
+                        )}
+                        className="object-cover h-full w-full"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-[48px] h-[48px] bg-night flex items-center justify-center border-[1px] border-white-smoke rounded-full">
+                      <FaUser className="text-[24px]" />
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center w-full">
+                    <div className="flex flex-col gap-y-1">
+                      <p className="text-[24px]">
+                        {chat.name === "Private Chat" && otherMember
+                          ? otherMember.username
+                          : chat.name}
+                      </p>
+                      <p className="flex items-center gap-x-1">
+                        {lastMessage?.userId
+                          ? lastMessage.userId === userData?.username
+                            ? "You: "
+                            : lastMessage.userId + ": "
+                          : ""}
+                        {lastMessage?.message?.length > 80
+                          ? lastMessage.message.slice(0, 80) + "..."
+                          : lastMessage?.message}
+                      </p>
+                    </div>
+                    {lastMessage?.timestamp !== null ? (
+                      <p>{formatTimeAgo(lastMessage.timestamp)}</p>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+
+            <button></button>
+          </div>
+          {chatsData?.content?.length > 0 && (
+            <button
+              onClick={() => setSize(size + 5)}
+              className="w-[45%] border-[1px] border-white-smoke px-5 py-2 text-[20px] text-center rounded-full hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
+            >
+              {t("common:messenger.loadMoreChats")}
+            </button>
           )}
-          <button
-            onClick={() => setSize(size + 5)}
-            className="w-[45%] border-[1px] border-white-smoke px-5 py-2 text-[20px] text-center rounded-full hover:bg-silver hover:bg-opacity-15 transition-all duration-150"
-          >
-            {t("common:messenger.loadMoreChats")}
-          </button>
+          {!chatsData?.content?.length && (
+            <p>{t("common:messenger.noChats")}</p>
+          )}
         </div>
 
         <div className="w-[70%] pt-[5%] h-screen overflow-y-auto z-10">
@@ -485,7 +490,7 @@ const Messenger = () => {
                           </p>
                         </div>
                       </DialogTrigger>
-                      <DialogContent className="bg-oxford-blue">
+                      <DialogContent className="bg-night">
                         <DialogTitle className="font-semibold">
                           {t("common:messenger.addNewMembers")}
                         </DialogTitle>

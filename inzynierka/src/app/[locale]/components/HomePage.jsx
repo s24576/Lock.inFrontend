@@ -386,6 +386,11 @@ const HomePage = () => {
                   {t("mainpage:seeMore")}
                 </p>
               )}
+            {followedProfilesData === undefined && (
+              <p className="text-white-smoke">
+                {t("mainpage:noFollowedProfiles")}
+              </p>
+            )}
           </div>
         </div>
       </div>

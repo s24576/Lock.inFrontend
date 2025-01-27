@@ -130,17 +130,17 @@ const FullMatch = ({ matchId }) => {
                 <div className="flex flex-col  ml-1 w-[28%]">
                   <p
                     onClick={() => findAnotherProfile(participant.puuid)}
-                    className="text-[20px] cursor-pointer hover:text-amber duration-150 transition-all"
+                    className="text-[22px] cursor-pointer hover:text-amber duration-150 transition-all"
                   >
-                    {participant.summonerName.length > 16
-                      ? `${participant.summonerName.substring(0, 16)}...`
+                    {participant.summonerName.length > 11
+                      ? `${participant.summonerName.substring(0, 11)}...`
                       : participant.summonerName}
                   </p>
-                  <p className="text-[14px] text-silver">
+                  {/* <p className="text-[14px] text-silver">
                     {participant.rank && participant.tier !== null
                       ? participant.tier + " " + participant.rank
                       : "Unranked"}
-                  </p>
+                  </p> */}
                 </div>
                 <div className="flex flex-col justify-center w-[15%]">
                   <p className="text-[20px]">

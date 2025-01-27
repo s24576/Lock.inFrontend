@@ -54,7 +54,8 @@ const rankOptions = rankList.map((rank) => ({
 }));
 
 const Duo = () => {
-  const { setDuoSettings, userData, isLogged } = useContext(UserContext);
+  const { duoSettings, setDuoSettings, userData, isLogged } =
+    useContext(UserContext);
 
   const { version } = useContext(SearchContext);
 
@@ -545,17 +546,18 @@ const Duo = () => {
                     </div>
                     {isLogged && (
                       <div className="w-[3%] flex items-center justify-center">
-                        {duo.author !== userData?.username && (
-                          <BiSolidLock
-                            onClick={() => {
-                              answerDuoMutation({
-                                puuid: riotProfiles[0].puuid,
-                                duoId: duo._id,
-                              });
-                            }}
-                            className="text-[32px] hover:text-amber duration-150 transition-all cursor-pointer"
-                          />
-                        )}
+                        {duo.author !== userData?.username &&
+                          duoSettings.duoAccount && (
+                            <BiSolidLock
+                              onClick={() => {
+                                answerDuoMutation({
+                                  puuid: riotProfiles[0].puuid,
+                                  duoId: duo._id,
+                                });
+                              }}
+                              className="text-[32px] hover:text-amber duration-150 transition-all cursor-pointer"
+                            />
+                          )}
                       </div>
                     )}
                   </div>

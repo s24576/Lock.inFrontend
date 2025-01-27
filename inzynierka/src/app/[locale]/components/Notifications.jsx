@@ -188,12 +188,7 @@ const Notifications = () => {
               );
             })}
           {notificationsData?.content?.length === 0 && (
-            <div
-              key={key}
-              className={`p-2 ${
-                !isLastElement ? "border-b border-amber" : ""
-              } hover:bg-amber hover:text-night transition-colors rounded-xl duration-150 flex items-center gap-x-4`}
-            >
+            <div className="p-2 hover:bg-amber hover:text-night transition-colors rounded-xl duration-150 flex items-center gap-x-4">
               <p className="w-[100%] text-[16px]">You have no notifications</p>
             </div>
           )}

@@ -32,7 +32,9 @@ const DuoSettings = ({ riotProfiles }) => {
                 </div>
               )}
 
-              <span>{profile.gameName ? profile.gameName : "Summoner"}</span>
+              <span className="text-white-smoke">
+                {profile.gameName ? profile.gameName : "Summoner"}
+              </span>
             </div>
 
             {profile.tier === "" || profile.tier === null ? (
@@ -71,7 +73,7 @@ const DuoSettings = ({ riotProfiles }) => {
               </div>
             )}
 
-            <span>
+            <span className="text-white-smoke">
               {data.profileData.gameName
                 ? data.profileData.gameName
                 : "Summoner"}

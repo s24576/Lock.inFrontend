@@ -49,7 +49,7 @@ const Courses = () => {
   );
 
   const previewCourseQueries = useQueries(
-    previewIds.map((id) => ({
+    previewIds?.map((id) => ({
       queryKey: ["courseData", id],
       queryFn: () => getCoursePreviewById(axiosInstance, id),
       refetchOnWindowFocus: false,

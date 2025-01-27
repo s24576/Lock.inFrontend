@@ -14,9 +14,10 @@ import Link from "next/link";
 import { BiSolidLock } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import getUserData from "../api/user/getUserData";
 
 const Profile = () => {
-  const { userData, isLogged } = useContext(UserContext);
+  const { userData, isLogged, setUserData } = useContext(UserContext);
   const [usernamesToFetch, setUsernamesToFetch] = useState([]);
   const { t } = useTranslation();
 
@@ -50,11 +51,26 @@ const Profile = () => {
     }
   );
 
+  const { refetch: userDataRefetch } = useQuery(
+    "getUserData",
+    () => getUserData(axiosInstance),
+    {
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        setUserData(data);
+      },
+    }
+  );
+
   const { mutateAsync: handleSendFriendRequest } = useMutation(
     () => {
       sendFriendRequest(axiosInstance, profileData._id);
     },
     {
+      onSuccess: () => {
+        profileRefetch();
+        userDataRefetch();
+      },
       onError: (error) => {
         console.error("Error adding friend:", error);
       },
@@ -135,40 +151,32 @@ const Profile = () => {
             <div className="flex flex-col gap-y-2 w-full">
               <div className="flex items-center gap-x-6">
                 <p className="text-[64px] font-bangers">{profileData._id}</p>
-                {userData?.friends?.some((friend) => {
-                  const otherUsername =
-                    friend.username === userData._id
-                      ? friend.username2
-                      : friend.username;
-                  return otherUsername === profileData._id;
-                }) ? (
-                  <div
-                    onClick={() => handleSendFriendRequest()}
-                    className="flex items-center gap-x-1 text-white-smoke hover:text-amber transition-all cursor-pointer duration-150"
-                  >
-                    <AiOutlineDelete className="text-[28px]" />
-                    <p className="text-[20px]">{t("mainpage:deleteFriend")}</p>
-                  </div>
-                ) : (
-                  <div
-                    onClick={() => handleSendFriendRequest()}
-                    className="flex items-center gap-x-1 text-white-smoke hover:text-amber transition-all cursor-pointer duration-150"
-                  >
-                    <IoPersonAddSharp className="text-[28px]" />
-                    <p className="text-[20px]">{t("mainpage:addFriend")}</p>
-                  </div>
-                )}
-              </div>
-              <div className="text-[18px] break-words p-2 max-w-[30%]">
-                {profileData.bio ? (
-                  <p>
-                    {profileData.bio.length > 200
-                      ? profileData.bio.substring(0, 200) + "..."
-                      : profileData.bio}
-                  </p>
-                ) : (
-                  <p>{t("mainpage:userBio")}</p>
-                )}
+                {userData?._id !== profileData._id &&
+                  (userData?.friends?.some((friend) => {
+                    const otherUsername =
+                      friend.username === userData._id
+                        ? friend.username2
+                        : friend.username;
+                    return otherUsername === profileData._id;
+                  }) ? (
+                    <div
+                      onClick={() => handleSendFriendRequest()}
+                      className="flex items-center gap-x-1 text-white-smoke hover:text-amber transition-all cursor-pointer duration-150"
+                    >
+                      <AiOutlineDelete className="text-[28px]" />
+                      <p className="text-[20px]">
+                        {t("mainpage:deleteFriend")}
+                      </p>
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => handleSendFriendRequest()}
+                      className="flex items-center gap-x-1 text-white-smoke hover:text-amber transition-all cursor-pointer duration-150"
+                    >
+                      <IoPersonAddSharp className="text-[28px]" />
+                      <p className="text-[20px]">{t("mainpage:addFriend")}</p>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>

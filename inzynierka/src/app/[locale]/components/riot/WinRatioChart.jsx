@@ -11,8 +11,8 @@ const WinRatioChart = ({ matchesData }) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const wins = matchesData.filter((match) => match.win === true).length;
-    const losses = matchesData.filter((match) => match.win === false).length;
+    const wins = matchesData?.filter((match) => match.win === true).length;
+    const losses = matchesData?.filter((match) => match.win === false).length;
     if (matchesData) {
       const totalGames = wins + losses;
       const winPercentage = totalGames === 0 ? 0 : (wins / totalGames) * 100;
@@ -61,14 +61,14 @@ const WinRatioChart = ({ matchesData }) => {
           <div className="size-8 bg-amber rounded-full"></div>
           <p className="text-[24px] font-dekko text-amber">
             {t("riot:wins")} (
-            {matchesData.filter((match) => match.win === true).length})
+            {matchesData?.filter((match) => match.win === true).length})
           </p>
         </div>
         <div className="flex items-center gap-x-3">
           <div className="size-8 bg-silver rounded-full"></div>
           <p className="text-[24px] font-dekko text-silver">
             {t("riot:losses")} (
-            {matchesData.filter((match) => match.win === false).length})
+            {matchesData?.filter((match) => match.win === false).length})
           </p>
         </div>
       </div>

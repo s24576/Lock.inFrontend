@@ -65,7 +65,7 @@ const CommentsSection = ({ id: objectId }) => {
     error: commentsError,
     isLoading: commentsIsLoading,
   } = useQuery(
-    ["commentsData", numberOfComments],
+    ["commentsData", numberOfComments, objectId],
     () =>
       getCommentsById(
         objectId,
@@ -150,7 +150,7 @@ const CommentsSection = ({ id: objectId }) => {
         setAllRepliesData((prevData) => {
           const prevContent = prevData?.content || [];
 
-          const newContent = newData.content.reduce((acc, newItem) => {
+          const newContent = newData?.content?.reduce((acc, newItem) => {
             const existingItem = prevContent.find(
               (item) => item._id === newItem._id
             );
@@ -185,7 +185,7 @@ const CommentsSection = ({ id: objectId }) => {
           };
         });
 
-        const usernames = newData.content.map((build) => build.username);
+        const usernames = newData?.content?.map((build) => build.username);
 
         setUsernamesToFetch((prevUsernames) => {
           const uniqueUsernames = new Set([...prevUsernames, ...usernames]);
@@ -530,7 +530,7 @@ const CommentsSection = ({ id: objectId }) => {
                           })}
 
                         {comment.replyCount >
-                        allRepliesData.content.filter(
+                        allRepliesData?.content?.filter(
                           (reply) => reply.replyingTo === comment._id
                         ).length ? (
                           <button

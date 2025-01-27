@@ -453,16 +453,8 @@ const SummonerProfile = () => {
           <div className="w-[45%] flex flex-col items-center">
             <div className="flex justify-between items-end h-[150px] w-full">
               <WinRatioChart matchesData={matchesData} />
-              <Select
-                styles={customStylesDuo}
-                options={queueOptions}
-                onChange={handleQueueFilter}
-                placeholder="All"
-                className="w-[35%]"
-                isSearchable={false}
-              />
             </div>
-            {matchesData.length > 0 ? (
+            {matchesData && matchesData.length > 0 ? (
               <div className="mt-6 flex flex-col gap-y-4 w-full">
                 {matchesData.map((match, key) => (
                   <div key={key} className="flex flex-col">
