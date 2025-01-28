@@ -265,13 +265,16 @@ const CreateBuild = () => {
   const { mutateAsync: handleCreateBuild, isLoading: isCreatingBuild } =
     useMutation((requestBody) => createBuild(axiosInstance, requestBody), {
       onSuccess: (data) => {
-        router.push("/builds/" + data);
+        if (data && typeof data === "string") {
+          router.push("/builds/" + data);
+        } else {
+          console.warn("No ID returned or status is not 200");
+        }
       },
       onError: (error) => {
         console.error("Error creating course:", error);
       },
     });
-
   const [validationError, setValidationError] = useState("");
 
   const handleSubmit = async () => {
